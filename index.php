@@ -131,24 +131,10 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
 		</div>
 	</header>
 
-	<!-- промо-полоса со скидкой -->
-	<section class="promo">
-		<div class="container promo__row">
-			<div class="promo__title">Дарим скидку 15% на санобработку!</div>
-			<form class="promo__form js-form" action="/source/php/order.php" method="post">
-				<input type="hidden" name="source" value="Промо — скидка 15%">
-				<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-				<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
-				<button type="submit" class="btn btn--light btn--sm">Отправить</button>
-				<div class="form-status" role="status"></div>
-			</form>
-		</div>
-	</section>
-
 	<!-- герой: преимущества, форма заявки, сетка услуг -->
 	<section class="hero" id="hero">
 		<div class="container hero__grid">
-			<div>
+			<div class="hero__col">
 				<ul class="hero__badges">
 					<li>Срочный заказ</li>
 					<li>Безопасные препараты без запаха</li>
@@ -162,7 +148,7 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
 					<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
 					<div class="hero__form-title">Оформить заявку</div>
 					<div class="hero__form-sub">Заполните поля для связи с вами</div>
-					<input type="text" name="name" placeholder="Имя (необязательно)">
+					<input type="text" name="name" placeholder="Ваше имя" required>
 					<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
 					<button type="submit" class="btn btn--accent btn--block">Получить консультацию</button>
 					<div class="form-status" role="status"></div>
@@ -429,23 +415,26 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
 					<div class="cleaning-price-row"><span>Двухкомнатной</span><span>от 80 ₽/м²</span></div>
 					<div class="cleaning-price-row"><span>Трёхкомнатной</span><span>от 80 ₽/м²</span></div>
 				</div>
-				<div class="cleaning-price-group">
-					<div class="cleaning-price-group__title">Уборка домов</div>
-					<div class="cleaning-price-row"><span>Уборка домов</span><span>от 80 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>После ремонта</span><span>от 180 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>Коттеджа</span><span>от 80 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>Таунхауса</span><span>от 80 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>Дачи</span><span>от 80 ₽/м²</span></div>
-				</div>
-				<div class="cleaning-price-group">
-					<div class="cleaning-price-group__title">Уборка офисов</div>
-					<div class="cleaning-price-row"><span>Уборка офисов</span><span>от 30 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>Генеральная</span><span>от 90 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>После ремонта</span><span>от 140 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>Ежедневная</span><span>от 30 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>Разовая</span><span>от 30 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>Утренняя</span><span>от 30 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>Вечерняя</span><span>от 30 ₽/м²</span></div>
+				<!-- правая колонка: два листа поменьше (как у донора) -->
+				<div class="cleaning-prices__col">
+					<div class="cleaning-price-group">
+						<div class="cleaning-price-group__title">Уборка домов</div>
+						<div class="cleaning-price-row"><span>Уборка домов</span><span>от 80 ₽/м²</span></div>
+						<div class="cleaning-price-row"><span>После ремонта</span><span>от 180 ₽/м²</span></div>
+						<div class="cleaning-price-row"><span>Коттеджа</span><span>от 80 ₽/м²</span></div>
+						<div class="cleaning-price-row"><span>Таунхауса</span><span>от 80 ₽/м²</span></div>
+						<div class="cleaning-price-row"><span>Дачи</span><span>от 80 ₽/м²</span></div>
+					</div>
+					<div class="cleaning-price-group">
+						<div class="cleaning-price-group__title">Уборка офисов</div>
+						<div class="cleaning-price-row"><span>Уборка офисов</span><span>от 30 ₽/м²</span></div>
+						<div class="cleaning-price-row"><span>Генеральная</span><span>от 90 ₽/м²</span></div>
+						<div class="cleaning-price-row"><span>После ремонта</span><span>от 140 ₽/м²</span></div>
+						<div class="cleaning-price-row"><span>Ежедневная</span><span>от 30 ₽/м²</span></div>
+						<div class="cleaning-price-row"><span>Разовая</span><span>от 30 ₽/м²</span></div>
+						<div class="cleaning-price-row"><span>Утренняя</span><span>от 30 ₽/м²</span></div>
+						<div class="cleaning-price-row"><span>Вечерняя</span><span>от 30 ₽/м²</span></div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -540,7 +529,7 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
 				<form class="veterans__form js-form" action="/source/php/order.php" method="post">
 					<input type="hidden" name="source" value="Назначить специалиста">
 					<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-					<input type="text" name="name" placeholder="Имя">
+					<input type="text" name="name" placeholder="Ваше имя" required>
 					<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
 					<button type="submit" class="btn btn--accent btn--block">Получить консультацию</button>
 					<div class="form-status" role="status"></div>
@@ -641,39 +630,39 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
 			<div class="faq__list">
 				<div class="faq-item">
 					<button type="button" class="faq-item__question">Время обработки?<span class="faq-item__plus"></span></button>
-					<div class="faq-item__answer">В помещении: 40-60 минут<br>На участке: 40-120 минут и более</div>
+					<div class="faq-item__answer"><div class="faq-item__answer-inner">В помещении: 40-60 минут<br>На участке: 40-120 минут и более</div></div>
 				</div>
 				<div class="faq-item">
 					<button type="button" class="faq-item__question">Через сколько вернуться в помещение после обработки?<span class="faq-item__plus"></span></button>
-					<div class="faq-item__answer">Перед обработкой необходимо покинуть объект на 2 часа, в некоторых случаях на трое суток</div>
+					<div class="faq-item__answer"><div class="faq-item__answer-inner">Перед обработкой необходимо покинуть объект на 2 часа, в некоторых случаях на трое суток</div></div>
 				</div>
 				<div class="faq-item">
 					<button type="button" class="faq-item__question">Может ли испортиться одежда и мебель?<span class="faq-item__plus"></span></button>
-					<div class="faq-item__answer">Наша химия не оставляет следов, не портит одежду, паркет, ламинат, фурнитуру и электронную технику.<br>Исключение - дезинфекция от плесени, специалист обеспечивает сохранность вещей</div>
+					<div class="faq-item__answer"><div class="faq-item__answer-inner">Наша химия не оставляет следов, не портит одежду, паркет, ламинат, фурнитуру и электронную технику.<br>Исключение - дезинфекция от плесени, специалист обеспечивает сохранность вещей</div></div>
 				</div>
 				<div class="faq-item">
 					<button type="button" class="faq-item__question">Как понять, есть ли опасные насекомые в доме?<span class="faq-item__plus"></span></button>
-					<div class="faq-item__answer">Первые признаки является зуд, укусы, точки и покраснения на коже. Насекомые бывают микроскопических размеров, крупные оставляют экскременты в виде черных или коричневых точек мягкой мебели или элементах интерьера.</div>
+					<div class="faq-item__answer"><div class="faq-item__answer-inner">Первые признаки является зуд, укусы, точки и покраснения на коже. Насекомые бывают микроскопических размеров, крупные оставляют экскременты в виде черных или коричневых точек мягкой мебели или элементах интерьера.</div></div>
 				</div>
 				<div class="faq-item">
 					<button type="button" class="faq-item__question">Гарантии?<span class="faq-item__plus"></span></button>
-					<div class="faq-item__answer">Мы предоставляем гарантии по договору и безналичный расчет по желанию клиентов</div>
+					<div class="faq-item__answer"><div class="faq-item__answer-inner">Мы предоставляем гарантии по договору и безналичный расчет по желанию клиентов</div></div>
 				</div>
 				<div class="faq-item">
 					<button type="button" class="faq-item__question">Какие вы используете препараты?<span class="faq-item__plus"></span></button>
-					<div class="faq-item__answer">Мы используем более 30 наименовании безопасных и сертифицированных средств от насекомых, грызунов, плесени</div>
+					<div class="faq-item__answer"><div class="faq-item__answer-inner">Мы используем более 30 наименовании безопасных и сертифицированных средств от насекомых, грызунов, плесени</div></div>
 				</div>
 				<div class="faq-item">
 					<button type="button" class="faq-item__question">Почему собственные методы не работают?<span class="faq-item__plus"></span></button>
-					<div class="faq-item__answer">У насекомых вырабатывается иммунитет к бесконтрольному применению общедоступных средств.<br>Только профессиональная дезинфекция, правильная дозировка препаратов и комбинирование могут дать результат на который вы рассчитываете.</div>
+					<div class="faq-item__answer"><div class="faq-item__answer-inner">У насекомых вырабатывается иммунитет к бесконтрольному применению общедоступных средств.<br>Только профессиональная дезинфекция, правильная дозировка препаратов и комбинирование могут дать результат на который вы рассчитываете.</div></div>
 				</div>
 				<div class="faq-item">
 					<button type="button" class="faq-item__question">Почему МосКомДез?<span class="faq-item__plus"></span></button>
-					<div class="faq-item__answer">Наша компания работает на рынке 8 лет. Специалисты регулярно проходят переаттестацию, повышают квалификацию и гарантируют качество и результат. Мы дорожим доверием крупных промышленных предприятий, торговых объектов, горожан и некоммерческих организаций.</div>
+					<div class="faq-item__answer"><div class="faq-item__answer-inner">Наша компания работает на рынке 8 лет. Специалисты регулярно проходят переаттестацию, повышают квалификацию и гарантируют качество и результат. Мы дорожим доверием крупных промышленных предприятий, торговых объектов, горожан и некоммерческих организаций.</div></div>
 				</div>
 				<div class="faq-item">
 					<button type="button" class="faq-item__question">Это опасно для ребёнка или аллергика?<span class="faq-item__plus"></span></button>
-					<div class="faq-item__answer">При соблюдении требований безопасности и применения безопасных средств нашими специалистами никакой опасности быть не может</div>
+					<div class="faq-item__answer"><div class="faq-item__answer-inner">При соблюдении требований безопасности и применения безопасных средств нашими специалистами никакой опасности быть не может</div></div>
 				</div>
 			</div>
 		</div>
@@ -689,8 +678,10 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
 				<div><b>Лицензия</b><?= h($config["license"]) ?></div>
 				<a href="#order" class="btn btn--primary">Оставить заявку</a>
 			</div>
-			<!-- карта подключается позже -->
-			<div class="contacts__map"></div>
+			<!-- Яндекс-карта: координаты временные, заменить на адрес офиса -->
+			<div class="contacts__map">
+				<iframe src="https://yandex.ru/map-widget/v1/?ll=37.617700%2C55.755800&amp;z=12" title="Карта — зона обслуживания" loading="lazy" allowfullscreen></iframe>
+			</div>
 		</div>
 	</section>
 
@@ -701,7 +692,7 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
 			<form class="hero__form order__form js-form" action="/source/php/order.php" method="post">
 				<input type="hidden" name="source" value="Заявка на обработку">
 				<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-				<input type="text" name="name" placeholder="Ваше имя">
+				<input type="text" name="name" placeholder="Ваше имя" required>
 				<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
 				<input type="text" name="comment" placeholder="Комментарий (необязательно)">
 				<button type="submit" class="btn btn--primary btn--block">Отправить заявку</button>

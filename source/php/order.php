@@ -26,6 +26,13 @@ $phone   = trim($_POST["phone"] ?? "");
 $comment = trim($_POST["comment"] ?? "");
 $source  = trim($_POST["source"] ?? "Сайт");
 
+// имя обязательно во всех формах, где поле есть
+if (array_key_exists("name", $_POST) && $name === "") {
+	http_response_code(422);
+	echo json_encode(array("ok" => false, "error" => "name"));
+	exit;
+}
+
 // валидация телефона: ровно 11 цифр
 $digits = preg_replace("/\D+/", "", $phone);
 if (strlen($digits) !== 11) {

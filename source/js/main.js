@@ -66,6 +66,13 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	});
 
+	// ===== маска имени: кириллица, латиница, пробелы =====
+	document.querySelectorAll("input[name=name]").forEach(function (input) {
+		input.addEventListener("input", function () {
+			input.value = input.value.replace(/[^A-Za-zА-Яа-яЁё\s]/g, "");
+		});
+	});
+
 	// ===== отправка форм в Telegram (через order.php) =====
 	function setStatus(el, text, type) {
 		if (!el) { return; }
@@ -74,11 +81,21 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	document.querySelectorAll(".js-form").forEach(function (form) {
+		// отключаем нативные всплывающие подсказки браузера — валидируем сами
+		form.setAttribute("novalidate", "novalidate");
 		form.addEventListener("submit", function (e) {
 			e.preventDefault();
+			var name = form.querySelector("input[name=name]");
 			var phone = form.querySelector("input[type=tel]");
 			var status = form.querySelector(".form-status");
 			var digits = phone ? phone.value.replace(/\D/g, "") : "";
+
+			// имя обязательно, если поле есть в форме
+			if (name && name.value.trim() === "") {
+				setStatus(status, "Введите ваше имя", "error");
+				name.focus();
+				return;
+			}
 
 			if (digits.length !== 11) {
 				setStatus(status, "Введите корректный телефон", "error");
