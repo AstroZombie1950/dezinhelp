@@ -1,0 +1,85 @@
+<!-- Подвал. Подключается через include. Нужны $config, $phones, $email, $msg, h() из config.php -->
+	<!-- футер по образцу topol-eco.ru -->
+	<footer class="footer">
+		<div class="container">
+			<div class="footer__columns">
+				<div class="footer__col">
+					<div class="footer__col-title">О компании</div>
+					<ul>
+						<li><a href="#process">Порядок обработки</a></li>
+						<li><a href="#methods">Методы обработки</a></li>
+						<li><a href="/politika/">Политика конфиденциальности</a></li>
+					</ul>
+				</div>
+				<div class="footer__col">
+					<div class="footer__col-title">Обработки</div>
+					<ul>
+						<li><a href="/tarakany/">Тараканы</a></li>
+						<li><a href="/klopy/">Клопы</a></li>
+						<li><a href="/kleshchi/">Клещи</a></li>
+						<li><a href="/komary/">Комары</a></li>
+						<li><a href="/gryzuny/">Грызуны</a></li>
+						<li><a href="/plesen/">Плесень</a></li>
+					</ul>
+				</div>
+				<div class="footer__col">
+					<div class="footer__col-title">Цены</div>
+					<ul>
+						<li><a href="#prices">Цены на услуги</a></li>
+						<li><a href="#faq">Частые вопросы</a></li>
+						<li><a href="#reviews">Отзывы</a></li>
+					</ul>
+				</div>
+				<div class="footer__col">
+					<div class="footer__col-title">Пользователям</div>
+					<ul>
+						<li><a href="#" class="js-order-open">Заказать онлайн</a></li>
+					</ul>
+				</div>
+				<div class="footer__col">
+					<div class="footer__col-title">Контакты</div>
+					<ul>
+						<?php foreach ($phones as $p): ?>
+						<li><a href="tel:<?= h($p["tel"]) ?>"><?= h($p["display"]) ?></a></li>
+						<?php endforeach; ?>
+						<li><a href="mailto:<?= h($email) ?>"><?= h($email) ?></a></li>
+						<li><?= h($config["address"]) ?></li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="footer__brand">
+				<div>
+					<div class="footer__brand-name">МосКомДез</div>
+					<div class="footer__brand-legal">
+						Региональная служба дезинфекции. ИП Мунтаниол А.Ю., ИНН 391103958473.<br>
+						Номер лицензии: 77.00165.0.25 (ЕРУЛ № Л04-00111-70197).
+					</div>
+				</div>
+				<!-- CTA + иконки оплаты под кнопкой -->
+				<div class="footer__order">
+					<a href="#" class="btn btn--accent js-order-open">Заказать онлайн</a>
+					<div class="footer__pay">
+						<svg class="pay-icon" aria-label="СБП"><use href="#i-sbp"></use></svg>
+						<svg class="pay-icon" aria-label="Мир"><use href="#i-mir"></use></svg>
+						<svg class="pay-icon" aria-label="Visa"><use href="#i-visa"></use></svg>
+						<svg class="pay-icon pay-icon--mc" aria-label="Mastercard"><use href="#i-mc"></use></svg>
+					</div>
+				</div>
+			</div>
+
+			<!-- соцсети отдельным блоком -->
+			<div class="footer__socials">
+				<span class="footer__col-title">Мы в соцсетях</span>
+				<div class="footer__social">
+					<a href="<?= h($msg["telegram"]) ?>" aria-label="Telegram"><svg><use href="#i-tg"></use></svg></a>
+					<a href="<?= h($msg["max"]) ?>" aria-label="Max"><svg><use href="#i-max"></use></svg></a>
+				</div>
+			</div>
+
+			<div class="footer__bottom">
+				<div>© 2026 Региональная служба дезинфекции. Все права защищены.</div>
+				<a href="/politika/">Политика конфиденциальности</a>
+			</div>
+		</div>
+	</footer>

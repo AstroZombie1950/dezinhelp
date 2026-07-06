@@ -55,388 +55,382 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
 </head>
 <body>
 
-	<!-- SVG-спрайт: иконки соцсетей, оплаты и типов объектов -->
-	<svg class="svg-sprite" aria-hidden="true" focusable="false">
-		<!-- мессенджеры / соцсети (монохром) -->
-		<symbol id="i-tg" viewBox="0 0 24 24"><path fill="currentColor" d="M9.8 15.6l-.3 3.9c.5 0 .7-.2.9-.5l1.8-1.7 3.8 2.8c.7.4 1.2.2 1.4-.6l2.5-11.9c.2-1-.3-1.4-1-1.1L2.9 10.2c-1 .4-1 .9-.2 1.2l4.3 1.3L17 6.9c.5-.3.9-.1.6.2z"/></symbol>
-		<symbol id="i-max" viewBox="0 0 24 24"><path fill="currentColor" d="M4 3h16a2 2 0 012 2v10a2 2 0 01-2 2H9l-4 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2zm3 4v7h2v-3.6l3 3.4 3-3.4V14h2V7h-2l-3 3.4L9 7z"/></symbol>
-		<symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 00-8.6 15l-1.4 5 5.1-1.3A10 10 0 1012 2zm0 2a8 8 0 11-4.2 14.8l-.3-.2-2.6.7.7-2.5-.2-.3A8 8 0 0112 4zm-3.5 3.6c-.2 0-.5.1-.7.4-.3.3-.9.9-.9 2.1s.9 2.4 1.1 2.6c.1.2 1.7 2.8 4.3 3.8 2.1.9 2.5.7 3 .6.5 0 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2l-.6-.3c-.3-.2-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.2l-.7.9c-.1.2-.3.2-.5.1-.7-.3-1.4-.6-2.1-1.5-.5-.6-.8-1.2-.9-1.4-.1-.2 0-.4.1-.5l.4-.4.2-.4c.1-.1 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4z"/></symbol>
-		<!-- оплата (цветные) -->
-		<symbol id="i-sbp" viewBox="0 0 62 16"><path fill="#5B57A2" d="M2 4l3 4-3 4z"/><path fill="#D90751" d="M6 2l3 4-3 4z"/><path fill="#F48120" d="M6 6l3 4-3 4z"/><path fill="#00A94F" d="M10 4l3 4-3 4z"/><text x="17" y="12" font-family="Arial, sans-serif" font-weight="700" font-size="11" fill="#1D1D1B">СБП</text></symbol>
-		<symbol id="i-mir" viewBox="0 0 52 16"><rect x="2" y="4" width="6" height="8" rx="1" fill="#0F9D58"/><text x="12" y="13" font-family="Arial, sans-serif" font-weight="800" font-size="13" fill="#0F9D58" letter-spacing="1">МИР</text></symbol>
-		<symbol id="i-visa" viewBox="0 0 52 16"><text x="4" y="13" font-family="Arial, sans-serif" font-weight="700" font-style="italic" font-size="14" fill="#1A1F71" letter-spacing="1">VISA</text></symbol>
-		<symbol id="i-mc" viewBox="0 0 40 24"><circle cx="16" cy="12" r="8" fill="#EB001B"/><circle cx="24" cy="12" r="8" fill="#F79E1B"/><path fill="#FF5F00" d="M20 6a8 8 0 000 12 8 8 0 000-12z"/></symbol>
-		<!-- типы объектов (монохром, обводка) -->
-		<symbol id="i-food" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v6M10 3v6M8.5 3v6M8.5 9v12"/><path d="M15 3c2 0 3 3 3 6s-1 4-2 4v8"/></g></symbol>
-		<symbol id="i-hotel" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h18M4 17v-5a2 2 0 012-2h8a3 3 0 013 3v4M4 12V8M8 12v-1a1 1 0 011-1h2a1 1 0 011 1v1M4 17v3M20 17v3"/></g></symbol>
-		<symbol id="i-retail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7L6 8zM9 8V6a3 3 0 016 0v2"/></g></symbol>
-		<symbol id="i-med" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4-3 7-7 9-4-2-7-5-7-9V6l7-3zM12 8.5v6M9 11.5h6"/></g></symbol>
-		<symbol id="i-transport" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v9H3zM14 9h4l3 3v3h-3M11 15H8"/><circle cx="6.5" cy="16.5" r="1.6"/><circle cx="17.5" cy="16.5" r="1.6"/></g></symbol>
-		<symbol id="i-home" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-6 8 6M6 10v9h12v-9M10 19v-5h4v5"/></g></symbol>
-		<symbol id="i-industry" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V10l5 3V10l5 3V7l6 4v10zM3 21h18M7 21v-3M12 21v-3M17 21v-3"/></g></symbol>
-		<symbol id="i-office" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4h9v17M14 21V9h5v12M3 21h18M8 8h3M8 12h3M8 16h3M17 13h1M17 17h1"/></g></symbol>
-	</svg>
+	<?php require __DIR__ . "/source/include/header.html"; ?>
 
-	<!-- шапка -->
-	<header class="header" id="top">
-		<div class="container header__row">
-			<a href="/" class="header__logo">
-				МосКомДез
-				<span class="header__logo-tagline">служба дезинфекции</span>
-			</a>
-
-			<nav class="nav">
-				<ul class="nav__list">
-					<li class="nav__item nav__item--dropdown">
-						<button type="button" class="nav__toggle">
-							Обработки
-							<span class="nav__toggle-arrow"></span>
-						</button>
-						<div class="nav__submenu">
-							<a class="nav__submenu-link" href="/tarakany/">Тараканы</a>
-							<a class="nav__submenu-link" href="/klopy/">Клопы</a>
-							<a class="nav__submenu-link" href="/komary/">Комары</a>
-							<a class="nav__submenu-link" href="/kleshchi/">Клещи</a>
-							<a class="nav__submenu-link" href="/zapah/">Запах</a>
-							<a class="nav__submenu-link" href="/plesen/">Плесень</a>
-							<a class="nav__submenu-link" href="/gryzuny/">Кроты</a>
-							<a class="nav__submenu-link" href="/gryzuny/">Крысы, мыши</a>
-							<a class="nav__submenu-link" href="/sushka/">Сушка дома</a>
-							<a class="nav__submenu-link" href="/muravyi/">Муравьи</a>
-							<a class="nav__submenu-link" href="/osy-shershni/">Осы, шершни</a>
-							<a class="nav__submenu-link" href="/koroed/">Короед</a>
-							<a class="nav__submenu-link" href="/uborka-posle-smerti/">Уборка после смерти</a>
-							<a class="nav__submenu-link" href="/nasekomye/">От всех насекомых</a>
-							<a class="nav__submenu-link" href="/borshchevik/">Борщевик</a>
-							<a class="nav__submenu-link" href="/rasteniya/">Лечение растений</a>
-							<a class="nav__submenu-link" href="/posle-pozhara/">После пожара</a>
-							<a class="nav__submenu-link" href="/kto-kusaet/">Кто-то кусает</a>
-						</div>
-					</li>
-					<li class="nav__item"><a class="nav__link" href="#reviews">Отзывы</a></li>
-					<li class="nav__item"><a class="nav__link" href="#contacts">Контакты</a></li>
-					<li class="nav__item nav__item--cta"><a class="nav__link" href="#order">Заказать онлайн</a></li>
-				</ul>
-			</nav>
-
-			<div class="header__side">
-				<div class="header__phones">
-					<?php foreach ($phones as $p): ?>
-					<a href="tel:<?= h($p["tel"]) ?>"><?= h($p["display"]) ?></a>
-					<?php endforeach; ?>
-				</div>
-				<a href="#order" class="btn btn--primary btn--sm">Заказать онлайн</a>
-				<button type="button" class="header__burger" aria-label="Меню"><span></span></button>
-			</div>
-		</div>
-	</header>
-
-	<!-- герой: преимущества, форма заявки, сетка услуг -->
+	<!-- герой: заголовок · абзац · чек-лист + форма · рабочий с ценой -->
 	<section class="hero" id="hero">
-		<div class="container hero__grid">
-			<div class="hero__col">
-				<ul class="hero__badges">
-					<li>Срочный заказ</li>
-					<li>Безопасные препараты без запаха</li>
-					<li>Государственная аттестация</li>
-					<li>Гарантия по договору 3 года</li>
-					<li>Решения под ключ</li>
-				</ul>
+		<div class="container">
 
-				<form class="hero__form js-form" action="/source/php/order.php" method="post">
-					<input type="hidden" name="source" value="Герой — консультация">
-					<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-					<div class="hero__form-title">Оформить заявку</div>
-					<div class="hero__form-sub">Заполните поля для связи с вами</div>
-					<input type="text" name="name" placeholder="Ваше имя" required>
-					<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
-					<button type="submit" class="btn btn--accent btn--block">Получить консультацию</button>
-					<div class="form-status" role="status"></div>
-					<div class="hero__form-note">Отправляя свои данные, вы соглашаетесь с <a href="/politika/">политикой конфиденциальности</a></div>
-				</form>
+			<!-- заголовок на всю ширину (акцент-заливка на «Санитарные услуги СЭС») -->
+			<h1 class="hero__title"><span class="hero__title-mark">Санитарные услуги СЭС</span> в Центральном Федеральном округе</h1>
 
-				<div class="hero__support">Круглосуточная поддержка</div>
-			</div>
+			<!-- лид-абзац; ключевые слова — фирменным акцентом -->
+			<p class="hero__lead">МосКомДез — Избавим качественно и быстро от <span class="hero__hl">насекомых</span>, <span class="hero__hl">грызунов</span>, <span class="hero__hl">плесени</span>, <span class="hero__hl">запахов</span> и <span class="hero__hl">сорняков</span> в любом помещении и на участках, вылечим <span class="hero__hl">деревья</span> от болезней и паразитов. Цена СЭС услуг одна из самых низких в Москве и МО</p>
 
-			<div class="hero__services">
-				<a class="service-tile" href="/gryzuny/"><span class="service-tile__icon">🐀</span>Грызуны</a>
-				<a class="service-tile" href="/klopy/"><span class="service-tile__icon">🛏️</span>Клопы</a>
-				<a class="service-tile" href="/tarakany/"><span class="service-tile__icon">🪳</span>Тараканы</a>
-				<a class="service-tile" href="/plesen/"><span class="service-tile__icon">🍄</span>Плесень</a>
-				<a class="service-tile" href="/zapah/"><span class="service-tile__icon">💨</span>Запахи</a>
-				<a class="service-tile" href="/nasekomye/"><span class="service-tile__icon">🪰</span>Мухи</a>
-				<a class="service-tile" href="/muravyi/"><span class="service-tile__icon">🐜</span>Муравьи</a>
-				<a class="service-tile" href="/nasekomye/"><span class="service-tile__icon">🦗</span>Блохи</a>
-				<a class="service-tile" href="/kleshchi/"><span class="service-tile__icon">🕷️</span>Клещи</a>
-				<a class="service-tile" href="/osy-shershni/"><span class="service-tile__icon">🐝</span>Осы, шершни</a>
-				<a class="service-tile" href="/koroed/"><span class="service-tile__icon">🪵</span>Короед</a>
-				<a class="service-tile" href="/komary/"><span class="service-tile__icon">🦟</span>Комары</a>
+			<!-- две колонки: слева контент+форма, справа рабочий -->
+			<div class="hero__cols">
+
+				<!-- левая колонка -->
+				<div class="hero__left">
+
+					<!-- чек-лист преимуществ (галочки — SVG, маркеры — акцент) -->
+					<ul class="hero__checks">
+						<li class="hero__check">
+							<span class="hero__check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12.5l2.5 2.5 5-5.5"/></svg></span>
+							<div class="hero__check-body">
+								<div class="hero__check-title">Устраним проблему <mark class="hero__mark">за 1 час на 100%.</mark></div>
+								<div class="hero__check-sub">Если не поможет — приедем бесплатно еще раз!</div>
+							</div>
+						</li>
+						<li class="hero__check">
+							<span class="hero__check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12.5l2.5 2.5 5-5.5"/></svg></span>
+							<div class="hero__check-body">
+								<div class="hero__check-title">Гарантия <mark class="hero__mark">до 2-х лет.</mark></div>
+								<div class="hero__check-sub">Прописана в договоре.</div>
+							</div>
+						</li>
+						<li class="hero__check">
+							<span class="hero__check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12.5l2.5 2.5 5-5.5"/></svg></span>
+							<div class="hero__check-body">
+								<div class="hero__check-title"><mark class="hero__mark">Лицензия</mark> СЭС</div>
+								<div class="hero__check-sub">Сотрудники предъявят документы по приезду.</div>
+							</div>
+						</li>
+						<li class="hero__check">
+							<span class="hero__check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12.5l2.5 2.5 5-5.5"/></svg></span>
+							<div class="hero__check-body">
+								<div class="hero__check-title"><mark class="hero__mark">НАШЛИ ДЕШЕВЛЕ?</mark></div>
+								<div class="hero__check-sub">Мы сделаем цену еще ниже!</div>
+							</div>
+						</li>
+					</ul>
+
+					<!-- выноска-призыв над формой (хвостик указывает вниз) -->
+					<div class="hero__bubble">СКИДКА 10%, ОСТАВЬТЕ ЗАЯВКУ ЗДЕСЬ</div>
+
+					<!-- форма: одно поле — телефон с маской, отправка в Телеграм -->
+					<form class="hero__form js-form" action="/source/php/order.php" method="post">
+						<input type="hidden" name="source" value="Герой — заявка">
+						<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+						<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" required>
+						<button type="submit" class="btn btn--primary btn--block">Оставить заявку</button>
+						<div class="form-status" role="status"></div>
+						<div class="hero__form-note">Нажимая на кнопку, я соглашаюсь с <a href="/politika/">правилами обработки данных</a></div>
+					</form>
+
+					<!-- онлайн-чат: контурные иконки мессенджеров + почта -->
+					<div class="hero__chat">
+						<div class="hero__chat-title">Или напишите нам в онлайн-чат</div>
+						<div class="hero__messengers">
+							<a class="msg-line" href="<?= h($msg["max"]) ?>" target="_blank" rel="noopener" aria-label="Max"><svg><use href="#i-max"></use></svg></a>
+							<a class="msg-line" href="<?= h($msg["whatsapp"]) ?>" target="_blank" rel="noopener" aria-label="WhatsApp"><svg><use href="#i-wa"></use></svg></a>
+							<a class="msg-line" href="<?= h($msg["telegram"]) ?>" target="_blank" rel="noopener" aria-label="Telegram"><svg><use href="#i-tg"></use></svg></a>
+							<a class="msg-line" href="mailto:<?= h($email) ?>" aria-label="Почта"><svg><use href="#i-mail"></use></svg></a>
+						</div>
+					</div>
+
+				</div>
+
+				<!-- правая колонка: рабочий + плашка цены -->
+				<div class="hero__right">
+					<div class="hero__figure">
+						<img class="hero__worker" src="/source/img/hero/worker.webp" alt="Специалист службы дезинфекции в защитном костюме" width="880" height="619" loading="eager">
+						<div class="hero__price">
+							<span class="hero__price-top">от</span>
+							<span class="hero__price-num">1500<span class="hero__price-cur">₽</span></span>
+							<span class="hero__price-bottom">за услугу</span>
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</div>
 	</section>
 
 	<!-- бегущая строка -->
+	<?php
+	// пункты бегущей строки (дублируются дважды — для бесшовной прокрутки)
+	$marquee = array("Короед", "Комары", "ФЗ-44", "Препараты по стандартам ЕврАзЭС", "Грызуны", "Клопы", "Тараканы", "Плесень", "Запахи", "Мухи", "Муравьи", "Блохи", "Клещи", "Осы и шершни");
+	?>
 	<div class="marquee">
 		<div class="marquee__track">
-			<span>ТОЛЬКО СЕРТИФИЦИРОВАННЫЕ ПРЕПАРАТЫ</span>
-			<span>ТОЛЬКО СЕРТИФИЦИРОВАННЫЕ ПРЕПАРАТЫ</span>
-			<span>ТОЛЬКО СЕРТИФИЦИРОВАННЫЕ ПРЕПАРАТЫ</span>
-			<span>ТОЛЬКО СЕРТИФИЦИРОВАННЫЕ ПРЕПАРАТЫ</span>
-			<span>ТОЛЬКО СЕРТИФИЦИРОВАННЫЕ ПРЕПАРАТЫ</span>
-			<span>ТОЛЬКО СЕРТИФИЦИРОВАННЫЕ ПРЕПАРАТЫ</span>
+			<?php for ($i = 0; $i < 2; $i++): foreach ($marquee as $m): ?>
+			<span class="marquee__item"><?= h($m) ?></span>
+			<span class="marquee__sep" aria-hidden="true">&#8855;</span>
+			<?php endforeach; endfor; ?>
 		</div>
 	</div>
 
-	<!-- цены: двухколоночный блок по образцу klining24.ru -->
-	<section class="section" id="prices">
+	<!-- цены: карточки с данными донора, наш визуал -->
+	<section class="section section--alt" id="prices">
 		<div class="container">
 			<h2 class="section__title">Цены на наши услуги</h2>
-			<div class="prices__columns">
-				<div>
-					<div class="price-card">
-						<div class="price-card__header">
-							<div class="price-card__title">Обработка помещений от насекомых</div>
-							<div class="price-card__from">от 2 300 ₽</div>
-						</div>
-						<div class="price-card__rows">
-							<div class="price-card__row"><span>10–30 м²</span><span>2 300 ₽</span></div>
-							<div class="price-card__row"><span>30–50 м²</span><span>2 900 ₽</span></div>
-							<div class="price-card__row"><span>&gt;50 м²</span><span>от 3 500 ₽</span></div>
-							<div class="price-card__row"><span>&gt;100 м²</span><span>от 6 500 ₽</span></div>
-							<div class="price-card__row"><span>&gt;300 м²</span><span>от 14 700 ₽</span></div>
-						</div>
-						<a href="#order" class="btn btn--outline btn--sm btn--block">Подробнее</a>
-					</div>
+			<div class="price__cards">
 
-					<div class="price-card">
-						<div class="price-card__header">
-							<div class="price-card__title">Обработка участков от насекомых</div>
-							<div class="price-card__from">от 200 ₽/сот.</div>
+				<!-- обработка участков -->
+				<div class="price-card">
+					<div class="price-card__img" style="background-image:url(/source/img/our_services/1.webp)"></div>
+					<div class="price-card__body">
+						<div class="price-card__title">ОБРАБОТКА УЧАСТКОВ<span>НАСЕКОМЫЕ</span></div>
+						<ul class="price-card__list">
+							<li>ДО 10 СОТОК - 7000Р</li>
+							<li>10 - 15 СОТОК - ОТ 9000Р (900Р/С)</li>
+							<li>15- 30 СОТОК - ОТ 10500Р (700Р/С)</li>
+							<li>30-40 СОТОК - ОТ 15000Р (500Р/С)</li>
+							<li>40-60 СОТОК - ОТ 18000Р (450Р/С)</li>
+							<li>&gt;70 СОТОК, 1ГА И БОЛЕЕ - ОТ 20000Р</li>
+						</ul>
+						<div class="price-card__from">ОТ 200₽/СОТ</div>
+						<div class="price-card__actions">
+							<a href="#" class="btn btn--primary btn--sm">Подробнее</a>
+							<a href="#" class="btn btn--outline btn--sm js-order-open">Заказать</a>
 						</div>
-						<div class="price-card__rows">
-							<div class="price-card__row"><span>до 10 соток</span><span>7 000 ₽</span></div>
-							<div class="price-card__row"><span>10–15 соток</span><span>от 9 000 ₽</span></div>
-							<div class="price-card__row"><span>15–30 соток</span><span>от 10 500 ₽</span></div>
-							<div class="price-card__row"><span>30–40 соток</span><span>от 15 000 ₽</span></div>
-							<div class="price-card__row"><span>40–60 соток</span><span>от 18 000 ₽</span></div>
-							<div class="price-card__row"><span>&gt;70 соток, 1 га и более</span><span>от 20 000 ₽</span></div>
-						</div>
-						<a href="#order" class="btn btn--outline btn--sm btn--block">Подробнее</a>
-					</div>
-
-					<div class="price-card">
-						<div class="price-card__header">
-							<div class="price-card__title">Дезинфекция от плесени</div>
-							<div class="price-card__from">от 1 500 ₽/м²</div>
-						</div>
-						<div class="price-card__rows">
-							<div class="price-card__row"><span>Механическая чистка</span><span>500 ₽/м²</span></div>
-							<div class="price-card__row"><span>Химическая чистка</span><span>от 1 500 ₽/м²</span></div>
-							<div class="price-card__row"><span>Защитная плёнка</span><span>1 000 ₽/м²</span></div>
-							<div class="price-card__row"><span>Демонтаж, технология</span><span>по запросу</span></div>
-						</div>
-						<a href="#order" class="btn btn--outline btn--sm btn--block">Подробнее</a>
-					</div>
-
-					<div class="price-card">
-						<div class="price-card__header">
-							<div class="price-card__title">Уничтожение крыс, кротов</div>
-							<div class="price-card__from">от 6 000 ₽</div>
-						</div>
-						<div class="price-card__rows">
-							<div class="price-card__row"><span>до 50 м²</span><span>6 000 ₽</span></div>
-							<div class="price-card__row"><span>до 100 м²</span><span>12 000 ₽</span></div>
-							<div class="price-card__row"><span>&gt;100 м²</span><span>по запросу</span></div>
-							<div class="price-card__row"><span>до 15 соток</span><span>от 9 000 ₽</span></div>
-							<div class="price-card__row"><span>&gt;15 соток</span><span>по запросу</span></div>
-						</div>
-						<a href="#order" class="btn btn--outline btn--sm btn--block">Подробнее</a>
 					</div>
 				</div>
 
-				<div>
-					<div class="price-card">
-						<div class="price-card__header">
-							<div class="price-card__title">Сушка помещений</div>
-							<div class="price-card__from">от 5 500 ₽/сут.</div>
+				<!-- обработка помещений -->
+				<div class="price-card">
+					<div class="price-card__img" style="background-image:url(/source/img/our_services/2.webp)"></div>
+					<div class="price-card__body">
+						<div class="price-card__title">ОБРАБОТКА ПОМЕЩЕНИЙ<span>НАСЕКОМЫЕ</span></div>
+						<ul class="price-card__list">
+							<li>10-30 КВ.М. - 2300Р</li>
+							<li>30-50 КВ.М. - 2900Р</li>
+							<li>&gt; 50 КВ.М. - ОТ 3500Р</li>
+							<li>&gt;100 КВ.М. - ОТ 6500Р</li>
+							<li>&gt; 300 КВ.М. - ОТ 14700Р</li>
+						</ul>
+						<div class="price-card__from">ОТ 2300 ₽</div>
+						<div class="price-card__actions">
+							<a href="#" class="btn btn--primary btn--sm">Подробнее</a>
+							<a href="#" class="btn btn--outline btn--sm js-order-open">Заказать</a>
 						</div>
-						<div class="price-card__rows">
-							<div class="price-card__row"><span>Сбор, слив воды</span><span>от 7 000 ₽/м³</span></div>
-							<div class="price-card__row"><span>Демонтаж</span><span>по запросу</span></div>
-							<div class="price-card__row"><span>Сушка</span><span>под ключ</span></div>
-							<div class="price-card__row"><span>Дезинфекция</span><span>от 1 500 ₽/м²</span></div>
-						</div>
-						<a href="#order" class="btn btn--outline btn--sm btn--block">Подробнее</a>
 					</div>
+				</div>
 
-					<div class="price-card">
-						<div class="price-card__header">
-							<div class="price-card__title">Устранение запаха</div>
-							<div class="price-card__from">от 2 300 ₽</div>
+				<!-- дезинфекция: плесень -->
+				<div class="price-card">
+					<div class="price-card__img" style="background-image:url(/source/img/our_services/3.webp)"></div>
+					<div class="price-card__body">
+						<div class="price-card__title">ДЕЗИНФЕКЦИЯ<span>ПЛЕСЕНЬ</span></div>
+						<ul class="price-card__list">
+							<li>МЕХАНИЧЕСКАЯ ЧИСТКА - 500Р КВ.М.</li>
+							<li>ХИМИЧЕСКАЯ ЧИСТКА ОТ - 1500Р КВ.М.</li>
+							<li>ЗАЩИТНАЯ ПЛЕНКА - 1000Р КВ.М.</li>
+							<li>ДЕМОНТАЖ, ГАЗАЦИЯ - ПО ЗАПРОСУ</li>
+						</ul>
+						<div class="price-card__from">ОТ 1500 ₽/М²</div>
+						<div class="price-card__actions">
+							<a href="#" class="btn btn--primary btn--sm">Подробнее</a>
+							<a href="#" class="btn btn--outline btn--sm js-order-open">Заказать</a>
 						</div>
-						<div class="price-card__rows">
-							<div class="price-card__row"><span>10–30 м²</span><span>3 500 ₽</span></div>
-							<div class="price-card__row"><span>40–60 м²</span><span>от 6 000 ₽</span></div>
-							<div class="price-card__row"><span>70–90 м²</span><span>от 9 000 ₽</span></div>
-							<div class="price-card__row"><span>100–150 м²</span><span>от 15 000 ₽</span></div>
-							<div class="price-card__row"><span>другое</span><span>по запросу</span></div>
-						</div>
-						<a href="#order" class="btn btn--outline btn--sm btn--block">Подробнее</a>
 					</div>
+				</div>
 
-					<div class="price-card">
-						<div class="price-card__header">
-							<div class="price-card__title">Дезинфекция после смерти</div>
-							<div class="price-card__from">от 10 000 ₽</div>
+				<!-- уничтожение грызунов -->
+				<div class="price-card">
+					<div class="price-card__img" style="background-image:url(/source/img/our_services/4.webp)"></div>
+					<div class="price-card__body">
+						<div class="price-card__title">УНИЧТОЖЕНИЕ<span>КРЫС, МЫШЕЙ, КРОТОВ</span></div>
+						<ul class="price-card__list">
+							<li>ДО 50 КВ.М. - 6000Р</li>
+							<li>ДО 100 КВ.М. - 12000Р</li>
+							<li>&gt;100 КВ.М. - ПО ЗАПРОСУ</li>
+							<li>ДО 15 СОТОК - ОТ 9000Р</li>
+							<li>&gt;15 СОТОК - ПО ЗАПРОСУ</li>
+						</ul>
+						<div class="price-card__from">ОТ 6000₽, 600₽/СОТ</div>
+						<div class="price-card__actions">
+							<a href="#" class="btn btn--primary btn--sm">Подробнее</a>
+							<a href="#" class="btn btn--outline btn--sm js-order-open">Заказать</a>
 						</div>
-						<div class="price-card__rows">
-							<div class="price-card__row"><span>Уборка мусора</span><span>по запросу</span></div>
-							<div class="price-card__row"><span>Демонтаж</span><span>по запросу</span></div>
-							<div class="price-card__row"><span>Дезинфекция пятна</span><span>от 1 500 ₽/м²</span></div>
-							<div class="price-card__row"><span>Дезодорация</span><span>от 500 ₽/м²</span></div>
-						</div>
-						<a href="#order" class="btn btn--outline btn--sm btn--block">Подробнее</a>
 					</div>
+				</div>
 
-					<div class="price-card">
-						<div class="price-card__header">
-							<div class="price-card__title">Уничтожение борщевика</div>
-							<div class="price-card__from">от 700 ₽/сот.</div>
+				<!-- сушка помещений -->
+				<div class="price-card">
+					<div class="price-card__img" style="background-image:url(/source/img/our_services/5.webp)"></div>
+					<div class="price-card__body">
+						<div class="price-card__title">СУШКА<span>ПОМЕЩЕНИЙ</span></div>
+						<ul class="price-card__list">
+							<li>СЛИВ, ОТКАЧКА ВОДЫ - 2500Р ЗА М³</li>
+							<li>ДЕМОНТАЖ - ПО ЗАПРОСУ</li>
+							<li>СУШКА - 800Р ЗА КВ.М.</li>
+							<li>ДЕЗИНФЕКЦИЯ - ОТ 1500Р КВ.М.</li>
+						</ul>
+						<div class="price-card__from">ОТ 5500 ₽/СУТ</div>
+						<div class="price-card__actions">
+							<a href="#" class="btn btn--primary btn--sm">Подробнее</a>
+							<a href="#" class="btn btn--outline btn--sm js-order-open">Заказать</a>
 						</div>
-						<div class="price-card__rows">
-							<div class="price-card__row"><span>до 10 соток</span><span>10 000 ₽</span></div>
-							<div class="price-card__row"><span>10–15 соток</span><span>от 10 000 ₽</span></div>
-							<div class="price-card__row"><span>15–20 соток</span><span>от 14 000 ₽</span></div>
-							<div class="price-card__row"><span>20–30 соток</span><span>от 17 000 ₽</span></div>
-							<div class="price-card__row"><span>40–60 соток</span><span>от 25 000 ₽</span></div>
-							<div class="price-card__row"><span>&gt;70 соток, 1 га и более</span><span>от 30 000 ₽</span></div>
-						</div>
-						<a href="#order" class="btn btn--outline btn--sm btn--block">Подробнее</a>
 					</div>
 				</div>
-			</div>
-		</div>
-	</section>
 
-	<!-- клининг: карточки с фото (образец klining24) + прайс -->
-	<section class="section section--alt" id="cleaning">
-		<div class="container">
-			<h2 class="section__title">Клининговые услуги</h2>
-			<div class="cleaning__cards">
-				<div class="cleaning-card">
-					<div class="cleaning-card__img" style="background-image:url(/source/img/cleaning/uborka-kvartir.webp)"></div>
-					<div class="cleaning-card__body">
-						<div class="cleaning-card__title">Уборка квартир</div>
-						<div class="cleaning-card__price">от 80 ₽/м²</div>
-						<div class="cleaning-card__meta"><span>Время: 2–7 ч.</span><span>Специалистов: 1–4</span></div>
-						<a href="#order" class="btn btn--outline btn--sm btn--block cleaning-card__btn">Подробнее</a>
+				<!-- дезинфекция: запах -->
+				<div class="price-card">
+					<div class="price-card__img" style="background-image:url(/source/img/our_services/6.webp)"></div>
+					<div class="price-card__body">
+						<div class="price-card__title">ДЕЗИНФЕКЦИЯ<span>ЗАПАХ</span></div>
+						<ul class="price-card__list">
+							<li>10-30 К.ВМ. - 3500Р</li>
+							<li>40-60 КВ.М.- ОТ 6000Р</li>
+							<li>70-90 КВ.М. - ОТ 9000Р</li>
+							<li>100 КВ.М. - 150 КВ.М. - ОТ 15000Р</li>
+							<li>ДРУГОЕ - ПО ЗАПРОСУ</li>
+						</ul>
+						<div class="price-card__from">ОТ 2300 ₽</div>
+						<div class="price-card__actions">
+							<a href="#" class="btn btn--primary btn--sm">Подробнее</a>
+							<a href="#" class="btn btn--outline btn--sm js-order-open">Заказать</a>
+						</div>
 					</div>
 				</div>
-				<div class="cleaning-card">
-					<div class="cleaning-card__img" style="background-image:url(/source/img/cleaning/generalnaya.webp)"><span class="cleaning-card__badge">Популярное</span></div>
-					<div class="cleaning-card__body">
-						<div class="cleaning-card__title">Генеральная уборка</div>
-						<div class="cleaning-card__price">от 140 ₽/м²</div>
-						<div class="cleaning-card__meta"><span>Время: 3–8 ч.</span><span>Специалистов: 1–4</span></div>
-						<a href="#order" class="btn btn--outline btn--sm btn--block cleaning-card__btn">Подробнее</a>
-					</div>
-				</div>
-				<div class="cleaning-card">
-					<div class="cleaning-card__img" style="background-image:url(/source/img/cleaning/posle-remonta.webp)"></div>
-					<div class="cleaning-card__body">
-						<div class="cleaning-card__title">Уборка после ремонта</div>
-						<div class="cleaning-card__price">от 180 ₽/м²</div>
-						<div class="cleaning-card__meta"><span>Время: 6–10 ч.</span><span>Специалистов: 1–5</span></div>
-						<a href="#order" class="btn btn--outline btn--sm btn--block cleaning-card__btn">Подробнее</a>
-					</div>
-				</div>
-				<div class="cleaning-card">
-					<div class="cleaning-card__img" style="background-image:url(/source/img/cleaning/podderzhivayushchaya.webp)"></div>
-					<div class="cleaning-card__body">
-						<div class="cleaning-card__title">Поддерживающая уборка</div>
-						<div class="cleaning-card__price">от 80 ₽/м²</div>
-						<div class="cleaning-card__meta"><span>Время: 2–4 ч.</span><span>Специалистов: 1–2</span></div>
-						<a href="#order" class="btn btn--outline btn--sm btn--block cleaning-card__btn">Подробнее</a>
-					</div>
-				</div>
-				<div class="cleaning-card">
-					<div class="cleaning-card__img" style="background-image:url(/source/img/cleaning/uborka-domov.webp)"></div>
-					<div class="cleaning-card__body">
-						<div class="cleaning-card__title">Уборка домов</div>
-						<div class="cleaning-card__price">от 80 ₽/м²</div>
-						<div class="cleaning-card__meta"><span>Время: 5–7 ч.</span><span>Специалистов: 2–5</span></div>
-						<a href="#order" class="btn btn--outline btn--sm btn--block cleaning-card__btn">Подробнее</a>
-					</div>
-				</div>
-				<div class="cleaning-card">
-					<div class="cleaning-card__img" style="background-image:url(/source/img/cleaning/kottedzhi.webp)"></div>
-					<div class="cleaning-card__body">
-						<div class="cleaning-card__title">Уборка коттеджей</div>
-						<div class="cleaning-card__price">от 80 ₽/м²</div>
-						<div class="cleaning-card__meta"><span>Время: 5–7 ч.</span><span>Специалистов: 2–5</span></div>
-						<a href="#order" class="btn btn--outline btn--sm btn--block cleaning-card__btn">Подробнее</a>
-					</div>
-				</div>
-				<div class="cleaning-card">
-					<div class="cleaning-card__img" style="background-image:url(/source/img/cleaning/mytyo-okon.webp)"></div>
-					<div class="cleaning-card__body">
-						<div class="cleaning-card__title">Мытьё окон</div>
-						<div class="cleaning-card__price">от 350 ₽/м²</div>
-						<div class="cleaning-card__meta"><span>Время: 1–3 ч.</span><span>Специалистов: 1–2</span></div>
-						<a href="#order" class="btn btn--outline btn--sm btn--block cleaning-card__btn">Подробнее</a>
-					</div>
-				</div>
-				<div class="cleaning-card">
-					<div class="cleaning-card__img" style="background-image:url(/source/img/cleaning/himchistka.webp)"></div>
-					<div class="cleaning-card__body">
-						<div class="cleaning-card__title">Химчистка</div>
-						<div class="cleaning-card__price">от 5 000 ₽/ед.</div>
-						<div class="cleaning-card__meta"><span>Время: 1–3 ч.</span><span>Специалистов: 1–2</span></div>
-						<a href="#order" class="btn btn--outline btn--sm btn--block cleaning-card__btn">Подробнее</a>
+
+				<!-- уничтожение борщевика -->
+				<div class="price-card">
+					<div class="price-card__img" style="background-image:url(/source/img/our_services/7.webp)"></div>
+					<div class="price-card__body">
+						<div class="price-card__title">УНИЧТОЖЕНИЕ<span>БОРЩЕВИКА</span></div>
+						<ul class="price-card__list">
+							<li>ДО 10 СОТОК - 10000Р</li>
+							<li>10 - 15 СОТОК - ОТ 10000Р (1000Р/С)</li>
+							<li>15-20 СОТОК - ОТ 14000Р (930Р/С)</li>
+							<li>20-30 СОТОК - ОТ 17000Р (850Р/С)</li>
+							<li>40-60 СОТОК - ОТ 25000Р (625Р/С)</li>
+							<li>&gt;70 СОТОК, 1ГА И БОЛЕЕ - ОТ 30000Р</li>
+						</ul>
+						<div class="price-card__from">ОТ 700 ₽/СОТ.</div>
+						<div class="price-card__actions">
+							<a href="#" class="btn btn--primary btn--sm">Подробнее</a>
+							<a href="#" class="btn btn--outline btn--sm js-order-open">Заказать</a>
+						</div>
 					</div>
 				</div>
 			</div>
 
-			<h3 class="cleaning__subtitle">Цены на клининг</h3>
-			<div class="cleaning-prices">
-				<div class="cleaning-price-group">
-					<div class="cleaning-price-group__title">Уборка квартир</div>
-					<div class="cleaning-price-row"><span>Уборка квартир</span><span>от 80 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>После ремонта</span><span>от 180 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>Поддерживающая</span><span>от 80 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>Генеральная</span><span>от 140 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>После потопа</span><span>от 350 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>После пожара</span><span>от 400 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>Запущенных квартир</span><span>от 150 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>Влажная</span><span>от 80 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>Комплексная</span><span>от 80 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>Элитной квартиры</span><span>от 200 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>Однокомнатной</span><span>от 80 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>Двухкомнатной</span><span>от 80 ₽/м²</span></div>
-					<div class="cleaning-price-row"><span>Трёхкомнатной</span><span>от 80 ₽/м²</span></div>
-				</div>
-				<!-- правая колонка: два листа поменьше (как у донора) -->
-				<div class="cleaning-prices__col">
-					<div class="cleaning-price-group">
-						<div class="cleaning-price-group__title">Уборка домов</div>
-						<div class="cleaning-price-row"><span>Уборка домов</span><span>от 80 ₽/м²</span></div>
-						<div class="cleaning-price-row"><span>После ремонта</span><span>от 180 ₽/м²</span></div>
-						<div class="cleaning-price-row"><span>Коттеджа</span><span>от 80 ₽/м²</span></div>
-						<div class="cleaning-price-row"><span>Таунхауса</span><span>от 80 ₽/м²</span></div>
-						<div class="cleaning-price-row"><span>Дачи</span><span>от 80 ₽/м²</span></div>
+			<!-- клининг: доп. блок цен (данные донора-клинингового сайта, наш визуал) -->
+			<div class="clean-prices-wrap">
+				<h3 class="clean-prices__title">Цены на клининг</h3>
+				<div class="clean-prices">
+
+					<!-- высокая карточка слева -->
+					<div class="clean-price-card clean-price-card--tall">
+						<div class="clean-price-card__row clean-price-card__row--head">
+							<span class="clean-price-card__name">Уборка квартир</span>
+							<span class="clean-price-card__value">от 80 руб./м2</span>
+						</div>
+						<div class="clean-price-card__row">
+							<span class="clean-price-card__name">После ремонта</span>
+							<span class="clean-price-card__value">от 180 руб./м2</span>
+						</div>
+						<div class="clean-price-card__row">
+							<span class="clean-price-card__name">Поддерживающая</span>
+							<span class="clean-price-card__value">от 80 руб./м2</span>
+						</div>
+						<div class="clean-price-card__row">
+							<span class="clean-price-card__name">Генеральная</span>
+							<span class="clean-price-card__value">от 140 руб./м2</span>
+						</div>
+						<div class="clean-price-card__row">
+							<span class="clean-price-card__name">После потопа</span>
+							<span class="clean-price-card__value">от 350 руб./м2</span>
+						</div>
+						<div class="clean-price-card__row">
+							<span class="clean-price-card__name">После пожара</span>
+							<span class="clean-price-card__value">от 400 руб./м2</span>
+						</div>
+						<div class="clean-price-card__row">
+							<span class="clean-price-card__name">Запущенных квартир</span>
+							<span class="clean-price-card__value">от 150 руб./м2</span>
+						</div>
+						<div class="clean-price-card__row">
+							<span class="clean-price-card__name">Влажная</span>
+							<span class="clean-price-card__value">от 80 руб./м2</span>
+						</div>
+						<div class="clean-price-card__row">
+							<span class="clean-price-card__name">Комплексная</span>
+							<span class="clean-price-card__value">от 80 руб./м2</span>
+						</div>
+						<div class="clean-price-card__row">
+							<span class="clean-price-card__name">Элитной квартиры</span>
+							<span class="clean-price-card__value">от 200 руб./м2</span>
+						</div>
+						<div class="clean-price-card__row">
+							<span class="clean-price-card__name">Однокомнатной</span>
+							<span class="clean-price-card__value">от 80 руб./м2</span>
+						</div>
+						<div class="clean-price-card__row">
+							<span class="clean-price-card__name">Двухкомнатной</span>
+							<span class="clean-price-card__value">от 80 руб./м2</span>
+						</div>
+						<div class="clean-price-card__row">
+							<span class="clean-price-card__name">Трёхкомнатной</span>
+							<span class="clean-price-card__value">от 80 руб./м2</span>
+						</div>
 					</div>
-					<div class="cleaning-price-group">
-						<div class="cleaning-price-group__title">Уборка офисов</div>
-						<div class="cleaning-price-row"><span>Уборка офисов</span><span>от 30 ₽/м²</span></div>
-						<div class="cleaning-price-row"><span>Генеральная</span><span>от 90 ₽/м²</span></div>
-						<div class="cleaning-price-row"><span>После ремонта</span><span>от 140 ₽/м²</span></div>
-						<div class="cleaning-price-row"><span>Ежедневная</span><span>от 30 ₽/м²</span></div>
-						<div class="cleaning-price-row"><span>Разовая</span><span>от 30 ₽/м²</span></div>
-						<div class="cleaning-price-row"><span>Утренняя</span><span>от 30 ₽/м²</span></div>
-						<div class="cleaning-price-row"><span>Вечерняя</span><span>от 30 ₽/м²</span></div>
+
+					<!-- правая колонка: две карточки поменьше, суммарно равны левой по высоте -->
+					<div class="clean-prices__col">
+
+						<div class="clean-price-card">
+							<div class="clean-price-card__row clean-price-card__row--head">
+								<span class="clean-price-card__name">Уборка домов</span>
+								<span class="clean-price-card__value">от 80 руб./м2</span>
+							</div>
+							<div class="clean-price-card__row">
+								<span class="clean-price-card__name">После ремонта</span>
+								<span class="clean-price-card__value">от 180 руб./м2</span>
+							</div>
+							<div class="clean-price-card__row">
+								<span class="clean-price-card__name">Коттеджа</span>
+								<span class="clean-price-card__value">от 80 руб./м2</span>
+							</div>
+							<div class="clean-price-card__row">
+								<span class="clean-price-card__name">Таунхауса</span>
+								<span class="clean-price-card__value">от 80 руб./м2</span>
+							</div>
+							<div class="clean-price-card__row">
+								<span class="clean-price-card__name">Дачи</span>
+								<span class="clean-price-card__value">от 80 руб./м2</span>
+							</div>
+						</div>
+
+						<div class="clean-price-card">
+							<div class="clean-price-card__row clean-price-card__row--head">
+								<span class="clean-price-card__name">Уборка офисов</span>
+								<span class="clean-price-card__value">от 30 руб./м2</span>
+							</div>
+							<div class="clean-price-card__row">
+								<span class="clean-price-card__name">Генеральная</span>
+								<span class="clean-price-card__value">от 90 руб./м2</span>
+							</div>
+							<div class="clean-price-card__row">
+								<span class="clean-price-card__name">После ремонта</span>
+								<span class="clean-price-card__value">от 140 руб./м2</span>
+							</div>
+							<div class="clean-price-card__row">
+								<span class="clean-price-card__name">Ежедневная</span>
+								<span class="clean-price-card__value">от 30 руб./м2</span>
+							</div>
+							<div class="clean-price-card__row">
+								<span class="clean-price-card__name">Разовая</span>
+								<span class="clean-price-card__value">от 30 руб./м2</span>
+							</div>
+							<div class="clean-price-card__row">
+								<span class="clean-price-card__name">Утренняя</span>
+								<span class="clean-price-card__value">от 30 руб./м2</span>
+							</div>
+							<div class="clean-price-card__row">
+								<span class="clean-price-card__name">Вечерняя</span>
+								<span class="clean-price-card__value">от 30 руб./м2</span>
+							</div>
+						</div>
+
 					</div>
+
 				</div>
 			</div>
+
 		</div>
 	</section>
 
@@ -518,41 +512,99 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
 		</div>
 	</section>
 
-	<!-- назначить специалиста / скидка ветеранам -->
-	<section class="section section--alt">
+	<!-- бегущая строка: сертификаты (navy, как первая) -->
+	<?php
+	// одна фраза по кругу; повторяется для ширины, ×2 — для бесшовной прокрутки
+	$certMarquee = array_fill(0, 8, "ТОЛЬКО СЕРТИФИЦИРОВАННЫЕ ПРЕПАРАТЫ");
+	?>
+	<div class="marquee">
+		<div class="marquee__track">
+			<?php for ($i = 0; $i < 2; $i++): foreach ($certMarquee as $m): ?>
+			<span class="marquee__item"><?= h($m) ?></span>
+			<span class="marquee__sep" aria-hidden="true">&#8855;</span>
+			<?php endforeach; endfor; ?>
+		</div>
+	</div>
+
+	<!-- сертификаты: карусель сканов. клоны по краям — для бесшовной прокрутки без autoplay -->
+	<section class="section" id="certificates">
 		<div class="container">
-			<div class="veterans">
-				<div class="veterans__text">
-					<strong>Назначить специалиста</strong><br>
-					Ветеранам боевых действий, героям, ликвидаторам радиационных катастроф, ветеранам труда действует скидка.
-				</div>
-				<form class="veterans__form js-form" action="/source/php/order.php" method="post">
-					<input type="hidden" name="source" value="Назначить специалиста">
-					<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-					<input type="text" name="name" placeholder="Ваше имя" required>
-					<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
-					<button type="submit" class="btn btn--accent btn--block">Получить консультацию</button>
-					<div class="form-status" role="status"></div>
-					<div class="form-messengers">
-						<span>Или напишите нам:</span>
-						<a href="<?= h($msg["telegram"]) ?>" aria-label="Telegram"><svg><use href="#i-tg"></use></svg></a>
-						<a href="<?= h($msg["max"]) ?>" aria-label="Max"><svg><use href="#i-max"></use></svg></a>
-						<a href="<?= h($msg["whatsapp"]) ?>" aria-label="WhatsApp"><svg><use href="#i-wa"></use></svg></a>
+			<h2 class="section__title">Наши сертификаты</h2>
+			<div class="certs__carousel">
+				<div class="certs__track js-certs-track">
+
+					<!-- клоны последних 4 карточек — стоят перед реальными для прокрутки влево -->
+					<?php foreach (array(3, 4, 5, 6) as $i): ?>
+					<div class="cert-card" aria-hidden="true" tabindex="-1">
+						<img class="cert-card__img" src="/source/img/certificate/cert_<?= $i ?>.webp" alt="" loading="lazy">
 					</div>
-				</form>
+					<?php endforeach; ?>
+
+					<!-- реальные сертификаты, кликабельны — открывают лайтбокс -->
+					<?php for ($i = 1; $i <= 6; $i++): ?>
+					<button type="button" class="cert-card js-cert-open" data-cert="<?= $i ?>" aria-label="Открыть сертификат №<?= $i ?> увеличенно">
+						<img class="cert-card__img" src="/source/img/certificate/cert_<?= $i ?>.webp" alt="Сертификат №<?= $i ?>" loading="lazy">
+						<span class="cert-card__zoom"><svg aria-hidden="true"><use href="#i-zoom"></use></svg></span>
+					</button>
+					<?php endfor; ?>
+
+					<!-- клоны первых 4 карточек — стоят после реальных для прокрутки вправо -->
+					<?php foreach (array(1, 2, 3, 4) as $i): ?>
+					<div class="cert-card" aria-hidden="true" tabindex="-1">
+						<img class="cert-card__img" src="/source/img/certificate/cert_<?= $i ?>.webp" alt="" loading="lazy">
+					</div>
+					<?php endforeach; ?>
+
+				</div>
+				<div class="certs__nav">
+					<button type="button" class="certs__btn" data-dir="prev" aria-label="Предыдущий сертификат">‹</button>
+					<button type="button" class="certs__btn" data-dir="next" aria-label="Следующий сертификат">›</button>
+				</div>
 			</div>
 		</div>
 	</section>
 
-	<!-- зона обслуживания -->
-	<section class="section">
+	<!-- назначить специалиста / скидка ветеранам · фон с персонажем сквозной -->
+	<section class="section section--specialist">
 		<div class="container">
-			<div class="coverage">
-				<div class="coverage__text">
-					<strong>Наши специалисты выезжают во все районы Москвы и Московской области</strong>
-					Обработка помещений — до 80 км от МКАД. Обработка участков — до 80 км от МКАД.
+			<div class="veterans">
+
+				<!-- левая зона: текст скидки + крупная «15%» -->
+				<div class="veterans__text">
+					<p class="veterans__lead">Ветеранам боевых действий, героям, ликвидаторам радиационных катастроф, ветеранам труда действует скидка</p>
+					<!-- SVG-скидка в фирменном градиенте (без красного донора) -->
+					<svg class="veterans__discount" viewBox="0 0 240 132" role="img" aria-label="Скидка 15 процентов">
+						<defs>
+							<linearGradient id="discount-grad" x1="0" y1="0" x2="1" y2="1">
+								<stop offset="0" stop-color="#81b76a"/>
+								<stop offset="0.55" stop-color="#5b918b"/>
+								<stop offset="1" stop-color="#4880b0"/>
+							</linearGradient>
+						</defs>
+						<text x="120" y="96" text-anchor="middle" font-family="Roboto, Arial, sans-serif" font-size="98" font-weight="800" fill="url(#discount-grad)">15%</text>
+						<text x="120" y="126" text-anchor="middle" font-family="Roboto, Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="8" fill="#5b918b">СКИДКА</text>
+					</svg>
 				</div>
-				<a href="#order" class="btn btn--primary">Оставить заявку</a>
+
+				<!-- правая зона: форма (белая карточка, как у донора) -->
+				<form class="veterans__form js-form" action="/source/php/order.php" method="post">
+					<input type="hidden" name="source" value="Назначить специалиста">
+					<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+					<div class="veterans__form-title">Назначить специалиста</div>
+					<div class="veterans__form-sub">Заполните поля для связи с вами</div>
+					<!-- мессенджеры цветными кружками (наш набор: tg / max / wa) -->
+					<div class="veterans__messengers">
+						<a class="msg-circle msg-circle--tg" href="<?= h($msg["telegram"]) ?>" target="_blank" rel="noopener" aria-label="Telegram"><svg><use href="#i-tg"></use></svg></a>
+						<a class="msg-circle msg-circle--max" href="<?= h($msg["max"]) ?>" target="_blank" rel="noopener" aria-label="Max"><svg><use href="#i-max"></use></svg></a>
+						<a class="msg-circle msg-circle--wa" href="<?= h($msg["whatsapp"]) ?>" target="_blank" rel="noopener" aria-label="WhatsApp"><svg><use href="#i-wa"></use></svg></a>
+					</div>
+					<input type="text" name="name" placeholder="Ваше имя" required>
+					<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
+					<button type="submit" class="btn btn--accent btn--block">Получить консультацию</button>
+					<div class="form-status" role="status"></div>
+					<div class="hero__form-note">Отправляя свои данные, вы соглашаетесь с <a href="/politika/">политикой конфиденциальности</a></div>
+				</form>
+
 			</div>
 		</div>
 	</section>
@@ -623,6 +675,22 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
 		</div>
 	</section>
 
+	<!-- зона обслуживания: карта покрытия + текст с CTA -->
+	<section class="section" id="coverage">
+		<div class="container">
+			<div class="coverage">
+				<!-- карта районов выезда -->
+				<img class="coverage__map" src="/source/img/coverage/map.webp" alt="Карта выезда: Москва и Московская область" width="857" height="896" loading="lazy">
+				<!-- текст + кнопка (открывает поп-ап заявки) -->
+				<div class="coverage__body">
+					<p class="coverage__lead">Наши специалисты выезжают во все районы Москвы и Московской области:</p>
+					<p class="coverage__note">обработка помещений — до 80 км от МКАД<br>обработка участков — до 80 км от МКАД</p>
+					<a href="#" class="btn btn--primary js-order-open">Оставить заявку</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
 	<!-- FAQ -->
 	<section class="section" id="faq">
 		<div class="container">
@@ -668,28 +736,15 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
 		</div>
 	</section>
 
-	<!-- контакты и карта -->
-	<section class="section" id="contacts">
-		<div class="container contacts__grid">
-			<div class="contacts__list">
-				<div class="contacts__phones"><b>Телефоны</b><?php foreach ($phones as $p): ?><a href="tel:<?= h($p["tel"]) ?>"><?= h($p["display"]) ?></a><?php endforeach; ?></div>
-				<div><b>Почта</b><a href="mailto:<?= h($email) ?>"><?= h($email) ?></a></div>
-				<div><b>Адрес</b><?= h($config["address"]) ?></div>
-				<div><b>Лицензия</b><?= h($config["license"]) ?></div>
-				<a href="#order" class="btn btn--primary">Оставить заявку</a>
-			</div>
-			<!-- Яндекс-карта: координаты временные, заменить на адрес офиса -->
-			<div class="contacts__map">
-				<iframe src="https://yandex.ru/map-widget/v1/?ll=37.617700%2C55.755800&amp;z=12" title="Карта — зона обслуживания" loading="lazy" allowfullscreen></iframe>
-			</div>
-		</div>
-	</section>
+	<?php require __DIR__ . "/source/include/footer.html"; ?>
 
-	<!-- заказ -->
-	<section class="section section--alt" id="order">
-		<div class="container">
-			<h2 class="section__title">Оставить заявку на обработку</h2>
-			<form class="hero__form order__form js-form" action="/source/php/order.php" method="post">
+	<!-- поп-ап заявки (заменил секцию #order; открывается со всех кнопок «Заказать»/«Оставить заявку») -->
+	<div class="modal" id="order-modal" aria-hidden="true">
+		<div class="modal__overlay" data-modal-close></div>
+		<div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="order-modal-title">
+			<button type="button" class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
+			<h2 class="modal__title" id="order-modal-title">Оставить заявку на обработку</h2>
+			<form class="hero__form js-form" action="/source/php/order.php" method="post">
 				<input type="hidden" name="source" value="Заявка на обработку">
 				<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
 				<input type="text" name="name" placeholder="Ваше имя" required>
@@ -700,94 +755,26 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
 				<div class="hero__form-note">Отправляя свои данные, вы соглашаетесь с <a href="/politika/">политикой конфиденциальности</a></div>
 			</form>
 		</div>
-	</section>
+	</div>
 
-	<!-- футер по образцу topol-eco.ru -->
-	<footer class="footer">
-		<div class="container">
-			<div class="footer__columns">
-				<div class="footer__col">
-					<div class="footer__col-title">О компании</div>
-					<ul>
-						<li><a href="#process">Порядок обработки</a></li>
-						<li><a href="#methods">Методы обработки</a></li>
-						<li><a href="/politika/">Политика конфиденциальности</a></li>
-					</ul>
-				</div>
-				<div class="footer__col">
-					<div class="footer__col-title">Обработки</div>
-					<ul>
-						<li><a href="/tarakany/">Тараканы</a></li>
-						<li><a href="/klopy/">Клопы</a></li>
-						<li><a href="/kleshchi/">Клещи</a></li>
-						<li><a href="/komary/">Комары</a></li>
-						<li><a href="/gryzuny/">Грызуны</a></li>
-						<li><a href="/plesen/">Плесень</a></li>
-					</ul>
-				</div>
-				<div class="footer__col">
-					<div class="footer__col-title">Цены</div>
-					<ul>
-						<li><a href="#prices">Цены на услуги</a></li>
-						<li><a href="#cleaning">Клининг</a></li>
-						<li><a href="#faq">Частые вопросы</a></li>
-						<li><a href="#reviews">Отзывы</a></li>
-					</ul>
-				</div>
-				<div class="footer__col">
-					<div class="footer__col-title">Пользователям</div>
-					<ul>
-						<li><a href="#order">Заказать онлайн</a></li>
-						<li><a href="#contacts">Контакты</a></li>
-					</ul>
-				</div>
-				<div class="footer__col">
-					<div class="footer__col-title">Контакты</div>
-					<ul>
-						<?php foreach ($phones as $p): ?>
-						<li><a href="tel:<?= h($p["tel"]) ?>"><?= h($p["display"]) ?></a></li>
-						<?php endforeach; ?>
-						<li><a href="mailto:<?= h($email) ?>"><?= h($email) ?></a></li>
-						<li><?= h($config["address"]) ?></li>
-					</ul>
-				</div>
-			</div>
-
-			<div class="footer__brand">
-				<div>
-					<div class="footer__brand-name">МосКомДез</div>
-					<div class="footer__brand-legal">
-						Региональная служба дезинфекции. ИП Мунтаниол А.Ю., ИНН 391103958473.<br>
-						Номер лицензии: 77.00165.0.25 (ЕРУЛ № Л04-00111-70197).
-					</div>
-				</div>
-				<!-- CTA + иконки оплаты под кнопкой -->
-				<div class="footer__order">
-					<a href="#order" class="btn btn--accent">Заказать онлайн</a>
-					<div class="footer__pay">
-						<svg class="pay-icon" aria-label="СБП"><use href="#i-sbp"></use></svg>
-						<svg class="pay-icon" aria-label="Мир"><use href="#i-mir"></use></svg>
-						<svg class="pay-icon" aria-label="Visa"><use href="#i-visa"></use></svg>
-						<svg class="pay-icon pay-icon--mc" aria-label="Mastercard"><use href="#i-mc"></use></svg>
-					</div>
-				</div>
-			</div>
-
-			<!-- соцсети отдельным блоком -->
-			<div class="footer__socials">
-				<span class="footer__col-title">Мы в соцсетях</span>
-				<div class="footer__social">
-					<a href="<?= h($msg["telegram"]) ?>" aria-label="Telegram"><svg><use href="#i-tg"></use></svg></a>
-					<a href="<?= h($msg["max"]) ?>" aria-label="Max"><svg><use href="#i-max"></use></svg></a>
-				</div>
-			</div>
-
-			<div class="footer__bottom">
-				<div>© 2026 Региональная служба дезинфекции. Все права защищены.</div>
-				<a href="/politika/">Политика конфиденциальности</a>
-			</div>
+	<!-- лайтбокс сертификатов: увеличенный просмотр по клику на карточку -->
+	<div class="lightbox" id="cert-lightbox" aria-hidden="true">
+		<div class="lightbox__overlay" data-modal-close></div>
+		<div class="lightbox__dialog">
+			<button type="button" class="lightbox__close" data-modal-close aria-label="Закрыть">&times;</button>
+			<img class="lightbox__img" src="" alt="">
 		</div>
-	</footer>
+	</div>
+
+	<!-- плавающая кнопка «Заказать звонок»: открывает поп-ап заявки -->
+	<button type="button" class="fab fab--call js-order-open" aria-label="Заказать звонок">
+		<svg aria-hidden="true"><use href="#i-phone"></use></svg>
+	</button>
+
+	<!-- кнопка «наверх»: появляется после первого экрана (логика в main.js) -->
+	<button type="button" class="fab fab--top" aria-label="Наверх">
+		<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 19V6M6 12l6-6 6 6"/></svg>
+	</button>
 
 	<script src="/source/js/main.js"></script>
 </body>

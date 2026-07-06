@@ -1,6 +1,4 @@
-/brief.txt
 .DS_Store
-/references
 
 # секреты и реальные контактные данные (создаётся из config.sample.php)
 /source/php/config.php

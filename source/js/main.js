@@ -90,8 +90,9 @@ document.addEventListener("DOMContentLoaded", function () {
 			var status = form.querySelector(".form-status");
 			var digits = phone ? phone.value.replace(/\D/g, "") : "";
 
-			// имя обязательно, если поле есть в форме
-			if (name && name.value.trim() === "") {
+			// имя обязательно, если поле есть и форма не помечена как name_optional
+			var nameOptional = form.querySelector("input[name=name_optional]");
+			if (name && !nameOptional && name.value.trim() === "") {
 				setStatus(status, "Введите ваше имя", "error");
 				name.focus();
 				return;
@@ -162,5 +163,143 @@ document.addEventListener("DOMContentLoaded", function () {
 		carousel.addEventListener("mouseleave", play);
 		track.addEventListener("touchstart", stop, { passive: true });
 		play();
+	}
+
+	// ===== поп-ап заявки (открывается со всех .js-order-open) =====
+	var orderModal = document.getElementById("order-modal");
+	if (orderModal) {
+		function openModal() {
+			orderModal.classList.add("is-open");
+			orderModal.setAttribute("aria-hidden", "false");
+			document.body.classList.add("modal-open");
+			// фокус на первое поле для удобства
+			var first = orderModal.querySelector("input[name=name]");
+			if (first) { first.focus(); }
+		}
+		function closeModal() {
+			orderModal.classList.remove("is-open");
+			orderModal.setAttribute("aria-hidden", "true");
+			document.body.classList.remove("modal-open");
+		}
+
+		// открытие: любая кнопка-триггер
+		document.querySelectorAll(".js-order-open").forEach(function (el) {
+			el.addEventListener("click", function (e) {
+				e.preventDefault();
+				openModal();
+			});
+		});
+
+		// закрытие: крестик и клик по затемнению
+		orderModal.querySelectorAll("[data-modal-close]").forEach(function (el) {
+			el.addEventListener("click", closeModal);
+		});
+
+		// закрытие по Esc
+		document.addEventListener("keydown", function (e) {
+			if (e.key === "Escape" && orderModal.classList.contains("is-open")) {
+				closeModal();
+			}
+		});
+	}
+
+	// ===== карусель сертификатов: скролл + клоны по краям для бесшовной прокрутки =====
+	var certsTrack = document.querySelector(".js-certs-track");
+	if (certsTrack) {
+		var certsCarousel = certsTrack.closest(".certs__carousel");
+		var CERTS_CLONE = 4; // клонов с каждой стороны
+		var CERTS_REAL = 6;  // реальных сертификатов
+
+		function certStep() {
+			var card = certsTrack.querySelector(".cert-card");
+			if (!card) { return certsTrack.clientWidth; }
+			var gap = parseInt(getComputedStyle(certsTrack).columnGap || getComputedStyle(certsTrack).gap || "20", 10);
+			return card.offsetWidth + (isNaN(gap) ? 20 : gap);
+		}
+
+		// стартуем на первой настоящей карточке (после клонов слева), без анимации
+		function certsSetPosition(index) {
+			certsTrack.style.scrollBehavior = "auto";
+			certsTrack.scrollLeft = index * certStep();
+			certsTrack.style.scrollBehavior = "";
+		}
+		certsSetPosition(CERTS_CLONE);
+		window.addEventListener("resize", function () { certsSetPosition(CERTS_CLONE); });
+
+		// после остановки скролла — если заехали в зону клонов, бесшовно телепортируем на реальную позицию
+		var certsSettleTimer = null;
+		certsTrack.addEventListener("scroll", function () {
+			clearTimeout(certsSettleTimer);
+			certsSettleTimer = setTimeout(function () {
+				var step = certStep();
+				var index = Math.round(certsTrack.scrollLeft / step);
+				if (index < CERTS_CLONE) {
+					certsSetPosition(index + CERTS_REAL);
+				} else if (index >= CERTS_CLONE + CERTS_REAL) {
+					certsSetPosition(index - CERTS_REAL);
+				}
+			}, 120);
+		}, { passive: true });
+
+		certsCarousel.querySelectorAll(".certs__btn").forEach(function (btn) {
+			btn.addEventListener("click", function () {
+				var dir = btn.dataset.dir === "prev" ? -1 : 1;
+				certsTrack.scrollBy({ left: dir * certStep(), behavior: "smooth" });
+			});
+		});
+	}
+
+	// ===== лайтбокс сертификатов: увеличенный просмотр по клику =====
+	var certLightbox = document.getElementById("cert-lightbox");
+	if (certLightbox) {
+		var certLightboxImg = certLightbox.querySelector(".lightbox__img");
+
+		function openCertLightbox(num) {
+			certLightboxImg.src = "/source/img/certificate/cert_" + num + "_full.webp";
+			certLightboxImg.alt = "Сертификат №" + num;
+			certLightbox.classList.add("is-open");
+			certLightbox.setAttribute("aria-hidden", "false");
+			document.body.classList.add("modal-open");
+		}
+		function closeCertLightbox() {
+			certLightbox.classList.remove("is-open");
+			certLightbox.setAttribute("aria-hidden", "true");
+			document.body.classList.remove("modal-open");
+			certLightboxImg.src = "";
+		}
+
+		document.querySelectorAll(".js-cert-open").forEach(function (btn) {
+			btn.addEventListener("click", function () {
+				openCertLightbox(btn.dataset.cert);
+			});
+		});
+
+		certLightbox.querySelectorAll("[data-modal-close]").forEach(function (el) {
+			el.addEventListener("click", closeCertLightbox);
+		});
+
+		document.addEventListener("keydown", function (e) {
+			if (e.key === "Escape" && certLightbox.classList.contains("is-open")) {
+				closeCertLightbox();
+			}
+		});
+	}
+
+	// ===== кнопка «наверх»: показ после первого экрана + плавный скролл =====
+	var toTop = document.querySelector(".fab--top");
+	if (toTop) {
+		function toggleTop() {
+			if (window.scrollY > window.innerHeight) {
+				toTop.classList.add("is-visible");
+			} else {
+				toTop.classList.remove("is-visible");
+			}
+		}
+		window.addEventListener("scroll", toggleTop, { passive: true });
+		toggleTop();
+
+		toTop.addEventListener("click", function () {
+			window.scrollTo({ top: 0, behavior: "smooth" });
+		});
 	}
 });
