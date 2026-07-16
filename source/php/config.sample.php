@@ -3,6 +3,9 @@
 // config.php исключён из git (см. .gitignore).
 
 return array(
+	// базовый адрес сайта без хвостового слеша — для canonical и sitemap
+	"site_url" => "https://dezinhelp.ru",
+
 	// телефоны (публичные — выводятся на странице)
 	"phones" => array(
 		array("display" => "+7 (000) 000-00-00", "tel" => "+70000000000"),

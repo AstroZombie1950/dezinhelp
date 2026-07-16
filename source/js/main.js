@@ -203,6 +203,51 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	}
 
+	// ===== слайдер услуг: скролл + клоны по краям, механика как у сертификатов =====
+	var srvTrack = document.querySelector(".js-srv-track");
+	if (srvTrack) {
+		var srvCarousel = srvTrack.closest(".srv__carousel");
+		var SRV_CLONE = parseInt(srvTrack.dataset.clone, 10); // клонов с каждой стороны
+		var SRV_REAL = parseInt(srvTrack.dataset.real, 10);   // реальных карточек
+
+		function srvStep() {
+			var card = srvTrack.querySelector(".srv-card");
+			if (!card) { return srvTrack.clientWidth; }
+			var gap = parseInt(getComputedStyle(srvTrack).columnGap || getComputedStyle(srvTrack).gap || "20", 10);
+			return card.offsetWidth + (isNaN(gap) ? 20 : gap);
+		}
+
+		// стартуем на первой настоящей карточке (после клонов слева), без анимации
+		function srvSetPosition(index) {
+			srvTrack.style.scrollBehavior = "auto";
+			srvTrack.scrollLeft = index * srvStep();
+			srvTrack.style.scrollBehavior = "";
+		}
+		srvSetPosition(SRV_CLONE);
+		window.addEventListener("resize", function () { srvSetPosition(SRV_CLONE); });
+
+		// после остановки скролла — если заехали в зону клонов, бесшовно телепортируем на реальную позицию
+		var srvSettleTimer = null;
+		srvTrack.addEventListener("scroll", function () {
+			clearTimeout(srvSettleTimer);
+			srvSettleTimer = setTimeout(function () {
+				var index = Math.round(srvTrack.scrollLeft / srvStep());
+				if (index < SRV_CLONE) {
+					srvSetPosition(index + SRV_REAL);
+				} else if (index >= SRV_CLONE + SRV_REAL) {
+					srvSetPosition(index - SRV_REAL);
+				}
+			}, 120);
+		}, { passive: true });
+
+		srvCarousel.querySelectorAll(".srv__btn").forEach(function (btn) {
+			btn.addEventListener("click", function () {
+				var dir = btn.dataset.dir === "prev" ? -1 : 1;
+				srvTrack.scrollBy({ left: dir * srvStep(), behavior: "smooth" });
+			});
+		});
+	}
+
 	// ===== карусель сертификатов: скролл + клоны по краям для бесшовной прокрутки =====
 	var certsTrack = document.querySelector(".js-certs-track");
 	if (certsTrack) {

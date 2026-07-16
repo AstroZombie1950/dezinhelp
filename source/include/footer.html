@@ -1,4 +1,4 @@
-<!-- Подвал. Подключается через include. Нужны $config, $phones, $email, $msg, h() из config.php -->
+<!-- Подвал. Подключается через include. Нужны $config, $phones, $email, $msg, h() из config.php и $footerServices из data.php -->
 	<!-- футер по образцу topol-eco.ru -->
 	<footer class="footer">
 		<div class="container">
@@ -6,28 +6,25 @@
 				<div class="footer__col">
 					<div class="footer__col-title">О компании</div>
 					<ul>
-						<li><a href="#process">Порядок обработки</a></li>
-						<li><a href="#methods">Методы обработки</a></li>
+						<li><a href="/#process">Порядок обработки</a></li>
+						<li><a href="/#methods">Методы обработки</a></li>
 						<li><a href="/politika/">Политика конфиденциальности</a></li>
 					</ul>
 				</div>
 				<div class="footer__col">
 					<div class="footer__col-title">Обработки</div>
 					<ul>
-						<li><a href="/tarakany/">Тараканы</a></li>
-						<li><a href="/klopy/">Клопы</a></li>
-						<li><a href="/kleshchi/">Клещи</a></li>
-						<li><a href="/komary/">Комары</a></li>
-						<li><a href="/gryzuny/">Грызуны</a></li>
-						<li><a href="/plesen/">Плесень</a></li>
+						<?php foreach ($footerServices as $s): ?>
+						<li><a href="/<?= h($s["slug"]) ?>/"><?= h($s["name"]) ?></a></li>
+						<?php endforeach; ?>
 					</ul>
 				</div>
 				<div class="footer__col">
 					<div class="footer__col-title">Цены</div>
 					<ul>
-						<li><a href="#prices">Цены на услуги</a></li>
-						<li><a href="#faq">Частые вопросы</a></li>
-						<li><a href="#reviews">Отзывы</a></li>
+						<li><a href="/#prices">Цены на услуги</a></li>
+						<li><a href="/#faq">Частые вопросы</a></li>
+						<li><a href="/#reviews">Отзывы</a></li>
 					</ul>
 				</div>
 				<div class="footer__col">

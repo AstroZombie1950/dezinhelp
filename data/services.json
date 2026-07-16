@@ -1,0 +1,40 @@
+{
+	"groups": [
+		{ "id": "insects-home", "title": "Насекомые в доме" },
+		{ "id": "outdoor", "title": "Участок и сад" },
+		{ "id": "rodents", "title": "Грызуны и кроты" },
+		{ "id": "cleaning", "title": "Уборка и дезинфекция" }
+	],
+	"services": [
+		{ "name": "Избавиться от тараканов", "slug": "obrabotka-ot-tarakanov", "group": "insects-home", "visible": true , "footer": true },
+		{ "name": "Обработка от клопов", "slug": "obrabotka-ot-klopov", "group": "insects-home", "visible": true , "footer": true },
+		{ "name": "Избавиться от муравьев", "slug": "izbavitsya-ot-muravev", "group": "insects-home", "visible": true },
+		{ "name": "Избавиться от мух", "slug": "izbavitsya-ot-muh", "group": "insects-home", "visible": true },
+		{ "name": "Избавиться от мошек в доме", "slug": "izbavitsya-ot-moshek-v-dome", "group": "insects-home", "visible": true },
+		{ "name": "Вывести моль", "slug": "vyvesti-mol", "group": "insects-home", "visible": true },
+		{ "name": "Избавиться от блох", "slug": "izbavitsya-ot-bloh", "group": "insects-home", "visible": true },
+		{ "name": "Избавиться от вшей", "slug": "izbavitsya-ot-vshey", "group": "insects-home", "visible": true },
+		{ "name": "Уничтожение насекомых", "slug": "unichtozhenie-nasekomyh", "group": "insects-home", "visible": true },
+
+		{ "name": "Обработка от клещей", "slug": "obrabotka-ot-kleshchey", "group": "outdoor", "visible": true , "footer": true },
+		{ "name": "Обработка от комаров", "slug": "obrabotka-ot-komarov", "group": "outdoor", "visible": true , "footer": true },
+		{ "name": "Избавиться от ос", "slug": "izbavitsya-ot-os", "group": "outdoor", "visible": true },
+		{ "name": "Избавиться от шершней", "slug": "izbavitsya-ot-shershney", "group": "outdoor", "visible": true },
+		{ "name": "Обработка от короеда", "slug": "obrabotka-ot-koroeda", "group": "outdoor", "visible": true },
+		{ "name": "Избавиться от слизней", "slug": "izbavitsya-ot-slizney", "group": "outdoor", "visible": true },
+		{ "name": "Уничтожение борщевика", "slug": "unichtozhenie-borshchevika", "group": "outdoor", "visible": true },
+		{ "name": "Обработка от мха", "slug": "obrabotka-ot-mha", "group": "outdoor", "visible": true },
+		{ "name": "Лечение деревьев", "slug": "lechenie-derevev", "group": "outdoor", "visible": true },
+
+		{ "name": "Избавиться от крыс", "slug": "izbavitsya-ot-krys", "group": "rodents", "visible": true , "footer": true },
+		{ "name": "Избавиться от мышей", "slug": "izbavitsya-ot-myshey", "group": "rodents", "visible": true },
+		{ "name": "Избавиться от кротов", "slug": "izbavitsya-ot-krotov", "group": "rodents", "visible": true },
+
+		{ "name": "Уборка после затопления", "slug": "uborka-posle-zatopleniya", "group": "cleaning", "visible": true },
+		{ "name": "Уборка после смерти", "slug": "uborka-posle-smerti", "group": "cleaning", "visible": true },
+		{ "name": "Удаление запахов", "slug": "udalenie-zapahov", "group": "cleaning", "visible": true },
+		{ "name": "Обработка от плесени", "slug": "obrabotka-ot-pleseni", "group": "cleaning", "visible": true , "footer": true },
+		{ "name": "Озонирование помещения", "slug": "ozonirovanie-pomeshcheniya", "group": "cleaning", "visible": true },
+		{ "name": "Демеркуризация", "slug": "demerkurizatsiya", "group": "cleaning", "visible": true }
+	]
+}

@@ -165,6 +165,7 @@ button {
 }
 
 .header__row {
+	position: relative;
 	display: flex;
 	align-items: center;
 	gap: 20px;
@@ -213,8 +214,9 @@ button {
 	color: var(--color-primary);
 }
 
+/* якорь подменю — вся шапка (см. .header__row), чтобы широкая панель не выезжала за край */
 .nav__item--dropdown {
-	position: relative;
+	position: static;
 }
 
 .nav__toggle {
@@ -242,20 +244,34 @@ button {
 .nav__submenu {
 	display: none;
 	position: absolute;
-	top: 100%;
+	top: 84px;
 	left: 50%;
 	transform: translateX(-50%);
-	min-width: 260px;
+	width: max-content;
+	max-width: 100%;
 	background: var(--color-bg-dark);
 	border-radius: var(--radius-sm);
-	padding: 12px;
+	padding: 20px;
 	box-shadow: var(--shadow-hover);
-	columns: 2;
-	column-gap: 8px;
+	grid-template-columns: repeat(4, minmax(180px, 1fr));
+	gap: 8px 20px;
+	text-align: left;
 }
 
 .nav__item--dropdown.is-open .nav__submenu {
-	display: block;
+	display: grid;
+}
+
+/* заголовок колонки — подпись, не ссылка: страниц категорий нет */
+.nav__group-title {
+	font-size: 12px;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: 0.6px;
+	color: var(--color-primary);
+	padding: 4px 10px 8px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+	margin-bottom: 6px;
 }
 
 .nav__submenu-link {
@@ -264,7 +280,6 @@ button {
 	font-size: 14px;
 	color: var(--color-text-on-dark);
 	border-radius: 6px;
-	break-inside: avoid;
 }
 
 .nav__submenu-link:hover {
@@ -1147,13 +1162,31 @@ button {
 
 
 /* ===== цены: карточки прайса (сетка, данные донора, наш визуал) ===== */
-.price__cards {
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 20px;
+/* ===== слайдер услуг на главной (механика та же, что у сертификатов) ===== */
+.srv__carousel {
+	position: relative;
 }
 
-.price-card {
+.srv__track {
+	display: flex;
+	gap: 20px;
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	scroll-behavior: smooth;
+	padding-bottom: 4px;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+	align-items: stretch;
+}
+
+.srv__track::-webkit-scrollbar {
+	display: none;
+}
+
+/* 4 целых карточки в ряд; в адаптиве — 3 / 2 / 1, полукарточек по краям не показываем */
+.srv-card {
+	flex: 0 0 calc((100% - 60px) / 4);
+	scroll-snap-align: start;
 	background: #fff;
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius);
@@ -1163,20 +1196,20 @@ button {
 	transition: box-shadow 0.15s ease, transform 0.15s ease;
 }
 
-.price-card:hover {
+.srv-card:hover {
 	box-shadow: var(--shadow);
 	transform: translateY(-2px);
 }
 
-/* фото-шапка карточки (пока заглушки из наших фото клининга) */
-.price-card__img {
+/* фото-шапка карточки */
+.srv-card__img {
 	aspect-ratio: 4 / 3;
 	background-color: #dbe6ee;
 	background-size: cover;
 	background-position: center;
 }
 
-.price-card__body {
+.srv-card__body {
 	padding: 20px 18px;
 	display: flex;
 	flex-direction: column;
@@ -1184,7 +1217,7 @@ button {
 }
 
 /* заголовок: категория + подкатегория, зелёный капс (как у донора) */
-.price-card__title {
+.srv-card__title {
 	text-align: center;
 	font-size: 17px;
 	font-weight: 800;
@@ -1193,12 +1226,12 @@ button {
 	margin-bottom: 16px;
 }
 
-.price-card__title span {
+.srv-card__title span {
 	display: block;
 }
 
 /* список цен — тянется, чтобы «от» и кнопки прижались вниз и выровнялись по ряду */
-.price-card__list {
+.srv-card__list {
 	flex: 1;
 	display: flex;
 	flex-direction: column;
@@ -1210,7 +1243,7 @@ button {
 }
 
 /* итоговое «от N ₽» — нашим синим вместо оранжевого донора */
-.price-card__from {
+.srv-card__from {
 	text-align: center;
 	font-size: 20px;
 	font-weight: 800;
@@ -1218,60 +1251,62 @@ button {
 	margin-bottom: 16px;
 }
 
-/* две кнопки в ряд, прижаты к низу */
-.price-card__actions {
+/* кнопки в ряд, прижаты к низу; если у карточки нет ссылки — «Заказать» на всю ширину */
+.srv-card__actions {
 	display: flex;
 	gap: 10px;
 }
 
-.price-card__actions .btn {
+.srv-card__actions .btn {
 	flex: 1;
 	padding-left: 12px;
 	padding-right: 12px;
 }
 
-/* ===== цены на клининг: доп. блок (высокая таблица + две поменьше) ===== */
-.clean-prices-wrap {
+.srv__nav {
+	display: flex;
+	justify-content: center;
+	gap: 12px;
+	margin-top: 24px;
+}
+
+/* ===== прайс: подразделы в двух колонках (левая шире) ===== */
+.price-table-wrap {
 	margin-top: 48px;
 }
 
-.clean-prices__title {
+.price-table__title {
 	font-size: 22px;
 	font-weight: 800;
 	margin-bottom: 20px;
 }
 
-/* левая колонка (высокая карточка) + правая колонка (две карточки), одной суммарной высоты */
-.clean-prices {
+.price-table {
 	display: grid;
 	grid-template-columns: 2fr 1fr;
 	gap: 20px;
 	align-items: stretch;
 }
 
-/* правая колонка: две карточки делят высоту левой пополам */
-.clean-prices__col {
+/* колонка тянется на всю высоту ряда, карточки внутри делят её между собой */
+.price-table__col {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
 }
 
-.clean-price-card {
+.price-table__card {
 	background: #fff;
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius);
 	padding: 4px 28px;
 	display: flex;
 	flex-direction: column;
-}
-
-/* карточки в правой колонке растягиваются, чтобы вдвоём сравняться с левой по высоте */
-.clean-prices__col .clean-price-card {
 	flex: 1;
 	justify-content: center;
 }
 
-.clean-price-card__row {
+.price-table__row {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -1280,23 +1315,22 @@ button {
 	border-bottom: 1px solid var(--color-border);
 }
 
-.clean-price-card__row:last-child {
+.price-table__row:last-child {
 	border-bottom: none;
 }
 
-.clean-price-card__name {
+.price-table__name {
 	font-size: 15px;
 }
 
-.clean-price-card__value {
+.price-table__value {
 	font-size: 15px;
 	font-weight: 700;
 	white-space: nowrap;
 }
 
-/* первая строка карточки — категория целиком жирным (как у донора) */
-.clean-price-card__row--head .clean-price-card__name,
-.clean-price-card__row--head .clean-price-card__value {
+/* шапка подраздела — только название, цены справа нет */
+.price-table__row--head .price-table__name {
 	font-weight: 800;
 }
 
@@ -1405,7 +1439,8 @@ button {
 }
 
 .reviews__btn,
-.certs__btn {
+.certs__btn,
+.srv__btn {
 	width: 44px;
 	height: 44px;
 	border-radius: 50%;
@@ -1421,7 +1456,8 @@ button {
 }
 
 .reviews__btn:hover,
-.certs__btn:hover {
+.certs__btn:hover,
+.srv__btn:hover {
 	background: var(--color-primary);
 	color: #fff;
 	border-color: var(--color-primary);
@@ -1713,6 +1749,45 @@ body.modal-open {
 	}
 }
 
+/* ===== страница 404 ===== */
+.e404 {
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	background: var(--gradient-brand);
+	color: #fff;
+}
+
+.e404__code {
+	font-size: clamp(80px, 18vw, 180px);
+	font-weight: 800;
+	line-height: 1;
+	letter-spacing: -0.03em;
+}
+
+.e404__title {
+	margin: 16px 0 8px;
+	font-size: clamp(22px, 4vw, 32px);
+	font-weight: 700;
+}
+
+.e404__text {
+	margin: 0 0 28px;
+	opacity: 0.9;
+}
+
+/* на градиенте акцентная кнопка сливается — делаем её белой */
+.e404 .btn--accent {
+	background: #fff;
+	color: var(--color-text);
+}
+
+.e404 .btn--accent:hover {
+	background: var(--color-bg-alt);
+	color: var(--color-text);
+}
+
 /* ===== адаптив ===== */
 
 /* --- шапка: 6 пунктов меню, полное меню только когда есть место; ниже — бургер (≤1200) --- */
@@ -1750,25 +1825,35 @@ body.modal-open {
 		color: var(--color-text-on-dark);
 	}
 
-	/* подменю в потоке, плавно раскрывается по max-height */
+	/* подменю в потоке, плавно раскрывается по max-height; группы друг под другом */
 	.nav__submenu,
 	.nav__item--dropdown.is-open .nav__submenu {
 		display: block;
 		position: static;
 		transform: none;
 		box-shadow: none;
-		columns: 1;
+		width: auto;
+		max-width: none;
 		background: rgba(255, 255, 255, 0.04);
 		border-radius: 6px;
 		padding: 0 12px;
 		max-height: 0;
 		overflow: hidden;
-		transition: max-height 0.3s ease, padding 0.3s ease;
+		transition: max-height 0.4s ease, padding 0.4s ease;
 	}
 
 	.nav__item--dropdown.is-open .nav__submenu {
-		max-height: 720px;
+		max-height: 2000px;
 		padding: 8px 12px;
+	}
+
+	.nav__group + .nav__group {
+		margin-top: 12px;
+	}
+
+	/* слайдер услуг: 3 целые карточки */
+	.srv-card {
+		flex-basis: calc((100% - 40px) / 3);
 	}
 
 	/* телефоны по центру между лого и бургером */
@@ -1833,17 +1918,17 @@ body.modal-open {
 		margin-right: auto;
 	}
 
-	/* сетки на шаг у́же */
-	.price__cards {
-		grid-template-columns: repeat(2, 1fr);
+	/* слайдер услуг: 2 целые карточки */
+	.srv-card {
+		flex-basis: calc((100% - 20px) / 2);
 	}
 
-	/* клининг: колонки друг под другом, высоты больше не выравниваем */
-	.clean-prices {
+	/* прайс: колонки друг под другом, высоты больше не выравниваем */
+	.price-table {
 		grid-template-columns: 1fr;
 	}
 
-	.clean-prices__col .clean-price-card {
+	.price-table__card {
 		flex: none;
 	}
 
@@ -1881,9 +1966,9 @@ body.modal-open {
 		font-size: 32px;
 	}
 
-	/* карточки цен в одну колонку — по две тесно на узких планшетах */
-	.price__cards {
-		grid-template-columns: 1fr;
+	/* слайдер услуг: одна карточка на экран — по две тесно на узких планшетах */
+	.srv-card {
+		flex-basis: 100%;
 	}
 
 	/* шаги и методы в столбик */

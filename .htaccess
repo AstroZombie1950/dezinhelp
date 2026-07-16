@@ -1,0 +1,80 @@
+# Кодировка по умолчанию
+AddDefaultCharset UTF-8
+
+# Своя страница 404 — для всего, что не поймал роутер
+ErrorDocument 404 /404.php
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+
+	# --- Закрываем служебное от прямого доступа ---
+	# /data — контент страниц и прайс, наружу отдавать незачем
+	# /source/php — конфиг и хелперы
+	RewriteRule ^data/ - [F,L]
+	RewriteRule ^source/php/ - [F,L]
+
+	# --- Роутинг страниц услуг ---
+	# /index.php — дубль главной, уводим на / (THE_REQUEST смотрит исходный
+	# запрос, поэтому внутренний DirectoryIndex под правило не попадает)
+	RewriteCond %{THE_REQUEST} \s/+index\.php[\s?] [NC]
+	RewriteRule ^ / [R=301,L]
+
+	# карта сайта генерится PHP, но отдаём её по привычному адресу
+	RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
+	# реальные файлы и папки отдаём как есть, роутер их не трогает
+	RewriteCond %{REQUEST_FILENAME} -f [OR]
+	RewriteCond %{REQUEST_FILENAME} -d
+	RewriteRule ^ - [L]
+
+	# зарезервированные пути мимо роутера: слагом услуги стать не могут
+	RewriteRule ^(admin|source|data|contacts|politika)(/|$) - [L]
+
+	# /<slug>/ и /<slug> уходят в шаблон; нижний регистр и хвостовой слеш
+	# доводит сам service.php — он же знает канонический адрес
+	RewriteRule ^([A-Za-z0-9-]+)/?$ service.php?slug=$1 [QSA,L]
+</IfModule>
+
+# Подстраховка на случай выключенного mod_rewrite
+<FilesMatch "\.(json|sample\.php)$">
+	<IfModule mod_authz_core.c>
+		Require all denied
+	</IfModule>
+	<IfModule !mod_authz_core.c>
+		Order allow,deny
+		Deny from all
+	</IfModule>
+</FilesMatch>
+
+# Листинг папок запрещаем
+Options -Indexes
+
+# --- Сжатие ---
+<IfModule mod_deflate.c>
+	AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+	AddOutputFilterByType DEFLATE application/javascript application/x-javascript
+	AddOutputFilterByType DEFLATE application/json application/xml
+	AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# --- Кэш статики ---
+# картинки и шрифты меняются редко — год; css/js — месяц (при правках меняем имя или ?v=)
+<IfModule mod_expires.c>
+	ExpiresActive On
+	ExpiresByType image/webp "access plus 1 year"
+	ExpiresByType image/jpeg "access plus 1 year"
+	ExpiresByType image/png "access plus 1 year"
+	ExpiresByType image/svg+xml "access plus 1 year"
+	ExpiresByType image/x-icon "access plus 1 year"
+	ExpiresByType font/woff2 "access plus 1 year"
+	ExpiresByType text/css "access plus 1 month"
+	ExpiresByType application/javascript "access plus 1 month"
+	ExpiresDefault "access plus 2 days"
+</IfModule>
+
+# HTML не кэшируем: страницы собираются из JSON и меняются через админку
+<IfModule mod_headers.c>
+	<FilesMatch "\.(php|html)$">
+		Header set Cache-Control "no-cache, must-revalidate"
+	</FilesMatch>
+</IfModule>

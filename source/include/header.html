@@ -1,4 +1,4 @@
-<!-- Шапка + SVG-спрайт. Подключается через include в index.php и на подстраницах. Нужны $phones, $msg, h() из config.php -->
+<!-- Шапка + SVG-спрайт. Подключается через include в index.php и на подстраницах. Нужны $phones, $msg, h() из config.php и $servicesData из data.php -->
 	<!-- SVG-спрайт: иконки соцсетей, оплаты и типов объектов -->
 	<svg class="svg-sprite" aria-hidden="true" focusable="false">
 		<!-- мессенджеры / соцсети (монохром) -->
@@ -38,36 +38,28 @@
 			<!-- меню (центр на десктопе, бургер-панель на мобиле) -->
 			<nav class="nav">
 				<ul class="nav__list">
-					<li class="nav__item"><a class="nav__link" href="#prices">Цены</a></li>
+					<li class="nav__item"><a class="nav__link" href="/#prices">Цены</a></li>
 					<li class="nav__item"><a class="nav__link" href="#">Гарантия</a></li>
-					<li class="nav__item"><a class="nav__link" href="#methods">Типы обработок</a></li>
+					<li class="nav__item"><a class="nav__link" href="/#methods">Типы обработок</a></li>
 					<li class="nav__item nav__item--dropdown">
 						<button type="button" class="nav__toggle">
 							Обработки
 							<span class="nav__toggle-arrow"></span>
 						</button>
 						<div class="nav__submenu">
-							<a class="nav__submenu-link" href="/tarakany/">Тараканы</a>
-							<a class="nav__submenu-link" href="/klopy/">Клопы</a>
-							<a class="nav__submenu-link" href="/komary/">Комары</a>
-							<a class="nav__submenu-link" href="/kleshchi/">Клещи</a>
-							<a class="nav__submenu-link" href="/zapah/">Запах</a>
-							<a class="nav__submenu-link" href="/plesen/">Плесень</a>
-							<a class="nav__submenu-link" href="/gryzuny/">Кроты</a>
-							<a class="nav__submenu-link" href="/gryzuny/">Крысы, мыши</a>
-							<a class="nav__submenu-link" href="/sushka/">Сушка дома</a>
-							<a class="nav__submenu-link" href="/muravyi/">Муравьи</a>
-							<a class="nav__submenu-link" href="/osy-shershni/">Осы, шершни</a>
-							<a class="nav__submenu-link" href="/koroed/">Короед</a>
-							<a class="nav__submenu-link" href="/uborka-posle-smerti/">Уборка после смерти</a>
-							<a class="nav__submenu-link" href="/nasekomye/">От всех насекомых</a>
-							<a class="nav__submenu-link" href="/borshchevik/">Борщевик</a>
-							<a class="nav__submenu-link" href="/rasteniya/">Лечение растений</a>
-							<a class="nav__submenu-link" href="/posle-pozhara/">После пожара</a>
-							<a class="nav__submenu-link" href="/kto-kusaet/">Кто-то кусает</a>
+							<?php foreach ($servicesData["groups"] as $group): ?>
+							<?php $groupServices = services_in_group($servicesData["services"], $group["id"]); ?>
+							<?php if (!$groupServices) { continue; } ?>
+							<div class="nav__group">
+								<div class="nav__group-title"><?= h($group["title"]) ?></div>
+								<?php foreach ($groupServices as $s): ?>
+								<a class="nav__submenu-link" href="/<?= h($s["slug"]) ?>/"><?= h($s["name"]) ?></a>
+								<?php endforeach; ?>
+							</div>
+							<?php endforeach; ?>
 						</div>
 					</li>
-					<li class="nav__item"><a class="nav__link" href="#reviews">Отзывы</a></li>
+					<li class="nav__item"><a class="nav__link" href="/#reviews">Отзывы</a></li>
 					<li class="nav__item"><a class="nav__link" href="/contacts/">Контакты</a></li>
 				</ul>
 			</nav>

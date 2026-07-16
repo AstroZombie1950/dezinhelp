@@ -1,11 +1,10 @@
 <?php
-// загрузка конфигурации: рабочий config.php, иначе шаблон
-$configFile = __DIR__ . "/source/php/config.php";
-$config = file_exists($configFile) ? require $configFile : require __DIR__ . "/source/php/config.sample.php";
-$phones = $config["phones"];
-$email  = $config["email"];
-$msg    = $config["messengers"];
-function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
+// конфиг, хелперы, данные для шапки и футера
+require __DIR__ . "/source/php/bootstrap.php";
+
+// данные только для главной
+$prices       = data_load("prices");
+$homeServices = data_load("home-services");
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -48,7 +47,7 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
 	<!-- шрифт Roboto (как на referense-сайте safelychange.ru) -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 	<!-- стили -->
 	<link rel="stylesheet" href="/source/css/main.css">
@@ -161,275 +160,70 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
 		</div>
 	</div>
 
-	<!-- цены: карточки с данными донора, наш визуал -->
+	<!-- услуги: слайдер карточек. клоны по краям — для бесшовной прокрутки, как в сертификатах -->
 	<section class="section section--alt" id="prices">
 		<div class="container">
-			<h2 class="section__title">Цены на наши услуги</h2>
-			<div class="price__cards">
 
-				<!-- обработка участков -->
-				<div class="price-card">
-					<div class="price-card__img" style="background-image:url(/source/img/our_services/1.webp)"></div>
-					<div class="price-card__body">
-						<div class="price-card__title">ОБРАБОТКА УЧАСТКОВ<span>НАСЕКОМЫЕ</span></div>
-						<ul class="price-card__list">
-							<li>ДО 10 СОТОК - 7000Р</li>
-							<li>10 - 15 СОТОК - ОТ 9000Р (900Р/С)</li>
-							<li>15- 30 СОТОК - ОТ 10500Р (700Р/С)</li>
-							<li>30-40 СОТОК - ОТ 15000Р (500Р/С)</li>
-							<li>40-60 СОТОК - ОТ 18000Р (450Р/С)</li>
-							<li>&gt;70 СОТОК, 1ГА И БОЛЕЕ - ОТ 20000Р</li>
-						</ul>
-						<div class="price-card__from">ОТ 200₽/СОТ</div>
-						<div class="price-card__actions">
-							<a href="#" class="btn btn--primary btn--sm">Подробнее</a>
-							<a href="#" class="btn btn--outline btn--sm js-order-open">Заказать</a>
-						</div>
-					</div>
+			<?php if (!empty($homeServices["visible"]) && $homeServices["cards"]): ?>
+			<h2 class="section__title"><?= h($homeServices["title"]) ?></h2>
+			<?php
+			// клонов с каждой стороны — по максимуму видимых карточек (4 на десктопе)
+			$srvCards = $homeServices["cards"];
+			$srvTotal = count($srvCards);
+			$srvClone  = min(4, $srvTotal);
+			$srvBefore = array_slice($srvCards, max(0, $srvTotal - $srvClone)); // последние — перед реальными, для прокрутки влево
+			$srvAfter  = array_slice($srvCards, 0, $srvClone);                  // первые — после реальных, для прокрутки вправо
+			?>
+			<div class="srv__carousel">
+				<div class="srv__track js-srv-track" data-real="<?= $srvTotal ?>" data-clone="<?= $srvClone ?>">
+
+					<?php foreach ($srvBefore as $card): ?>
+					<?php $cardAria = true; require __DIR__ . "/source/include/service-card.php"; ?>
+					<?php endforeach; ?>
+
+					<?php foreach ($srvCards as $card): ?>
+					<?php $cardAria = false; require __DIR__ . "/source/include/service-card.php"; ?>
+					<?php endforeach; ?>
+
+					<?php foreach ($srvAfter as $card): ?>
+					<?php $cardAria = true; require __DIR__ . "/source/include/service-card.php"; ?>
+					<?php endforeach; ?>
+
 				</div>
-
-				<!-- обработка помещений -->
-				<div class="price-card">
-					<div class="price-card__img" style="background-image:url(/source/img/our_services/2.webp)"></div>
-					<div class="price-card__body">
-						<div class="price-card__title">ОБРАБОТКА ПОМЕЩЕНИЙ<span>НАСЕКОМЫЕ</span></div>
-						<ul class="price-card__list">
-							<li>10-30 КВ.М. - 2300Р</li>
-							<li>30-50 КВ.М. - 2900Р</li>
-							<li>&gt; 50 КВ.М. - ОТ 3500Р</li>
-							<li>&gt;100 КВ.М. - ОТ 6500Р</li>
-							<li>&gt; 300 КВ.М. - ОТ 14700Р</li>
-						</ul>
-						<div class="price-card__from">ОТ 2300 ₽</div>
-						<div class="price-card__actions">
-							<a href="#" class="btn btn--primary btn--sm">Подробнее</a>
-							<a href="#" class="btn btn--outline btn--sm js-order-open">Заказать</a>
-						</div>
-					</div>
-				</div>
-
-				<!-- дезинфекция: плесень -->
-				<div class="price-card">
-					<div class="price-card__img" style="background-image:url(/source/img/our_services/3.webp)"></div>
-					<div class="price-card__body">
-						<div class="price-card__title">ДЕЗИНФЕКЦИЯ<span>ПЛЕСЕНЬ</span></div>
-						<ul class="price-card__list">
-							<li>МЕХАНИЧЕСКАЯ ЧИСТКА - 500Р КВ.М.</li>
-							<li>ХИМИЧЕСКАЯ ЧИСТКА ОТ - 1500Р КВ.М.</li>
-							<li>ЗАЩИТНАЯ ПЛЕНКА - 1000Р КВ.М.</li>
-							<li>ДЕМОНТАЖ, ГАЗАЦИЯ - ПО ЗАПРОСУ</li>
-						</ul>
-						<div class="price-card__from">ОТ 1500 ₽/М²</div>
-						<div class="price-card__actions">
-							<a href="#" class="btn btn--primary btn--sm">Подробнее</a>
-							<a href="#" class="btn btn--outline btn--sm js-order-open">Заказать</a>
-						</div>
-					</div>
-				</div>
-
-				<!-- уничтожение грызунов -->
-				<div class="price-card">
-					<div class="price-card__img" style="background-image:url(/source/img/our_services/4.webp)"></div>
-					<div class="price-card__body">
-						<div class="price-card__title">УНИЧТОЖЕНИЕ<span>КРЫС, МЫШЕЙ, КРОТОВ</span></div>
-						<ul class="price-card__list">
-							<li>ДО 50 КВ.М. - 6000Р</li>
-							<li>ДО 100 КВ.М. - 12000Р</li>
-							<li>&gt;100 КВ.М. - ПО ЗАПРОСУ</li>
-							<li>ДО 15 СОТОК - ОТ 9000Р</li>
-							<li>&gt;15 СОТОК - ПО ЗАПРОСУ</li>
-						</ul>
-						<div class="price-card__from">ОТ 6000₽, 600₽/СОТ</div>
-						<div class="price-card__actions">
-							<a href="#" class="btn btn--primary btn--sm">Подробнее</a>
-							<a href="#" class="btn btn--outline btn--sm js-order-open">Заказать</a>
-						</div>
-					</div>
-				</div>
-
-				<!-- сушка помещений -->
-				<div class="price-card">
-					<div class="price-card__img" style="background-image:url(/source/img/our_services/5.webp)"></div>
-					<div class="price-card__body">
-						<div class="price-card__title">СУШКА<span>ПОМЕЩЕНИЙ</span></div>
-						<ul class="price-card__list">
-							<li>СЛИВ, ОТКАЧКА ВОДЫ - 2500Р ЗА М³</li>
-							<li>ДЕМОНТАЖ - ПО ЗАПРОСУ</li>
-							<li>СУШКА - 800Р ЗА КВ.М.</li>
-							<li>ДЕЗИНФЕКЦИЯ - ОТ 1500Р КВ.М.</li>
-						</ul>
-						<div class="price-card__from">ОТ 5500 ₽/СУТ</div>
-						<div class="price-card__actions">
-							<a href="#" class="btn btn--primary btn--sm">Подробнее</a>
-							<a href="#" class="btn btn--outline btn--sm js-order-open">Заказать</a>
-						</div>
-					</div>
-				</div>
-
-				<!-- дезинфекция: запах -->
-				<div class="price-card">
-					<div class="price-card__img" style="background-image:url(/source/img/our_services/6.webp)"></div>
-					<div class="price-card__body">
-						<div class="price-card__title">ДЕЗИНФЕКЦИЯ<span>ЗАПАХ</span></div>
-						<ul class="price-card__list">
-							<li>10-30 К.ВМ. - 3500Р</li>
-							<li>40-60 КВ.М.- ОТ 6000Р</li>
-							<li>70-90 КВ.М. - ОТ 9000Р</li>
-							<li>100 КВ.М. - 150 КВ.М. - ОТ 15000Р</li>
-							<li>ДРУГОЕ - ПО ЗАПРОСУ</li>
-						</ul>
-						<div class="price-card__from">ОТ 2300 ₽</div>
-						<div class="price-card__actions">
-							<a href="#" class="btn btn--primary btn--sm">Подробнее</a>
-							<a href="#" class="btn btn--outline btn--sm js-order-open">Заказать</a>
-						</div>
-					</div>
-				</div>
-
-				<!-- уничтожение борщевика -->
-				<div class="price-card">
-					<div class="price-card__img" style="background-image:url(/source/img/our_services/7.webp)"></div>
-					<div class="price-card__body">
-						<div class="price-card__title">УНИЧТОЖЕНИЕ<span>БОРЩЕВИКА</span></div>
-						<ul class="price-card__list">
-							<li>ДО 10 СОТОК - 10000Р</li>
-							<li>10 - 15 СОТОК - ОТ 10000Р (1000Р/С)</li>
-							<li>15-20 СОТОК - ОТ 14000Р (930Р/С)</li>
-							<li>20-30 СОТОК - ОТ 17000Р (850Р/С)</li>
-							<li>40-60 СОТОК - ОТ 25000Р (625Р/С)</li>
-							<li>&gt;70 СОТОК, 1ГА И БОЛЕЕ - ОТ 30000Р</li>
-						</ul>
-						<div class="price-card__from">ОТ 700 ₽/СОТ.</div>
-						<div class="price-card__actions">
-							<a href="#" class="btn btn--primary btn--sm">Подробнее</a>
-							<a href="#" class="btn btn--outline btn--sm js-order-open">Заказать</a>
-						</div>
-					</div>
+				<div class="srv__nav">
+					<button type="button" class="srv__btn" data-dir="prev" aria-label="Предыдущая услуга">&lsaquo;</button>
+					<button type="button" class="srv__btn" data-dir="next" aria-label="Следующая услуга">&rsaquo;</button>
 				</div>
 			</div>
+			<?php endif; ?>
 
-			<!-- клининг: доп. блок цен (данные донора-клинингового сайта, наш визуал) -->
-			<div class="clean-prices-wrap">
-				<h3 class="clean-prices__title">Цены на клининг</h3>
-				<div class="clean-prices">
-
-					<!-- высокая карточка слева -->
-					<div class="clean-price-card clean-price-card--tall">
-						<div class="clean-price-card__row clean-price-card__row--head">
-							<span class="clean-price-card__name">Уборка квартир</span>
-							<span class="clean-price-card__value">от 80 руб./м2</span>
+			<!-- прайс: подразделы раскладываются по двум колонкам автоматически -->
+			<?php if (!empty($prices["visible"]) && $prices["groups"]): ?>
+			<?php $priceCols = prices_split($prices["groups"]); ?>
+			<div class="price-table-wrap">
+				<h3 class="price-table__title"><?= h($prices["title"]) ?></h3>
+				<div class="price-table">
+					<?php foreach ($priceCols as $col): ?>
+					<?php if (!$col) { continue; } ?>
+					<div class="price-table__col">
+						<?php foreach ($col as $group): ?>
+						<div class="price-table__card">
+							<div class="price-table__row price-table__row--head">
+								<span class="price-table__name"><?= h($group["title"]) ?></span>
+							</div>
+							<?php foreach ($group["items"] as $item): ?>
+							<div class="price-table__row">
+								<span class="price-table__name"><?= h($item["name"]) ?></span>
+								<span class="price-table__value"><?= h($item["price"]) ?></span>
+							</div>
+							<?php endforeach; ?>
 						</div>
-						<div class="clean-price-card__row">
-							<span class="clean-price-card__name">После ремонта</span>
-							<span class="clean-price-card__value">от 180 руб./м2</span>
-						</div>
-						<div class="clean-price-card__row">
-							<span class="clean-price-card__name">Поддерживающая</span>
-							<span class="clean-price-card__value">от 80 руб./м2</span>
-						</div>
-						<div class="clean-price-card__row">
-							<span class="clean-price-card__name">Генеральная</span>
-							<span class="clean-price-card__value">от 140 руб./м2</span>
-						</div>
-						<div class="clean-price-card__row">
-							<span class="clean-price-card__name">После потопа</span>
-							<span class="clean-price-card__value">от 350 руб./м2</span>
-						</div>
-						<div class="clean-price-card__row">
-							<span class="clean-price-card__name">После пожара</span>
-							<span class="clean-price-card__value">от 400 руб./м2</span>
-						</div>
-						<div class="clean-price-card__row">
-							<span class="clean-price-card__name">Запущенных квартир</span>
-							<span class="clean-price-card__value">от 150 руб./м2</span>
-						</div>
-						<div class="clean-price-card__row">
-							<span class="clean-price-card__name">Влажная</span>
-							<span class="clean-price-card__value">от 80 руб./м2</span>
-						</div>
-						<div class="clean-price-card__row">
-							<span class="clean-price-card__name">Комплексная</span>
-							<span class="clean-price-card__value">от 80 руб./м2</span>
-						</div>
-						<div class="clean-price-card__row">
-							<span class="clean-price-card__name">Элитной квартиры</span>
-							<span class="clean-price-card__value">от 200 руб./м2</span>
-						</div>
-						<div class="clean-price-card__row">
-							<span class="clean-price-card__name">Однокомнатной</span>
-							<span class="clean-price-card__value">от 80 руб./м2</span>
-						</div>
-						<div class="clean-price-card__row">
-							<span class="clean-price-card__name">Двухкомнатной</span>
-							<span class="clean-price-card__value">от 80 руб./м2</span>
-						</div>
-						<div class="clean-price-card__row">
-							<span class="clean-price-card__name">Трёхкомнатной</span>
-							<span class="clean-price-card__value">от 80 руб./м2</span>
-						</div>
+						<?php endforeach; ?>
 					</div>
-
-					<!-- правая колонка: две карточки поменьше, суммарно равны левой по высоте -->
-					<div class="clean-prices__col">
-
-						<div class="clean-price-card">
-							<div class="clean-price-card__row clean-price-card__row--head">
-								<span class="clean-price-card__name">Уборка домов</span>
-								<span class="clean-price-card__value">от 80 руб./м2</span>
-							</div>
-							<div class="clean-price-card__row">
-								<span class="clean-price-card__name">После ремонта</span>
-								<span class="clean-price-card__value">от 180 руб./м2</span>
-							</div>
-							<div class="clean-price-card__row">
-								<span class="clean-price-card__name">Коттеджа</span>
-								<span class="clean-price-card__value">от 80 руб./м2</span>
-							</div>
-							<div class="clean-price-card__row">
-								<span class="clean-price-card__name">Таунхауса</span>
-								<span class="clean-price-card__value">от 80 руб./м2</span>
-							</div>
-							<div class="clean-price-card__row">
-								<span class="clean-price-card__name">Дачи</span>
-								<span class="clean-price-card__value">от 80 руб./м2</span>
-							</div>
-						</div>
-
-						<div class="clean-price-card">
-							<div class="clean-price-card__row clean-price-card__row--head">
-								<span class="clean-price-card__name">Уборка офисов</span>
-								<span class="clean-price-card__value">от 30 руб./м2</span>
-							</div>
-							<div class="clean-price-card__row">
-								<span class="clean-price-card__name">Генеральная</span>
-								<span class="clean-price-card__value">от 90 руб./м2</span>
-							</div>
-							<div class="clean-price-card__row">
-								<span class="clean-price-card__name">После ремонта</span>
-								<span class="clean-price-card__value">от 140 руб./м2</span>
-							</div>
-							<div class="clean-price-card__row">
-								<span class="clean-price-card__name">Ежедневная</span>
-								<span class="clean-price-card__value">от 30 руб./м2</span>
-							</div>
-							<div class="clean-price-card__row">
-								<span class="clean-price-card__name">Разовая</span>
-								<span class="clean-price-card__value">от 30 руб./м2</span>
-							</div>
-							<div class="clean-price-card__row">
-								<span class="clean-price-card__name">Утренняя</span>
-								<span class="clean-price-card__value">от 30 руб./м2</span>
-							</div>
-							<div class="clean-price-card__row">
-								<span class="clean-price-card__name">Вечерняя</span>
-								<span class="clean-price-card__value">от 30 руб./м2</span>
-							</div>
-						</div>
-
-					</div>
-
+					<?php endforeach; ?>
 				</div>
 			</div>
+			<?php endif; ?>
 
 		</div>
 	</section>
@@ -680,7 +474,7 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
 		<div class="container">
 			<div class="coverage">
 				<!-- карта районов выезда -->
-				<img class="coverage__map" src="/source/img/coverage/map.webp" alt="Карта выезда: Москва и Московская область" width="857" height="896" loading="lazy">
+				<img class="coverage__map" src="/source/img/coverage/map.webp" alt="Карта выезда: Москва и Московская область" width="775" height="710" loading="lazy">
 				<!-- текст + кнопка (открывает поп-ап заявки) -->
 				<div class="coverage__body">
 					<p class="coverage__lead">Наши специалисты выезжают во все районы Москвы и Московской области:</p>
@@ -738,24 +532,7 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
 
 	<?php require __DIR__ . "/source/include/footer.html"; ?>
 
-	<!-- поп-ап заявки (заменил секцию #order; открывается со всех кнопок «Заказать»/«Оставить заявку») -->
-	<div class="modal" id="order-modal" aria-hidden="true">
-		<div class="modal__overlay" data-modal-close></div>
-		<div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="order-modal-title">
-			<button type="button" class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
-			<h2 class="modal__title" id="order-modal-title">Оставить заявку на обработку</h2>
-			<form class="hero__form js-form" action="/source/php/order.php" method="post">
-				<input type="hidden" name="source" value="Заявка на обработку">
-				<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-				<input type="text" name="name" placeholder="Ваше имя" required>
-				<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
-				<input type="text" name="comment" placeholder="Комментарий (необязательно)">
-				<button type="submit" class="btn btn--primary btn--block">Отправить заявку</button>
-				<div class="form-status" role="status"></div>
-				<div class="hero__form-note">Отправляя свои данные, вы соглашаетесь с <a href="/politika/">политикой конфиденциальности</a></div>
-			</form>
-		</div>
-	</div>
+	<?php require __DIR__ . "/source/include/modal.php"; ?>
 
 	<!-- лайтбокс сертификатов: увеличенный просмотр по клику на карточку -->
 	<div class="lightbox" id="cert-lightbox" aria-hidden="true">
@@ -765,16 +542,6 @@ function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
 			<img class="lightbox__img" src="" alt="">
 		</div>
 	</div>
-
-	<!-- плавающая кнопка «Заказать звонок»: открывает поп-ап заявки -->
-	<button type="button" class="fab fab--call js-order-open" aria-label="Заказать звонок">
-		<svg aria-hidden="true"><use href="#i-phone"></use></svg>
-	</button>
-
-	<!-- кнопка «наверх»: появляется после первого экрана (логика в main.js) -->
-	<button type="button" class="fab fab--top" aria-label="Наверх">
-		<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 19V6M6 12l6-6 6 6"/></svg>
-	</button>
 
 	<script src="/source/js/main.js"></script>
 </body>

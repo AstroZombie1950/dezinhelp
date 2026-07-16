@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /source/php/
+Disallow: /data/
+Disallow: /admin/
+Disallow: /404.php
+
+Sitemap: https://dezinhelp.ru/sitemap.xml
