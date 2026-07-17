@@ -1749,6 +1749,372 @@ body.modal-open {
 	}
 }
 
+/* ===== страница услуги: герой ===== */
+/* три слоя: дым — фон секции, рабочий — абсолют вне потока, колонки — обычная сетка.
+   рабочий заезжает под колонки, но их не двигает: position:absolute + pointer-events:none */
+.hero-srv {
+	position: relative;
+	overflow: hidden;
+	padding: 44px 0 48px;
+	background: var(--color-bg);
+}
+
+/* нижний слой — широкий дым от края до края */
+.hero-srv__smoke {
+	position: absolute;
+	inset: 0;
+	background: url("/source/img/hero/smoke-wide.webp") center center / cover no-repeat;
+	pointer-events: none;
+}
+
+/* верхний слой — бледный силуэт в противогазе, стоит за рабочим */
+.hero-srv__smoke::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: url("/source/img/hero/smoke.webp") center bottom / contain no-repeat;
+}
+
+.hero-srv__worker {
+	position: absolute;
+	left: 50%;
+	bottom: 0;
+	transform: translateX(-50%);
+	height: 100%;
+	width: auto;
+	max-width: none;
+	pointer-events: none;
+	user-select: none;
+}
+
+.hero-srv__cols {
+	position: relative;          /* над фоновыми слоями */
+	z-index: 1;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 400px);
+	gap: 40px;
+	align-items: start;
+}
+
+.hero-srv__title {
+	font-size: 34px;
+	line-height: 1.14;
+	font-weight: 800;
+	text-transform: uppercase;
+	margin: 0 0 28px;
+	max-width: 620px;
+}
+
+/* чек-лист: иконка + плашка с текстом */
+.hero-srv__checks {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	align-items: flex-start;
+}
+
+.hero-srv__check {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+}
+
+.hero-srv__check-icon {
+	flex: 0 0 auto;
+	width: 38px;
+	height: 38px;
+	color: var(--color-blue);
+}
+
+.hero-srv__check-icon svg {
+	width: 100%;
+	height: 100%;
+	display: block;
+}
+
+.hero-srv__check-text {
+	display: inline-block;
+	padding: 8px 18px;
+	border-radius: 999px;
+	background: #fff;
+	box-shadow: 0 2px 8px rgba(11, 32, 57, 0.09);
+	font-size: 16px;
+}
+
+.hero-srv__note {
+	display: flex;
+	gap: 10px;
+	margin: 32px 0 0;
+	max-width: 520px;
+	font-size: 13px;
+	line-height: 1.5;
+	color: var(--color-text-muted);
+}
+
+.hero-srv__note-star {
+	flex: 0 0 auto;
+	font-size: 18px;
+	line-height: 1;
+	color: var(--color-text);
+}
+
+/* форма-консультация справа */
+.hero-srv__form {
+	background: rgba(255, 255, 255, 0.92);
+	backdrop-filter: blur(6px);
+	border-radius: 20px;
+	box-shadow: var(--shadow);
+	padding: 28px 26px;
+}
+
+.hero-srv__form-eyebrow {
+	font-size: 17px;
+	font-weight: 800;
+	text-transform: uppercase;
+	color: var(--color-accent);
+	text-align: center;
+}
+
+.hero-srv__form-title {
+	font-size: 19px;
+	font-weight: 800;
+	text-transform: uppercase;
+	text-align: center;
+	margin-top: 4px;
+}
+
+.hero-srv__form-sub {
+	margin: 18px 0 14px;
+	text-align: center;
+	color: var(--color-accent-dark);
+}
+
+.hero-srv__form input[type="text"],
+.hero-srv__form input[type="tel"] {
+	width: 100%;
+	padding: 15px 18px;
+	margin-bottom: 12px;
+	border: 1px solid var(--color-border);
+	border-radius: 999px;
+	font-family: inherit;
+	font-size: 15px;
+	background: #fff;
+}
+
+.hero-srv__form .btn {
+	border-radius: 999px;
+	margin-top: 4px;
+}
+
+.hero-srv__form-note {
+	margin-top: 16px;
+	font-size: 12px;
+	line-height: 1.5;
+	text-align: center;
+	color: var(--color-text-muted);
+}
+
+/* ===== объекты санобработки: слайдер ===== */
+/* правила те же, что у слайдера услуг: только целые карточки, без подглядывания */
+.gal__carousel {
+	position: relative;
+}
+
+.gal__track {
+	display: flex;
+	gap: 20px;
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	scroll-behavior: smooth;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+.gal__track::-webkit-scrollbar {
+	display: none;
+}
+
+.gal__item {
+	flex: 0 0 calc((100% - 40px) / 3);
+	scroll-snap-align: start;
+	border-radius: var(--radius);
+	overflow: hidden;
+	background: #fff;
+}
+
+.gal__item img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	aspect-ratio: 3 / 2;
+	object-fit: cover;
+}
+
+.gal__nav {
+	display: flex;
+	justify-content: center;
+	gap: 12px;
+	margin-top: 24px;
+}
+
+.gal__btn {
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	border: 1px solid var(--color-border);
+	background: #fff;
+	font-size: 22px;
+	line-height: 1;
+	color: var(--color-text);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background 0.15s ease, color 0.15s ease;
+}
+
+.gal__btn:hover {
+	background: var(--color-blue);
+	color: #fff;
+	border-color: var(--color-blue);
+}
+
+/* ===== страница услуги: основной текст ===== */
+/* вводный абзац виден всегда, SEO-текст под кнопкой */
+.srv-text {
+	max-width: 900px;
+	margin: 0 auto;
+	line-height: 1.65;
+}
+
+.srv-text__intro p:first-child {
+	margin-top: 0;
+}
+
+.srv-text__more {
+	position: relative;
+	overflow: hidden;
+	max-height: 0;
+	transition: max-height 0.4s ease;
+}
+
+/* затухание у нижней кромки — подсказка, что текст продолжается */
+.srv-text__more::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 90px;
+	background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--color-bg));
+	pointer-events: none;
+	transition: opacity 0.3s ease;
+}
+
+.srv-text__more.is-open::after {
+	opacity: 0;
+}
+
+.srv-text__toggle {
+	display: block;
+	margin: 20px auto 0;
+	padding: 12px 30px;
+	border: 1px solid var(--color-blue);
+	border-radius: 999px;
+	background: transparent;
+	color: var(--color-blue);
+	font-family: inherit;
+	font-size: 15px;
+	font-weight: 700;
+	transition: background 0.15s ease, color 0.15s ease;
+}
+
+.srv-text__toggle:hover {
+	background: var(--color-blue);
+	color: #fff;
+}
+
+/* ===== страница услуги: цены ===== */
+/* одна колонка на всю ширину — подразделов может быть сколько угодно */
+.price-table--full {
+	grid-template-columns: 1fr;
+}
+
+.price-form {
+	display: flex;
+	justify-content: center;
+	gap: 16px;
+	flex-wrap: wrap;
+	margin-top: 32px;
+}
+
+.price-form input[type="tel"] {
+	flex: 0 1 340px;
+	padding: 15px 18px;
+	border: 1px solid var(--color-border);
+	border-radius: 999px;
+	font-family: inherit;
+	font-size: 15px;
+	background: #fff;
+}
+
+.price-form .btn {
+	border-radius: 999px;
+	padding-left: 34px;
+	padding-right: 34px;
+}
+
+.price-form .form-status {
+	flex: 1 0 100%;
+	text-align: center;
+}
+
+/* ===== страница услуги: методы ===== */
+/* карточка — иллюстрация — карточка; на узких экранах в столбик */
+.methods-srv {
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
+	gap: 24px;
+	align-items: center;
+}
+
+.methods-srv__card {
+	background: var(--color-bg-dark);
+	color: var(--color-text-on-dark);
+	border-radius: 20px;
+	padding: 34px 30px;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.methods-srv__title {
+	font-size: 22px;
+	font-weight: 800;
+	text-transform: uppercase;
+	text-align: center;
+	color: var(--color-accent);
+	margin-bottom: 24px;
+}
+
+.methods-srv__text {
+	line-height: 1.6;
+}
+
+.methods-srv__figure {
+	flex: 0 0 auto;
+}
+
+.methods-srv__figure img {
+	display: block;
+	width: 100%;
+	max-width: 280px;
+	height: auto;
+}
+
 /* ===== страница 404 ===== */
 .e404 {
 	min-height: 100vh;
@@ -1947,6 +2313,41 @@ body.modal-open {
 	.footer__columns {
 		grid-template-columns: repeat(3, 1fr);
 	}
+
+	/* герой услуги: форма уже, рабочий мельче */
+	.hero-srv__cols {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+		gap: 24px;
+	}
+
+	.hero-srv__title {
+		font-size: 28px;
+	}
+
+	.hero-srv__worker {
+		height: 88%;
+		opacity: 0.55;
+	}
+
+	/* объекты: две карточки в ряд */
+	.gal__item {
+		flex-basis: calc((100% - 20px) / 2);
+	}
+
+	/* методы: иллюстрация уходит вниз, карточки в ряд */
+	.methods-srv {
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.methods-srv__figure {
+		grid-column: 1 / -1;
+		grid-row: 1;
+		justify-self: center;
+	}
+
+	.methods-srv__figure img {
+		max-width: 200px;
+	}
 }
 
 /* --- крупный телефон / малый планшет --- */
@@ -2011,6 +2412,39 @@ body.modal-open {
 		grid-template-columns: 1fr;
 		gap: 24px;
 	}
+
+	/* герой услуги: в одну колонку, рабочий уходит из-под текста */
+	.hero-srv__cols {
+		grid-template-columns: 1fr;
+	}
+
+	.hero-srv__worker {
+		display: none;
+	}
+
+	.hero-srv__smoke {
+		opacity: 0.5;
+	}
+
+	.hero-srv__title {
+		font-size: 24px;
+	}
+
+	/* объекты: по одной карточке */
+	.gal__item {
+		flex-basis: 100%;
+	}
+
+	/* методы: всё в столбик */
+	.methods-srv {
+		grid-template-columns: 1fr;
+	}
+
+	/* цены: поле и кнопка на всю ширину */
+	.price-form input[type="tel"],
+	.price-form .btn {
+		flex: 1 0 100%;
+	}
 }
 
 /* --- малый телефон --- */
@@ -2064,5 +2498,23 @@ body.modal-open {
 
 	.fab--top {
 		left: 16px;
+	}
+
+	.hero-srv__title {
+		font-size: 21px;
+	}
+
+	.hero-srv__check-icon {
+		width: 32px;
+		height: 32px;
+	}
+
+	.hero-srv__check-text {
+		font-size: 14px;
+		padding: 7px 14px;
+	}
+
+	.hero-srv__form {
+		padding: 22px 18px;
 	}
 }

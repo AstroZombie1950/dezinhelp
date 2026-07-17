@@ -24,6 +24,17 @@ function services_in_group($services, $groupId)
 	return $out;
 }
 
+// делит текст на первый абзац и остаток: первый виден всегда, остальное под кнопкой
+function html_first_para($html)
+{
+	$pos = strpos($html, "</p>");
+	if ($pos === false) {
+		return array($html, "");
+	}
+	$cut = $pos + 4;
+	return array(substr($html, 0, $cut), trim(substr($html, $cut)));
+}
+
 // одна услуга по слагу; скрытые не отдаём — для роутера это 404
 function service_find($services, $slug)
 {

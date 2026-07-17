@@ -146,111 +146,22 @@ $homeServices = data_load("home-services");
 		</div>
 	</section>
 
-	<!-- бегущая строка -->
-	<?php
-	// пункты бегущей строки (дублируются дважды — для бесшовной прокрутки)
-	$marquee = array("Короед", "Комары", "ФЗ-44", "Препараты по стандартам ЕврАзЭС", "Грызуны", "Клопы", "Тараканы", "Плесень", "Запахи", "Мухи", "Муравьи", "Блохи", "Клещи", "Осы и шершни");
-	?>
-	<div class="marquee">
-		<div class="marquee__track">
-			<?php for ($i = 0; $i < 2; $i++): foreach ($marquee as $m): ?>
-			<span class="marquee__item"><?= h($m) ?></span>
-			<span class="marquee__sep" aria-hidden="true">&#8855;</span>
-			<?php endforeach; endfor; ?>
-		</div>
-	</div>
+	<!-- бегущая строка: вредители -->
+	<?php $marqueeItems = array("Короед", "Комары", "ФЗ-44", "Препараты по стандартам ЕврАзЭС", "Грызуны", "Клопы", "Тараканы", "Плесень", "Запахи", "Мухи", "Муравьи", "Блохи", "Клещи", "Осы и шершни"); ?>
+	<?php require __DIR__ . "/source/include/block-marquee.php"; ?>
 
-	<!-- услуги: слайдер карточек. клоны по краям — для бесшовной прокрутки, как в сертификатах -->
+	<!-- услуги: слайдер карточек + прайс -->
 	<section class="section section--alt" id="prices">
 		<div class="container">
+			<?php $srvData = $homeServices; ?>
+			<?php require __DIR__ . "/source/include/block-services-slider.php"; ?>
 
-			<?php if (!empty($homeServices["visible"]) && $homeServices["cards"]): ?>
-			<h2 class="section__title"><?= h($homeServices["title"]) ?></h2>
-			<?php
-			// клонов с каждой стороны — по максимуму видимых карточек (4 на десктопе)
-			$srvCards = $homeServices["cards"];
-			$srvTotal = count($srvCards);
-			$srvClone  = min(4, $srvTotal);
-			$srvBefore = array_slice($srvCards, max(0, $srvTotal - $srvClone)); // последние — перед реальными, для прокрутки влево
-			$srvAfter  = array_slice($srvCards, 0, $srvClone);                  // первые — после реальных, для прокрутки вправо
-			?>
-			<div class="srv__carousel">
-				<div class="srv__track js-srv-track" data-real="<?= $srvTotal ?>" data-clone="<?= $srvClone ?>">
-
-					<?php foreach ($srvBefore as $card): ?>
-					<?php $cardAria = true; require __DIR__ . "/source/include/service-card.php"; ?>
-					<?php endforeach; ?>
-
-					<?php foreach ($srvCards as $card): ?>
-					<?php $cardAria = false; require __DIR__ . "/source/include/service-card.php"; ?>
-					<?php endforeach; ?>
-
-					<?php foreach ($srvAfter as $card): ?>
-					<?php $cardAria = true; require __DIR__ . "/source/include/service-card.php"; ?>
-					<?php endforeach; ?>
-
-				</div>
-				<div class="srv__nav">
-					<button type="button" class="srv__btn" data-dir="prev" aria-label="Предыдущая услуга">&lsaquo;</button>
-					<button type="button" class="srv__btn" data-dir="next" aria-label="Следующая услуга">&rsaquo;</button>
-				</div>
-			</div>
-			<?php endif; ?>
-
-			<!-- прайс: подразделы раскладываются по двум колонкам автоматически -->
-			<?php if (!empty($prices["visible"]) && $prices["groups"]): ?>
-			<?php $priceCols = prices_split($prices["groups"]); ?>
-			<div class="price-table-wrap">
-				<h3 class="price-table__title"><?= h($prices["title"]) ?></h3>
-				<div class="price-table">
-					<?php foreach ($priceCols as $col): ?>
-					<?php if (!$col) { continue; } ?>
-					<div class="price-table__col">
-						<?php foreach ($col as $group): ?>
-						<div class="price-table__card">
-							<div class="price-table__row price-table__row--head">
-								<span class="price-table__name"><?= h($group["title"]) ?></span>
-							</div>
-							<?php foreach ($group["items"] as $item): ?>
-							<div class="price-table__row">
-								<span class="price-table__name"><?= h($item["name"]) ?></span>
-								<span class="price-table__value"><?= h($item["price"]) ?></span>
-							</div>
-							<?php endforeach; ?>
-						</div>
-						<?php endforeach; ?>
-					</div>
-					<?php endforeach; ?>
-				</div>
-			</div>
-			<?php endif; ?>
-
+			<?php $pricesData = $prices; $pricesLayout = "cols"; $pricesButton = ""; ?>
+			<?php require __DIR__ . "/source/include/block-prices.php"; ?>
 		</div>
 	</section>
 
-	<!-- порядок обработки -->
-	<section class="section" id="process">
-		<div class="container">
-			<h2 class="section__title">Порядок обработки</h2>
-			<div class="steps">
-				<div class="step">
-					<div class="step__num">1</div>
-					<div class="step__title">ПОДГОТОВКА</div>
-					<div class="step__text">Оператор проконсультирует об услуге: как подготовиться, что убирать, что освободить, порядке проведения работ, противопоказаниях и технике безопасности.</div>
-				</div>
-				<div class="step">
-					<div class="step__num">2</div>
-					<div class="step__title">ДОКУМЕНТЫ</div>
-					<div class="step__text">Перед началом работ заключается договор с памяткой о безопасности, сроках и дальнейших действиях после обработок.</div>
-				</div>
-				<div class="step">
-					<div class="step__num">3</div>
-					<div class="step__title">ПРОВЕДЕНИЕ РАБОТ</div>
-					<div class="step__text">Применение методов и технических средств с препаратами классов опасности (I, II, III, IV) на объекте, необходимых и допустимых для конкретной ситуации.</div>
-				</div>
-			</div>
-		</div>
-	</section>
+	<?php require __DIR__ . "/source/include/block-process.php"; ?>
 
 	<!-- типы объектов -->
 	<section class="section section--alt" id="objects">
@@ -269,266 +180,22 @@ $homeServices = data_load("home-services");
 		</div>
 	</section>
 
-	<!-- методы обработки -->
-	<section class="section" id="methods">
-		<div class="container">
-			<h2 class="section__title">Методы обработки</h2>
-			<div class="methods">
-				<div class="method-card">
-					<div class="method-card__title">Горячий туман</div>
-					<div class="method-card__text">Раскалённый газ нагревает рабочий раствор до 70°C. Образовавшийся конденсат подаётся наружу в виде облака тумана, который оседает на поверхностях, ядохимикаты при этом работают наиболее эффективно. (Опасный метод.)</div>
-				</div>
-				<div class="method-card">
-					<div class="method-card__title">Холодный туман</div>
-					<div class="method-card__text">Химический раствор под давлением с температурой 25°C. Облако заполняет все труднодоступные места в помещениях или, оседая на почву, на участках и фасадах зданий, не портя мебель, технику и растения.</div>
-				</div>
-				<div class="method-card">
-					<div class="method-card__title">Дератизация</div>
-					<div class="method-card__text">Приготовление, закладка ядоприманок от крыс и мышей в домах, помещениях и на территориях.</div>
-				</div>
-				<div class="method-card">
-					<div class="method-card__title">Фумигация</div>
-					<div class="method-card__text">Уничтожение насекомых в зернохранилищах, в частности от короеда в деревянных домах, от кротов — отравляющими ядовитыми газами.</div>
-				</div>
-				<div class="method-card">
-					<div class="method-card__title">Дезинфекция патогенов</div>
-					<div class="method-card__text">Комплекс мер уничтожения очагов инфекций, вирусов, плесени на 100% снизит риск вреда здоровью, уберёт проблему и обеспокоенность жителей — с применением технических средств, технологических карт с соблюдением нормативных актов технадзора и пожеланий клиентов.</div>
-				</div>
-				<div class="method-card">
-					<div class="method-card__title">Дезинфекция воздуха, газация</div>
-					<div class="method-card__text">Уничтожение запахов на молекулярном уровне — не маскирует запахи гари, затхлости, табака, разложения, химии.</div>
-				</div>
-				<div class="method-card">
-					<div class="method-card__title">Гербицидная обработка</div>
-					<div class="method-card__text">От борщевика Сосновского и других сорняков.</div>
-				</div>
-			</div>
-		</div>
-	</section>
+	<?php require __DIR__ . "/source/include/block-methods.php"; ?>
 
-	<!-- бегущая строка: сертификаты (navy, как первая) -->
-	<?php
-	// одна фраза по кругу; повторяется для ширины, ×2 — для бесшовной прокрутки
-	$certMarquee = array_fill(0, 8, "ТОЛЬКО СЕРТИФИЦИРОВАННЫЕ ПРЕПАРАТЫ");
-	?>
-	<div class="marquee">
-		<div class="marquee__track">
-			<?php for ($i = 0; $i < 2; $i++): foreach ($certMarquee as $m): ?>
-			<span class="marquee__item"><?= h($m) ?></span>
-			<span class="marquee__sep" aria-hidden="true">&#8855;</span>
-			<?php endforeach; endfor; ?>
-		</div>
-	</div>
+	<!-- бегущая строка: только сертифицированные препараты -->
+	<?php $marqueeItems = array_fill(0, 8, "ТОЛЬКО СЕРТИФИЦИРОВАННЫЕ ПРЕПАРАТЫ"); ?>
+	<?php require __DIR__ . "/source/include/block-marquee.php"; ?>
 
-	<!-- сертификаты: карусель сканов. клоны по краям — для бесшовной прокрутки без autoplay -->
-	<section class="section" id="certificates">
-		<div class="container">
-			<h2 class="section__title">Наши сертификаты</h2>
-			<div class="certs__carousel">
-				<div class="certs__track js-certs-track">
+	<?php require __DIR__ . "/source/include/block-certificates.php"; ?>
 
-					<!-- клоны последних 4 карточек — стоят перед реальными для прокрутки влево -->
-					<?php foreach (array(3, 4, 5, 6) as $i): ?>
-					<div class="cert-card" aria-hidden="true" tabindex="-1">
-						<img class="cert-card__img" src="/source/img/certificate/cert_<?= $i ?>.webp" alt="" loading="lazy">
-					</div>
-					<?php endforeach; ?>
+	<?php require __DIR__ . "/source/include/block-veterans.php"; ?>
 
-					<!-- реальные сертификаты, кликабельны — открывают лайтбокс -->
-					<?php for ($i = 1; $i <= 6; $i++): ?>
-					<button type="button" class="cert-card js-cert-open" data-cert="<?= $i ?>" aria-label="Открыть сертификат №<?= $i ?> увеличенно">
-						<img class="cert-card__img" src="/source/img/certificate/cert_<?= $i ?>.webp" alt="Сертификат №<?= $i ?>" loading="lazy">
-						<span class="cert-card__zoom"><svg aria-hidden="true"><use href="#i-zoom"></use></svg></span>
-					</button>
-					<?php endfor; ?>
+	<?php require __DIR__ . "/source/include/block-reviews.php"; ?>
 
-					<!-- клоны первых 4 карточек — стоят после реальных для прокрутки вправо -->
-					<?php foreach (array(1, 2, 3, 4) as $i): ?>
-					<div class="cert-card" aria-hidden="true" tabindex="-1">
-						<img class="cert-card__img" src="/source/img/certificate/cert_<?= $i ?>.webp" alt="" loading="lazy">
-					</div>
-					<?php endforeach; ?>
+	<?php require __DIR__ . "/source/include/block-coverage.php"; ?>
 
-				</div>
-				<div class="certs__nav">
-					<button type="button" class="certs__btn" data-dir="prev" aria-label="Предыдущий сертификат">‹</button>
-					<button type="button" class="certs__btn" data-dir="next" aria-label="Следующий сертификат">›</button>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- назначить специалиста / скидка ветеранам · фон с персонажем сквозной -->
-	<section class="section section--specialist">
-		<div class="container">
-			<div class="veterans">
-
-				<!-- левая зона: текст скидки + крупная «15%» -->
-				<div class="veterans__text">
-					<p class="veterans__lead">Ветеранам боевых действий, героям, ликвидаторам радиационных катастроф, ветеранам труда действует скидка</p>
-					<!-- SVG-скидка в фирменном градиенте (без красного донора) -->
-					<svg class="veterans__discount" viewBox="0 0 240 132" role="img" aria-label="Скидка 15 процентов">
-						<defs>
-							<linearGradient id="discount-grad" x1="0" y1="0" x2="1" y2="1">
-								<stop offset="0" stop-color="#81b76a"/>
-								<stop offset="0.55" stop-color="#5b918b"/>
-								<stop offset="1" stop-color="#4880b0"/>
-							</linearGradient>
-						</defs>
-						<text x="120" y="96" text-anchor="middle" font-family="Roboto, Arial, sans-serif" font-size="98" font-weight="800" fill="url(#discount-grad)">15%</text>
-						<text x="120" y="126" text-anchor="middle" font-family="Roboto, Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="8" fill="#5b918b">СКИДКА</text>
-					</svg>
-				</div>
-
-				<!-- правая зона: форма (белая карточка, как у донора) -->
-				<form class="veterans__form js-form" action="/source/php/order.php" method="post">
-					<input type="hidden" name="source" value="Назначить специалиста">
-					<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-					<div class="veterans__form-title">Назначить специалиста</div>
-					<div class="veterans__form-sub">Заполните поля для связи с вами</div>
-					<!-- мессенджеры цветными кружками (наш набор: tg / max / wa) -->
-					<div class="veterans__messengers">
-						<a class="msg-circle msg-circle--tg" href="<?= h($msg["telegram"]) ?>" target="_blank" rel="noopener" aria-label="Telegram"><svg><use href="#i-tg"></use></svg></a>
-						<a class="msg-circle msg-circle--max" href="<?= h($msg["max"]) ?>" target="_blank" rel="noopener" aria-label="Max"><svg><use href="#i-max"></use></svg></a>
-						<a class="msg-circle msg-circle--wa" href="<?= h($msg["whatsapp"]) ?>" target="_blank" rel="noopener" aria-label="WhatsApp"><svg><use href="#i-wa"></use></svg></a>
-					</div>
-					<input type="text" name="name" placeholder="Ваше имя" required>
-					<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
-					<button type="submit" class="btn btn--accent btn--block">Получить консультацию</button>
-					<div class="form-status" role="status"></div>
-					<div class="hero__form-note">Отправляя свои данные, вы соглашаетесь с <a href="/politika/">политикой конфиденциальности</a></div>
-				</form>
-
-			</div>
-		</div>
-	</section>
-
-	<!-- отзывы: карусель -->
-	<section class="section section--alt" id="reviews">
-		<div class="container">
-			<h2 class="section__title">Отзывы наших клиентов</h2>
-			<div class="reviews__ratings">
-				<div class="reviews__rating"><strong>4.8</strong>средний рейтинг по отзывам клиентов</div>
-			</div>
-			<div class="reviews__carousel">
-				<div class="reviews__track">
-					<div class="review-card">
-						<div class="review-card__head">
-							<div class="review-card__avatar" style="background:#2f9e44">А</div>
-							<div><div class="review-card__name">Анна К.</div><div class="review-card__date">12 марта 2026</div></div>
-						</div>
-						<div class="review-card__stars">★★★★★</div>
-						<div class="review-card__text">Вызывали из-за тараканов на кухне. Приехали в тот же день, обработали холодным туманом — запаха почти нет. Через неделю никого не осталось. Спасибо за оперативность!</div>
-					</div>
-					<div class="review-card">
-						<div class="review-card__head">
-							<div class="review-card__avatar" style="background:#237a35">Д</div>
-							<div><div class="review-card__name">Дмитрий С.</div><div class="review-card__date">28 января 2026</div></div>
-						</div>
-						<div class="review-card__stars">★★★★★</div>
-						<div class="review-card__text">Клопы завелись после поездки. Мастер всё объяснил, дал договор с гарантией 3 года. Повторная обработка не понадобилась. Рекомендую.</div>
-					</div>
-					<div class="review-card">
-						<div class="review-card__head">
-							<div class="review-card__avatar" style="background:#1d6b8f">Е</div>
-							<div><div class="review-card__name">Елена В.</div><div class="review-card__date">5 февраля 2026</div></div>
-						</div>
-						<div class="review-card__stars">★★★★☆</div>
-						<div class="review-card__text">Обрабатывали участок от клещей перед дачным сезоном. Приехали вовремя, работу выполнили аккуратно. Единственное — ждала звонка-напоминания, но в целом всё отлично.</div>
-					</div>
-					<div class="review-card">
-						<div class="review-card__head">
-							<div class="review-card__avatar" style="background:#0b2039">И</div>
-							<div><div class="review-card__name">Игорь П.</div><div class="review-card__date">19 ноября 2025</div></div>
-						</div>
-						<div class="review-card__stars">★★★★★</div>
-						<div class="review-card__text">Заказывали дератизацию на складе. Работают по договору, всё официально, с актами. Грызунов больше не видим. Будем сотрудничать дальше.</div>
-					</div>
-					<div class="review-card">
-						<div class="review-card__head">
-							<div class="review-card__avatar" style="background:#57a03f">М</div>
-							<div><div class="review-card__name">Марина Л.</div><div class="review-card__date">3 декабря 2025</div></div>
-						</div>
-						<div class="review-card__stars">★★★★★</div>
-						<div class="review-card__text">Долго не могли избавиться от запаха в квартире после залива. Специалисты сделали озонирование — запах ушёл полностью. Очень довольны результатом.</div>
-					</div>
-					<div class="review-card">
-						<div class="review-card__head">
-							<div class="review-card__avatar" style="background:#3d7d2e">С</div>
-							<div><div class="review-card__name">Сергей Т.</div><div class="review-card__date">22 октября 2025</div></div>
-						</div>
-						<div class="review-card__stars">★★★★☆</div>
-						<div class="review-card__text">Была плесень в ванной и на балконе. Обработали, нанесли защитную плёнку, дали рекомендации по проветриванию. Прошло два месяца — не возвращается.</div>
-					</div>
-				</div>
-				<div class="reviews__nav">
-					<button type="button" class="reviews__btn" data-dir="prev" aria-label="Предыдущий отзыв">‹</button>
-					<button type="button" class="reviews__btn" data-dir="next" aria-label="Следующий отзыв">›</button>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- зона обслуживания: карта покрытия + текст с CTA -->
-	<section class="section" id="coverage">
-		<div class="container">
-			<div class="coverage">
-				<!-- карта районов выезда -->
-				<img class="coverage__map" src="/source/img/coverage/map.webp" alt="Карта выезда: Москва и Московская область" width="775" height="710" loading="lazy">
-				<!-- текст + кнопка (открывает поп-ап заявки) -->
-				<div class="coverage__body">
-					<p class="coverage__lead">Наши специалисты выезжают во все районы Москвы и Московской области:</p>
-					<p class="coverage__note">обработка помещений — до 80 км от МКАД<br>обработка участков — до 80 км от МКАД</p>
-					<a href="#" class="btn btn--primary js-order-open">Оставить заявку</a>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- FAQ -->
-	<section class="section" id="faq">
-		<div class="container">
-			<h2 class="section__title">Часто задаваемые вопросы</h2>
-			<div class="faq__list">
-				<div class="faq-item">
-					<button type="button" class="faq-item__question">Время обработки?<span class="faq-item__plus"></span></button>
-					<div class="faq-item__answer"><div class="faq-item__answer-inner">В помещении: 40-60 минут<br>На участке: 40-120 минут и более</div></div>
-				</div>
-				<div class="faq-item">
-					<button type="button" class="faq-item__question">Через сколько вернуться в помещение после обработки?<span class="faq-item__plus"></span></button>
-					<div class="faq-item__answer"><div class="faq-item__answer-inner">Перед обработкой необходимо покинуть объект на 2 часа, в некоторых случаях на трое суток</div></div>
-				</div>
-				<div class="faq-item">
-					<button type="button" class="faq-item__question">Может ли испортиться одежда и мебель?<span class="faq-item__plus"></span></button>
-					<div class="faq-item__answer"><div class="faq-item__answer-inner">Наша химия не оставляет следов, не портит одежду, паркет, ламинат, фурнитуру и электронную технику.<br>Исключение - дезинфекция от плесени, специалист обеспечивает сохранность вещей</div></div>
-				</div>
-				<div class="faq-item">
-					<button type="button" class="faq-item__question">Как понять, есть ли опасные насекомые в доме?<span class="faq-item__plus"></span></button>
-					<div class="faq-item__answer"><div class="faq-item__answer-inner">Первые признаки является зуд, укусы, точки и покраснения на коже. Насекомые бывают микроскопических размеров, крупные оставляют экскременты в виде черных или коричневых точек мягкой мебели или элементах интерьера.</div></div>
-				</div>
-				<div class="faq-item">
-					<button type="button" class="faq-item__question">Гарантии?<span class="faq-item__plus"></span></button>
-					<div class="faq-item__answer"><div class="faq-item__answer-inner">Мы предоставляем гарантии по договору и безналичный расчет по желанию клиентов</div></div>
-				</div>
-				<div class="faq-item">
-					<button type="button" class="faq-item__question">Какие вы используете препараты?<span class="faq-item__plus"></span></button>
-					<div class="faq-item__answer"><div class="faq-item__answer-inner">Мы используем более 30 наименовании безопасных и сертифицированных средств от насекомых, грызунов, плесени</div></div>
-				</div>
-				<div class="faq-item">
-					<button type="button" class="faq-item__question">Почему собственные методы не работают?<span class="faq-item__plus"></span></button>
-					<div class="faq-item__answer"><div class="faq-item__answer-inner">У насекомых вырабатывается иммунитет к бесконтрольному применению общедоступных средств.<br>Только профессиональная дезинфекция, правильная дозировка препаратов и комбинирование могут дать результат на который вы рассчитываете.</div></div>
-				</div>
-				<div class="faq-item">
-					<button type="button" class="faq-item__question">Почему МосКомДез?<span class="faq-item__plus"></span></button>
-					<div class="faq-item__answer"><div class="faq-item__answer-inner">Наша компания работает на рынке 8 лет. Специалисты регулярно проходят переаттестацию, повышают квалификацию и гарантируют качество и результат. Мы дорожим доверием крупных промышленных предприятий, торговых объектов, горожан и некоммерческих организаций.</div></div>
-				</div>
-				<div class="faq-item">
-					<button type="button" class="faq-item__question">Это опасно для ребёнка или аллергика?<span class="faq-item__plus"></span></button>
-					<div class="faq-item__answer"><div class="faq-item__answer-inner">При соблюдении требований безопасности и применения безопасных средств нашими специалистами никакой опасности быть не может</div></div>
-				</div>
-			</div>
-		</div>
-	</section>
+	<?php $faqData = data_load("faq"); $faqItems = $faqData["items"]; $faqTitle = $faqData["title"]; ?>
+	<?php require __DIR__ . "/source/include/block-faq.php"; ?>
 
 	<?php require __DIR__ . "/source/include/footer.html"; ?>
 

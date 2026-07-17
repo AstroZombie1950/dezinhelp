@@ -1,0 +1,44 @@
+{
+	"hero": {
+		"bg": "/source/img/hero/smoke.webp",
+		"worker": "/source/img/hero/man.webp",
+		"worker_alt": "Специалист МосКомДез в защитном костюме",
+		"checks": [
+			{ "icon": "i-urgent", "text": "Срочность" },
+			{ "icon": "i-anon", "text": "Анонимность" },
+			{ "icon": "i-turnkey", "text": "Решение под ключ" },
+			{ "icon": "i-guarantee", "text": "Гарантия до 3-5 лет" },
+			{ "icon": "i-safe", "text": "Безопасно для детей, мебели" },
+			{ "icon": "i-pay", "text": "Любая форма оплаты" },
+			{ "icon": "i-control", "text": "Производственный контроль" }
+		],
+		"form": {
+			"eyebrow": "Круглосуточная поддержка",
+			"title": "Получите подробную консультацию",
+			"subtitle": "Заполните поля для связи с вами",
+			"button": "Получить консультацию"
+		}
+	},
+	"gallery": {
+		"visible": true,
+		"title": "Объекты санобработки",
+		"images": [
+			{ "src": "/source/img/gallery/1.webp", "alt": "Многоквартирные дома" },
+			{ "src": "/source/img/gallery/2.webp", "alt": "Жилые кварталы Москвы" },
+			{ "src": "/source/img/gallery/3.webp", "alt": "Загородный дом с участком" },
+			{ "src": "/source/img/gallery/4.webp", "alt": "Строительные бытовки" },
+			{ "src": "/source/img/gallery/5.webp", "alt": "Производственная кухня" },
+			{ "src": "/source/img/gallery/6.webp", "alt": "Офисное помещение" }
+		]
+	},
+	"text": {
+		"more": "Читать полностью",
+		"less": "Свернуть"
+	},
+	"prices": {
+		"button": "Заказать обработку"
+	},
+	"services": {
+		"title": "Виды услуг"
+	}
+}

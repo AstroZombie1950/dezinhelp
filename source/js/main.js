@@ -347,4 +347,80 @@ document.addEventListener("DOMContentLoaded", function () {
 			window.scrollTo({ top: 0, behavior: "smooth" });
 		});
 	}
+
+	// ===== объекты санобработки: слайдер (та же схема, что у услуг — клоны по краям) =====
+	var galTrack = document.querySelector(".js-gal-track");
+	if (galTrack) {
+		var galCarousel = galTrack.closest(".gal__carousel");
+		var GAL_CLONE = parseInt(galTrack.dataset.clone, 10); // клонов с каждой стороны
+		var GAL_REAL = parseInt(galTrack.dataset.real, 10);   // реальных фото
+
+		function galStep() {
+			var item = galTrack.querySelector(".gal__item");
+			if (!item) { return galTrack.clientWidth; }
+			var gap = parseInt(getComputedStyle(galTrack).columnGap || getComputedStyle(galTrack).gap || "20", 10);
+			return item.offsetWidth + (isNaN(gap) ? 20 : gap);
+		}
+
+		// стартуем на первом настоящем фото, без анимации
+		function galSetPosition(index) {
+			galTrack.style.scrollBehavior = "auto";
+			galTrack.scrollLeft = index * galStep();
+			galTrack.style.scrollBehavior = "";
+		}
+		galSetPosition(GAL_CLONE);
+		window.addEventListener("resize", function () { galSetPosition(GAL_CLONE); });
+
+		// заехали в клоны — бесшовно телепортируем на реальную позицию
+		var galSettleTimer = null;
+		galTrack.addEventListener("scroll", function () {
+			clearTimeout(galSettleTimer);
+			galSettleTimer = setTimeout(function () {
+				var index = Math.round(galTrack.scrollLeft / galStep());
+				if (index < GAL_CLONE) {
+					galSetPosition(index + GAL_REAL);
+				} else if (index >= GAL_CLONE + GAL_REAL) {
+					galSetPosition(index - GAL_REAL);
+				}
+			}, 120);
+		}, { passive: true });
+
+		galCarousel.querySelectorAll(".gal__btn").forEach(function (btn) {
+			btn.addEventListener("click", function () {
+				var dir = btn.dataset.dir === "prev" ? -1 : 1;
+				galTrack.scrollBy({ left: dir * galStep(), behavior: "smooth" });
+			});
+		});
+	}
+
+	// ===== основной текст услуги: сворачивание с анимацией =====
+	// max-height нельзя анимировать от auto, поэтому подставляем реальную высоту содержимого
+	var collapse = document.querySelector(".js-collapse");
+	var collapseBtn = document.querySelector(".js-collapse-toggle");
+	if (collapse && collapseBtn) {
+		var open = false;
+
+		function collapseApply() {
+			collapse.style.maxHeight = open ? collapse.scrollHeight + "px" : "0px";
+			collapse.classList.toggle("is-open", open);
+			collapseBtn.textContent = open ? collapseBtn.dataset.less : collapseBtn.dataset.more;
+			collapseBtn.setAttribute("aria-expanded", open ? "true" : "false");
+		}
+		collapseApply();
+
+		collapseBtn.addEventListener("click", function () {
+			open = !open;
+			collapseApply();
+		});
+
+		// после раскрытия высота фиксирована в пикселях — при ресайзе пересчитываем
+		window.addEventListener("resize", function () {
+			if (open) { collapse.style.maxHeight = collapse.scrollHeight + "px"; }
+		});
+
+		// картинки внутри догружаются и меняют высоту — снимаем ограничение после раскрытия
+		collapse.addEventListener("transitionend", function (e) {
+			if (e.propertyName === "max-height" && open) { collapse.style.maxHeight = "none"; }
+		});
+	}
 });
