@@ -41,12 +41,54 @@ if (strlen($digits) !== 11) {
 	exit;
 }
 
+// ответы квиза: с клиента приходят только индексы, тексты берём из data/quiz.json.
+// иначе в Telegram можно было бы прислать произвольную строку
+$quizAnswers = array();
+$quizContact = "";
+if (isset($_POST["q0"]) || isset($_POST["contact_method"])) {
+	require __DIR__ . "/data.php";
+	$quiz = data_load("quiz");
+
+	if (!empty($quiz["steps"])) {
+		foreach ($quiz["steps"] as $i => $step) {
+			if (!isset($_POST["q" . $i])) { continue; }
+			$picked = (array) $_POST["q" . $i];
+			$texts = array();
+			foreach ($picked as $idx) {
+				// только целые индексы: нечисловое иначе приводится к 0 и молча
+				// подставляет первый вариант
+				if (is_numeric($idx) && isset($step["options"][(int) $idx])) {
+					$texts[] = $step["options"][(int) $idx]["text"];
+				}
+			}
+			if ($texts) {
+				$quizAnswers[] = " • " . $step["title"] . ": " . implode(", ", $texts);
+			}
+		}
+	}
+
+	// способ связи: сверяем id со списком, чужое не пропускаем
+	if (!empty($quiz["final"]["contacts"]) && isset($_POST["contact_method"])) {
+		foreach ($quiz["final"]["contacts"] as $c) {
+			if ($c["id"] === $_POST["contact_method"]) {
+				$quizContact = $c["text"];
+				break;
+			}
+		}
+	}
+}
+
 // текст сообщения
 $lines = array();
 $lines[] = "🆕 Новая заявка: " . $source;
 if ($name !== "")    { $lines[] = "👤 Имя: " . $name; }
 $lines[] = "📞 Телефон: " . $phone;
+if ($quizContact !== "") { $lines[] = "📲 Способ связи: " . $quizContact; }
 if ($comment !== "") { $lines[] = "💬 Комментарий: " . $comment; }
+if ($quizAnswers) {
+	$lines[] = "📋 Ответы:";
+	$lines[] = implode("\n", $quizAnswers);
+}
 $text = implode("\n", $lines);
 
 // секреты

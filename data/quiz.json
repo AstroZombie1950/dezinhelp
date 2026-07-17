@@ -1,0 +1,72 @@
+{
+	"visible": true,
+	"title": "Рассчитайте стоимость обработки",
+	"progress_label": "Квиз пройден на:",
+	"final_label": "Остался последний шаг",
+	"next_button": "Далее",
+	"source": "Квиз",
+	"steps": [
+		{
+			"title": "Вы обращаетесь как",
+			"type": "radio",
+			"options": [
+				{ "text": "физ. лицо" },
+				{ "text": "юр. лицо" }
+			]
+		},
+		{
+			"title": "Какую проблему нужно решить?",
+			"type": "checkbox",
+			"options": [
+				{ "text": "Тараканы", "slugs": ["obrabotka-ot-tarakanov"] },
+				{ "text": "Клопы", "slugs": ["obrabotka-ot-klopov"] },
+				{ "text": "Насекомые", "slugs": ["unichtozhenie-nasekomyh", "izbavitsya-ot-muravev", "izbavitsya-ot-muh", "izbavitsya-ot-moshek-v-dome", "vyvesti-mol", "izbavitsya-ot-bloh", "izbavitsya-ot-vshey", "obrabotka-ot-komarov", "obrabotka-ot-kleshchey", "izbavitsya-ot-os", "izbavitsya-ot-shershney", "obrabotka-ot-koroeda"] },
+				{ "text": "Грызуны", "slugs": ["izbavitsya-ot-krys", "izbavitsya-ot-myshey", "izbavitsya-ot-krotov"] },
+				{ "text": "Плесень", "slugs": ["obrabotka-ot-pleseni", "obrabotka-ot-mha"] },
+				{ "text": "Лечение деревьев/кронирование", "slugs": ["lechenie-derevev", "unichtozhenie-borshchevika"] },
+				{ "text": "Запах", "slugs": ["udalenie-zapahov", "ozonirovanie-pomeshcheniya"] },
+				{ "text": "Трупный яд", "slugs": ["uborka-posle-smerti"] },
+				{ "text": "Нет подходящего ответа", "slugs": [] }
+			]
+		},
+		{
+			"title": "Вид объекта",
+			"type": "radio",
+			"options": [
+				{ "text": "Частный дом" },
+				{ "text": "Комната" },
+				{ "text": "1к. квартира" },
+				{ "text": "2к. квартира" },
+				{ "text": "3к. квартира" },
+				{ "text": "Другая квартира" },
+				{ "text": "Земельный участок" },
+				{ "text": "Коммерческое помещение" },
+				{ "text": "Некоммерческое помещение" },
+				{ "text": "Режимный объект" }
+			]
+		},
+		{
+			"title": "Когда планируете обработку?",
+			"type": "radio",
+			"options": [
+				{ "text": "Сегодня" },
+				{ "text": "Завтра" },
+				{ "text": "В течение 7 дней" },
+				{ "text": "Ещё думаю (необходима консультация)" }
+			]
+		}
+	],
+	"final": {
+		"title": "Напишите контактный телефон для связи с Вами",
+		"phone_label": "Ваш телефон",
+		"contacts_label": "Выберите способ связи",
+		"button": "Получить консультацию",
+		"consent_html": "Согласен на обработку персональных данных и принимаю <a href=\"/politika/\">условия соглашения</a>",
+		"contacts": [
+			{ "id": "call", "text": "Звонок", "icon": "i-phone" },
+			{ "id": "whatsapp", "text": "WhatsApp", "icon": "i-wa" },
+			{ "id": "telegram", "text": "Telegram", "icon": "i-tg" },
+			{ "id": "max", "text": "MAX", "icon": "i-max" }
+		]
+	}
+}

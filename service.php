@@ -198,7 +198,11 @@ $descr  = isset($seo["description"]) ? $seo["description"] : "";
 	<?php require __DIR__ . "/source/include/block-coverage.php"; ?>
 	<?php endif; ?>
 
-	<!-- 12. форма заявки (квиз) — ждём логику, разметки пока нет намеренно -->
+	<!-- 12. форма заявки (квиз): вариант текущей услуги на шаге «проблема» отмечен заранее -->
+	<?php if (!empty($blocks["quiz"])): ?>
+	<?php $quizData = data_load("quiz"); $quizSlug = $canonical; $quizSource = "Квиз — " . $service["name"]; ?>
+	<?php require __DIR__ . "/source/include/block-quiz.php"; ?>
+	<?php endif; ?>
 
 	<!-- 13. виды услуг: текущую услугу из слайдера выкидываем -->
 	<?php if (!empty($blocks["services"])): ?>

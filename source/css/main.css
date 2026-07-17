@@ -1780,7 +1780,7 @@ body.modal-open {
 	left: 50%;
 	bottom: 0;
 	transform: translateX(-50%);
-	height: 100%;
+	height: 80%;
 	width: auto;
 	max-width: none;
 	pointer-events: none;
@@ -2081,7 +2081,7 @@ body.modal-open {
 }
 
 .methods-srv__card {
-	background: var(--color-bg-dark);
+	background: var(--color-blue);
 	color: var(--color-text-on-dark);
 	border-radius: 20px;
 	padding: 34px 30px;
@@ -2096,7 +2096,7 @@ body.modal-open {
 	font-weight: 800;
 	text-transform: uppercase;
 	text-align: center;
-	color: var(--color-accent);
+	color: var(--color-bg-dark);
 	margin-bottom: 24px;
 }
 
@@ -2113,6 +2113,322 @@ body.modal-open {
 	width: 100%;
 	max-width: 280px;
 	height: auto;
+}
+
+/* ===== страница услуги: квиз-заявка ===== */
+/* все экраны лежат в разметке сразу, показывает по одному JS (.is-active).
+   кнопка донора тёмно-зелёная — у нас фирменный градиент через .btn--primary */
+.quiz {
+	max-width: 1000px;
+	margin: 0 auto;
+	background: var(--color-bg-alt);
+	border-radius: 20px;
+	padding: 32px;
+}
+
+/* в потоке только активный экран — высота блока идёт по его контенту,
+   иначе короткий первый шаг тянется под самый длинный */
+.quiz__step {
+	display: none;
+}
+
+.quiz__step.is-active {
+	display: block;
+}
+
+.quiz__question {
+	font-size: 20px;
+	font-weight: 800;
+	margin-bottom: 20px;
+}
+
+.quiz__options {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+/* вариант — белая плашка на всю ширину, кликается целиком */
+.quiz__option {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	padding: 16px 20px;
+	background: #fff;
+	border-radius: var(--radius-sm);
+	border: 1px solid transparent;
+	cursor: pointer;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.quiz__option:hover {
+	border-color: var(--color-primary);
+}
+
+/* нативный кружок/квадрат прячем, рисуем свой в .quiz__mark */
+.quiz__option input,
+.quiz__consent input,
+.quiz__contact input {
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.quiz__mark {
+	flex: 0 0 auto;
+	position: relative;
+	width: 22px;
+	height: 22px;
+	border: 2px solid var(--color-primary);
+	border-radius: 50%;
+	transition: background 0.15s ease;
+}
+
+/* множественный выбор — квадрат со скруглением */
+.quiz__mark--box {
+	border-radius: 6px;
+}
+
+/* точка внутри кружка / галочка внутри квадрата */
+.quiz__mark::after {
+	content: "";
+	position: absolute;
+	opacity: 0;
+	transition: opacity 0.15s ease;
+	inset: 3px;
+	border-radius: 50%;
+	background: var(--color-primary);
+}
+
+.quiz__mark--box::after {
+	inset: 0;
+	border-radius: 0;
+	background: none;
+	border: solid #fff;
+	border-width: 0 2px 2px 0;
+	width: 6px;
+	height: 11px;
+	margin: 3px auto 0;
+	transform: rotate(45deg);
+}
+
+.quiz__option input:checked ~ .quiz__mark::after,
+.quiz__consent input:checked ~ .quiz__mark::after {
+	opacity: 1;
+}
+
+.quiz__mark--box {
+	overflow: hidden;
+}
+
+.quiz__option input:checked ~ .quiz__mark--box,
+.quiz__consent input:checked ~ .quiz__mark--box {
+	background: var(--color-primary);
+}
+
+/* выбранный вариант подсвечиваем рамкой — видно без взгляда на кружок */
+.quiz__option:has(input:checked) {
+	border-color: var(--color-primary);
+	box-shadow: var(--shadow);
+}
+
+.quiz__option-text {
+	font-size: 16px;
+}
+
+/* --- финальный экран: слева заголовок, справа форма --- */
+.quiz__final {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 40px;
+	align-items: center;
+}
+
+.quiz__final-title {
+	font-size: 26px;
+	font-weight: 800;
+	line-height: 1.25;
+}
+
+.quiz__field-label {
+	font-size: 14px;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: 0.4px;
+	margin-bottom: 10px;
+}
+
+.quiz__final-form input[type="tel"] {
+	width: 100%;
+	padding: 15px 18px;
+	margin-bottom: 20px;
+	border: 1px solid var(--color-primary);
+	border-radius: 999px;
+	font-family: inherit;
+	font-size: 15px;
+	background: #fff;
+}
+
+.quiz__final-form input[type="tel"]:focus {
+	outline: none;
+	border-color: var(--color-blue);
+}
+
+/* способ связи: кружки-иконки, невыбранные приглушены */
+.quiz__contacts {
+	display: flex;
+	gap: 12px;
+	margin-bottom: 20px;
+}
+
+.quiz__contact {
+	cursor: pointer;
+}
+
+.quiz__contact-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	background: var(--color-text-muted);
+	color: #fff;
+	transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.quiz__contact-icon svg {
+	width: 22px;
+	height: 22px;
+}
+
+.quiz__contact input:checked ~ .quiz__contact-icon {
+	background: var(--color-primary);
+	transform: scale(1.06);
+}
+
+.quiz__submit {
+	width: 100%;
+	border-radius: 999px;
+	margin-bottom: 16px;
+}
+
+.quiz__consent {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	cursor: pointer;
+	font-size: 13px;
+	line-height: 1.45;
+	color: var(--color-text-muted);
+}
+
+.quiz__consent .quiz__mark {
+	width: 20px;
+	height: 20px;
+	margin-top: 1px;
+}
+
+.quiz__consent-text a {
+	text-decoration: underline;
+}
+
+/* --- футер: прогресс + навигация --- */
+.quiz__footer {
+	display: flex;
+	align-items: center;
+	gap: 24px;
+	margin-top: 32px;
+}
+
+.quiz__progress {
+	flex: 1;
+	min-width: 0;
+}
+
+.quiz__progress-text {
+	font-size: 15px;
+	margin-bottom: 8px;
+}
+
+.quiz__progress-text strong {
+	color: var(--color-primary-dark);
+}
+
+.quiz__bar {
+	display: block;
+	height: 6px;
+	border-radius: 999px;
+	background: #d9dfe4;
+	overflow: hidden;
+}
+
+.quiz__bar-fill {
+	display: block;
+	height: 100%;
+	border-radius: 999px;
+	background: var(--gradient-accent);
+	transition: width 0.3s ease;
+}
+
+.quiz__nav {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex: 0 0 auto;
+}
+
+/* «Назад» на первом экране скрыта, место под неё не держим */
+.quiz__back {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	border: 1px solid var(--color-border);
+	background: #fff;
+	color: var(--color-text);
+	transition: background 0.15s ease, color 0.15s ease;
+}
+
+.quiz__back.is-visible {
+	display: flex;
+}
+
+.quiz__back:hover {
+	background: var(--color-primary);
+	color: #fff;
+	border-color: var(--color-primary);
+}
+
+.quiz__back svg {
+	width: 20px;
+	height: 20px;
+}
+
+.quiz__next {
+	border-radius: 999px;
+	text-transform: uppercase;
+}
+
+.quiz__next svg {
+	width: 18px;
+	height: 18px;
+}
+
+/* пока ничего не выбрано — дальше не пускаем */
+.quiz__next:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+	transform: none;
+	box-shadow: none;
+}
+
+/* на финале «Далее» не нужна — отправляет кнопка внутри формы */
+.quiz__next.is-hidden {
+	display: none;
 }
 
 /* ===== страница 404 ===== */
@@ -2325,8 +2641,8 @@ body.modal-open {
 	}
 
 	.hero-srv__worker {
-		height: 88%;
-		opacity: 0.55;
+		height: 70%;
+		opacity: 0.75;
 	}
 
 	/* объекты: две карточки в ряд */
@@ -2445,6 +2761,31 @@ body.modal-open {
 	.price-form .btn {
 		flex: 1 0 100%;
 	}
+
+	/* квиз: карточка уже, финал в столбик */
+	.quiz {
+		padding: 24px 18px;
+	}
+
+	.quiz__final {
+		grid-template-columns: 1fr;
+		gap: 24px;
+	}
+
+	.quiz__final-title {
+		font-size: 21px;
+	}
+
+	/* футер: прогресс сверху, кнопки под ним */
+	.quiz__footer {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 16px;
+	}
+
+	.quiz__nav {
+		justify-content: flex-end;
+	}
 }
 
 /* --- малый телефон --- */
@@ -2516,5 +2857,18 @@ body.modal-open {
 
 	.hero-srv__form {
 		padding: 22px 18px;
+	}
+
+	.quiz__question {
+		font-size: 17px;
+	}
+
+	.quiz__option {
+		padding: 14px 16px;
+		gap: 12px;
+	}
+
+	.quiz__option-text {
+		font-size: 14px;
 	}
 }

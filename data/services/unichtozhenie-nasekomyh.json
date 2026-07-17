@@ -72,6 +72,7 @@
 		"certificates": true,
 		"veterans": true,
 		"coverage": true,
+		"quiz": true,
 		"services": true,
 		"faq": true
 	},

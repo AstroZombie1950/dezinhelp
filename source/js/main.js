@@ -104,6 +104,13 @@ document.addEventListener("DOMContentLoaded", function () {
 				return;
 			}
 
+			// согласие на обработку данных — есть только там, где его требует макет
+			var consent = form.querySelector("input[name=consent]");
+			if (consent && !consent.checked) {
+				setStatus(status, "Подтвердите согласие на обработку данных", "error");
+				return;
+			}
+
 			var btn = form.querySelector("button[type=submit]");
 			if (btn) { btn.disabled = true; }
 			setStatus(status, "Отправляем…", "");
@@ -114,6 +121,8 @@ document.addEventListener("DOMContentLoaded", function () {
 					if (res.ok) {
 						setStatus(status, "Заявка отправлена! Мы перезвоним вам.", "success");
 						form.reset();
+						// квизу нужно вернуться на первый экран — слушает это событие
+						form.dispatchEvent(new CustomEvent("form:sent"));
 					} else {
 						setStatus(status, "Не удалось отправить. Позвоните нам, пожалуйста.", "error");
 					}
@@ -422,5 +431,87 @@ document.addEventListener("DOMContentLoaded", function () {
 		collapse.addEventListener("transitionend", function (e) {
 			if (e.propertyName === "max-height" && open) { collapse.style.maxHeight = "none"; }
 		});
+	}
+
+	// ===== квиз-заявка: переключение экранов, прогресс, блокировка «Далее» =====
+	// отправку делает общий обработчик .js-form — здесь только навигация
+	var quiz = document.querySelector(".js-quiz");
+	if (quiz) {
+		var quizSteps = quiz.querySelectorAll(".quiz__step");
+		var quizBack = quiz.querySelector(".js-quiz-back");
+		var quizNext = quiz.querySelector(".js-quiz-next");
+		var quizLabel = quiz.querySelector(".js-quiz-label");
+		var quizPercent = quiz.querySelector(".js-quiz-percent");
+		var quizFill = quiz.querySelector(".js-quiz-fill");
+		var quizFinalLabel = quiz.querySelector(".js-quiz-final-label").textContent;
+		var quizStartLabel = quizLabel.textContent;
+		var quizIndex = 0;
+
+		// на финале «Далее» не нужна, там своя кнопка отправки
+		function quizIsFinal(i) {
+			return quizSteps[i].classList.contains("quiz__step--final");
+		}
+
+		// пустой шаг дальше не пускает: и радио, и чекбоксы считаем одинаково
+		function quizAnswered(i) {
+			return quizSteps[i].querySelector("input:checked") !== null;
+		}
+
+		function quizRender() {
+			quizSteps.forEach(function (step, i) {
+				step.classList.toggle("is-active", i === quizIndex);
+			});
+
+			var percent = quizSteps[quizIndex].dataset.percent;
+			quizPercent.textContent = percent + "%";
+			quizFill.style.width = percent + "%";
+
+			// на финале счётчик процентов заменяем подписью «остался последний шаг»
+			var final = quizIsFinal(quizIndex);
+			quizLabel.textContent = final ? quizFinalLabel : quizStartLabel;
+			quizPercent.hidden = final;
+
+			quizBack.classList.toggle("is-visible", quizIndex > 0);
+			quizNext.classList.toggle("is-hidden", final);
+			quizNext.disabled = !final && !quizAnswered(quizIndex);
+		}
+
+		// выбор варианта разблокирует «Далее» сразу, без перерисовки экрана
+		quiz.addEventListener("change", function () {
+			if (!quizIsFinal(quizIndex)) {
+				quizNext.disabled = !quizAnswered(quizIndex);
+			}
+		});
+
+		quizNext.addEventListener("click", function () {
+			if (quizIndex < quizSteps.length - 1) {
+				quizIndex++;
+				quizRender();
+			}
+		});
+
+		quizBack.addEventListener("click", function () {
+			if (quizIndex > 0) {
+				quizIndex--;
+				quizRender();
+			}
+		});
+
+		// отправили — даём прочитать ответ и возвращаем на первый экран.
+		// reset() уже отработал в обработчике формы: предвыбранные варианты
+		// проставлены атрибутом checked и переживают сброс
+		quiz.addEventListener("form:sent", function () {
+			setTimeout(function () {
+				var status = quiz.querySelector(".form-status");
+				if (status) {
+					status.textContent = "";
+					status.className = "form-status";
+				}
+				quizIndex = 0;
+				quizRender();
+			}, 3000);
+		});
+
+		quizRender();
 	}
 });
