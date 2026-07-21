@@ -405,6 +405,162 @@ case "home_slider_upload":
 
 	respond(true, array("path" => "/source/img/our_services/" . $name));
 
+// примеры работ: вся форма приходит одним JSON-полем
+case "works_save":
+	$in = json_decode(isset($_POST["works_json"]) ? $_POST["works_json"] : "", true);
+	if (!is_array($in)) { fail("Не получилось прочитать данные формы — обновите страницу"); }
+
+	$items = array();
+	foreach ((array) (isset($in["items"]) ? $in["items"] : array()) as $n => $w) {
+		$text = isset($w["text"]) ? trim($w["text"]) : "";
+		if ($text === "") { fail("У примера №" . ($n + 1) . " не заполнен текст"); }
+
+		// оба фото обязательны — сравнивать иначе нечего
+		$before = isset($w["before"]) ? trim($w["before"]) : "";
+		$after  = isset($w["after"]) ? trim($w["after"]) : "";
+		if ($before === "" || $after === "") { fail("У примера «" . $text . "» должны быть оба фото — до и после"); }
+		if (strpos($before, "/source/img/") !== 0 || strpos($after, "/source/img/") !== 0) {
+			fail("У примера «" . $text . "» неправильный путь к фото");
+		}
+
+		// привязка только к существующей услуге — битых ссылок на сайте не оставляем
+		$cslug = isset($w["slug"]) ? trim($w["slug"]) : "";
+		if ($cslug !== "" && svc_index($services, $cslug) < 0) {
+			fail("Пример «" . $text . "» привязан к услуге, которой уже нет — выберите другую");
+		}
+
+		$items[] = array(
+			"text"     => $text,
+			"year"     => isset($w["year"]) ? trim($w["year"]) : "",
+			"location" => isset($w["location"]) ? trim($w["location"]) : "",
+			"slug"     => $cslug,
+			"before"   => $before,
+			"after"    => $after,
+		);
+	}
+
+	// порядок ключей файла сохраняем: visible, title, items
+	$data = array(
+		"visible" => !empty($in["visible"]),
+		"title"   => isset($in["title"]) ? trim($in["title"]) : "",
+		"items"   => $items,
+	);
+	json_write(data_path("works"), $data);
+	respond(true);
+
+// загрузка фото примера: любой jpeg/png/webp кропается в квадрат 640×640 и жмётся в webp
+case "works_upload":
+	if (empty($_FILES["file"]) || $_FILES["file"]["error"] === UPLOAD_ERR_INI_SIZE || $_FILES["file"]["error"] === UPLOAD_ERR_FORM_SIZE) {
+		fail("Файл слишком большой — загрузите фото до 10 МБ");
+	}
+	if ($_FILES["file"]["error"] !== UPLOAD_ERR_OK || !is_uploaded_file($_FILES["file"]["tmp_name"])) {
+		fail("Не получилось загрузить файл — попробуйте ещё раз");
+	}
+	if ($_FILES["file"]["size"] > 10 * 1024 * 1024) { fail("Файл слишком большой — загрузите фото до 10 МБ"); }
+
+	$info = getimagesize($_FILES["file"]["tmp_name"]);
+	if (!$info) { fail("Это не похоже на картинку — нужен файл JPG, PNG или WebP"); }
+
+	switch ($info[2]) {
+		case IMAGETYPE_JPEG: $src = imagecreatefromjpeg($_FILES["file"]["tmp_name"]); break;
+		case IMAGETYPE_PNG:  $src = imagecreatefrompng($_FILES["file"]["tmp_name"]); break;
+		case IMAGETYPE_WEBP: $src = imagecreatefromwebp($_FILES["file"]["tmp_name"]); break;
+		default: fail("Такой формат не подходит — нужен файл JPG, PNG или WebP");
+	}
+	if (!$src) { fail("Не получилось прочитать картинку — попробуйте другой файл"); }
+
+	// кроп «cover»: масштабируем по меньшей стороне и вырезаем центр
+	$sw = imagesx($src); $sh = imagesy($src);
+	$side = min($sw, $sh);
+	$sx = (int) (($sw - $side) / 2);
+	$sy = (int) (($sh - $side) / 2);
+
+	$dst = imagecreatetruecolor(640, 640);
+	$white = imagecolorallocate($dst, 255, 255, 255);
+	imagefill($dst, 0, 0, $white);
+	imagecopyresampled($dst, $src, 0, 0, $sx, $sy, 640, 640, $side, $side);
+	imagedestroy($src);
+
+	$name = "w" . date("Ymd-His") . "-" . substr(bin2hex(random_bytes(3)), 0, 4) . ".webp";
+	$dir  = realpath(__DIR__ . "/../../source/img/works");
+	if (!$dir) { fail("Папка для фотографий не найдена на сервере"); }
+	if (!imagewebp($dst, $dir . "/" . $name, 82)) {
+		imagedestroy($dst);
+		fail("Не получилось сохранить фотографию на сервере");
+	}
+	imagedestroy($dst);
+
+	respond(true, array("path" => "/source/img/works/" . $name));
+
+// вкладка «Герой»: цена в плашке + пути картинок (герой и текст)
+case "svc_save_hero":
+	$slug = isset($_POST["slug"]) ? (string) $_POST["slug"] : "";
+	if (svc_index($services, $slug) < 0) { fail("Услуга не найдена — обновите страницу"); }
+	$pg = json_read(service_path($slug));
+	if (!$pg) { fail("Файл страницы не найден"); }
+
+	$pg["hero_price"] = isset($_POST["hero_price"]) ? trim($_POST["hero_price"]) : "";
+
+	// пути принимаем только из нашей папки; пусто = сброс на дефолт
+	$hi = isset($_POST["hero_image"]) ? trim($_POST["hero_image"]) : "";
+	$ti = isset($_POST["text_image"]) ? trim($_POST["text_image"]) : "";
+	$pg["hero_image"] = (strpos($hi, "/source/img/") === 0) ? $hi : "";
+	$pg["text_image"] = (strpos($ti, "/source/img/") === 0) ? $ti : "";
+
+	json_write(service_path($slug), $pg);
+	respond(true);
+
+// загрузка картинки услуги (герой / текст): даунскейл до 900px по ширине без кропа,
+// прозрачность сохраняем (png без фона для текста), результат — webp
+case "svc_image_upload":
+	if (empty($_FILES["file"]) || $_FILES["file"]["error"] === UPLOAD_ERR_INI_SIZE || $_FILES["file"]["error"] === UPLOAD_ERR_FORM_SIZE) {
+		fail("Файл слишком большой — загрузите фото до 10 МБ");
+	}
+	if ($_FILES["file"]["error"] !== UPLOAD_ERR_OK || !is_uploaded_file($_FILES["file"]["tmp_name"])) {
+		fail("Не получилось загрузить файл — попробуйте ещё раз");
+	}
+	if ($_FILES["file"]["size"] > 10 * 1024 * 1024) { fail("Файл слишком большой — загрузите фото до 10 МБ"); }
+
+	$info = getimagesize($_FILES["file"]["tmp_name"]);
+	if (!$info) { fail("Это не похоже на картинку — нужен файл JPG, PNG или WebP"); }
+
+	switch ($info[2]) {
+		case IMAGETYPE_JPEG: $src = imagecreatefromjpeg($_FILES["file"]["tmp_name"]); break;
+		case IMAGETYPE_PNG:  $src = imagecreatefrompng($_FILES["file"]["tmp_name"]); break;
+		case IMAGETYPE_WEBP: $src = imagecreatefromwebp($_FILES["file"]["tmp_name"]); break;
+		default: fail("Такой формат не подходит — нужен файл JPG, PNG или WebP");
+	}
+	if (!$src) { fail("Не получилось прочитать картинку — попробуйте другой файл"); }
+
+	// даунскейл по ширине, пропорции сохраняем; апскейл не делаем
+	$sw = imagesx($src); $sh = imagesy($src);
+	$maxW = 900;
+	if ($sw > $maxW) { $nw = $maxW; $nh = (int) round($sh * $maxW / $sw); }
+	else { $nw = $sw; $nh = $sh; }
+
+	$dst = imagecreatetruecolor($nw, $nh);
+	// сохраняем прозрачность (для png без фона)
+	imagealphablending($dst, false);
+	imagesavealpha($dst, true);
+	$transparent = imagecolorallocatealpha($dst, 0, 0, 0, 127);
+	imagefilledrectangle($dst, 0, 0, $nw, $nh, $transparent);
+	imagecopyresampled($dst, $src, 0, 0, 0, 0, $nw, $nh, $sw, $sh);
+	imagedestroy($src);
+
+	$dir = __DIR__ . "/../../source/img/services";
+	if (!is_dir($dir)) { @mkdir($dir, 0755, true); }
+	$dir = realpath($dir);
+	if (!$dir) { fail("Папка для фотографий не найдена на сервере"); }
+
+	$name = "s" . date("Ymd-His") . "-" . substr(bin2hex(random_bytes(3)), 0, 4) . ".webp";
+	if (!imagewebp($dst, $dir . "/" . $name, 84)) {
+		imagedestroy($dst);
+		fail("Не получилось сохранить фотографию на сервере");
+	}
+	imagedestroy($dst);
+
+	respond(true, array("path" => "/source/img/services/" . $name));
+
 default:
 	fail("Неизвестное действие");
 }

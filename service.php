@@ -35,6 +35,10 @@ $homeServices = data_load("home-services");
 $blocks = isset($page["blocks"]) ? $page["blocks"] : array();
 $seo    = isset($page["seo"]) ? $page["seo"] : array();
 $hero   = $servicePage["hero"];
+// картинка и цена геро — свои у каждой услуги, иначе общий дефолт из service-page.json
+$heroImg    = !empty($page["hero_image"]) ? $page["hero_image"] : $hero["worker"];
+$heroImgAlt = !empty($page["hero_image_alt"]) ? $page["hero_image_alt"] : (isset($hero["worker_alt"]) ? $hero["worker_alt"] : "");
+$heroPrice  = array_key_exists("hero_price", $page) ? trim((string) $page["hero_price"]) : (isset($hero["price"]) ? $hero["price"] : "");
 $url    = $siteUrl . $path;
 $title  = isset($seo["title"]) ? $seo["title"] : $service["name"];
 $descr  = isset($seo["description"]) ? $seo["description"] : "";
@@ -83,45 +87,63 @@ $descr  = isset($seo["description"]) ? $seo["description"] : "";
 
 	<main>
 
-	<!-- 1. герой: заголовок · чек-лист · сноска | форма. Рабочий и дым — фоновые слои, сетку не двигают -->
+	<!-- 1. герой: каркас как на главной — заголовок и лид на всю ширину, слева контент+форма, справа картинка с ценой -->
 	<section class="hero-srv">
-		<div class="hero-srv__smoke" aria-hidden="true"></div>
-		<img class="hero-srv__worker" src="<?= h($hero["worker"]) ?>" alt="<?= h($hero["worker_alt"]) ?>" width="823" height="1000" loading="eager" aria-hidden="true">
-
 		<div class="container">
+
+			<h1 class="hero-srv__title"><?php
+			// первые пару слов заголовка — фирменным градиентом, как на главной
+			$hWords = preg_split('/\s+/', trim($page["h1"]));
+			$hHead  = h(implode(" ", array_slice($hWords, 0, 2)));
+			$hTail  = h(implode(" ", array_slice($hWords, 2)));
+			echo '<span class="hero__title-mark">' . $hHead . '</span>' . ($hTail !== "" ? " " . $hTail : "");
+			?></h1>
+
 			<div class="hero-srv__cols">
 
 				<div class="hero-srv__left">
-					<h1 class="hero-srv__title"><?= h($page["h1"]) ?></h1>
-
-					<ul class="hero-srv__checks">
-						<?php foreach ($hero["checks"] as $c): ?>
-						<li class="hero-srv__check">
-							<span class="hero-srv__check-icon"><svg aria-hidden="true"><use href="#<?= h($c["icon"]) ?>"></use></svg></span>
-							<span class="hero-srv__check-text"><?= h($c["text"]) ?></span>
-						</li>
-						<?php endforeach; ?>
-					</ul>
+					<?php require __DIR__ . "/source/include/hero-checks.php"; ?>
 
 					<?php // сноска своя у каждой услуги; пусто — не выводим ?>
 					<?php if (!empty($page["hero_note"])): ?>
 					<p class="hero-srv__note"><span class="hero-srv__note-star">*</span><?= h($page["hero_note"]) ?></p>
 					<?php endif; ?>
+
+					<?php // блок заявки — тот же, что на главной: выноска + телефон + мессенджеры ?>
+					<div class="hero__bubble">СКИДКА 10%, ОСТАВЬТЕ ЗАЯВКУ ЗДЕСЬ</div>
+
+					<form class="hero__form js-form" action="/source/php/order.php" method="post">
+						<input type="hidden" name="source" value="Услуга: <?= h($service["name"]) ?> — герой">
+						<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+						<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" required>
+						<button type="submit" class="btn btn--primary btn--block">Оставить заявку</button>
+						<div class="form-status" role="status"></div>
+						<div class="hero__form-note">Нажимая на кнопку, я соглашаюсь с <a href="/politika/">правилами обработки данных</a></div>
+					</form>
+
+					<div class="hero__chat">
+						<div class="hero__chat-title">Или напишите нам в онлайн-чат</div>
+						<div class="hero__messengers">
+							<a class="msg-line" href="<?= h($msg["max"]) ?>" target="_blank" rel="noopener" aria-label="Max"><svg><use href="#i-max"></use></svg></a>
+							<a class="msg-line" href="<?= h($msg["whatsapp"]) ?>" target="_blank" rel="noopener" aria-label="WhatsApp"><svg><use href="#i-wa"></use></svg></a>
+							<a class="msg-line" href="<?= h($msg["telegram"]) ?>" target="_blank" rel="noopener" aria-label="Telegram"><svg><use href="#i-tg"></use></svg></a>
+							<a class="msg-line" href="mailto:<?= h($email) ?>" aria-label="Почта"><svg><use href="#i-mail"></use></svg></a>
+						</div>
+					</div>
 				</div>
 
+				<!-- правая колонка: картинка услуги + плашка цены в углу (плашка — та же, что на главной) -->
 				<div class="hero-srv__right">
-					<form class="hero-srv__form js-form" action="/source/php/order.php" method="post">
-						<input type="hidden" name="source" value="Услуга: <?= h($service["name"]) ?>">
-						<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-						<div class="hero-srv__form-eyebrow"><?= h($hero["form"]["eyebrow"]) ?></div>
-						<div class="hero-srv__form-title"><?= h($hero["form"]["title"]) ?></div>
-						<div class="hero-srv__form-sub"><?= h($hero["form"]["subtitle"]) ?></div>
-						<input type="text" name="name" placeholder="Ваше имя" autocomplete="name" required>
-						<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" required>
-						<button type="submit" class="btn btn--primary btn--block"><?= h($hero["form"]["button"]) ?></button>
-						<div class="form-status" role="status"></div>
-						<div class="hero-srv__form-note">Отправляя свои данные, вы соглашаетесь с <a href="/politika/">политикой конфиденциальности</a></div>
-					</form>
+					<div class="hero-srv__figure">
+						<img class="hero-srv__img" src="<?= h($heroImg) ?>" alt="<?= h($heroImgAlt) ?>" loading="eager">
+						<?php if ($heroPrice !== ""): ?>
+						<div class="hero__price">
+							<span class="hero__price-top">от</span>
+							<span class="hero__price-num"><?= h($heroPrice) ?><span class="hero__price-cur">₽</span></span>
+							<span class="hero__price-bottom">за услугу</span>
+						</div>
+						<?php endif; ?>
+					</div>
 				</div>
 
 			</div>
@@ -137,24 +159,36 @@ $descr  = isset($seo["description"]) ? $seo["description"] : "";
 	<?php require __DIR__ . "/source/include/block-gallery.php"; ?>
 	<?php endif; ?>
 
-	<!-- 4. основной текст: вводный абзац виден всегда, остальное под кнопкой -->
+	<!-- 4. основной текст: вводный абзац виден всегда, остальное под кнопкой. Слева — картинка услуги (если задана) -->
 	<section class="section" id="about">
 		<div class="container">
 			<?php
 			// виден только первый абзац; остальное вводного текста и весь SEO-текст — под кнопкой
 			list($textFirst, $textRest) = html_first_para($page["intro_html"]);
 			$textMore = $textRest . $page["seo_html"];
+			// картинка слева от текста — своя у каждой услуги, пусто = текст на всю ширину
+			$textImg    = !empty($page["text_image"]) ? $page["text_image"] : "";
+			$textImgAlt = !empty($page["text_image_alt"]) ? $page["text_image_alt"] : "";
 			?>
-			<div class="srv-text">
-				<div class="srv-text__intro"><?= $textFirst ?></div>
+			<div class="srv-about<?= $textImg !== "" ? " srv-about--media" : "" ?>">
 
-				<?php if (trim($textMore) !== ""): ?>
-				<div class="srv-text__more js-collapse">
-					<div class="srv-text__inner"><?= $textMore ?></div>
+				<?php if ($textImg !== ""): ?>
+				<div class="srv-about__media">
+					<img src="<?= h($textImg) ?>" alt="<?= h($textImgAlt) ?>" loading="lazy">
 				</div>
-				<button type="button" class="srv-text__toggle js-collapse-toggle" aria-expanded="false"
-					data-more="<?= h($servicePage["text"]["more"]) ?>" data-less="<?= h($servicePage["text"]["less"]) ?>"><?= h($servicePage["text"]["more"]) ?></button>
 				<?php endif; ?>
+
+				<div class="srv-text">
+					<div class="srv-text__intro"><?= $textFirst ?></div>
+
+					<?php if (trim($textMore) !== ""): ?>
+					<div class="srv-text__more js-collapse">
+						<div class="srv-text__inner"><?= $textMore ?></div>
+					</div>
+					<button type="button" class="srv-text__toggle js-collapse-toggle" aria-expanded="false"
+						data-more="<?= h($servicePage["text"]["more"]) ?>" data-less="<?= h($servicePage["text"]["less"]) ?>"><?= h($servicePage["text"]["more"]) ?></button>
+					<?php endif; ?>
+				</div>
 			</div>
 		</div>
 	</section>

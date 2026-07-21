@@ -29,6 +29,7 @@ $blockLabels = array(
 <!-- переключатель вкладок -->
 <div class="tabs" id="tabs">
 	<button type="button" class="tabs__btn is-active" data-tab="seo">SEO</button>
+	<button type="button" class="tabs__btn" data-tab="hero">Герой</button>
 	<button type="button" class="tabs__btn" data-tab="texts">Тексты</button>
 	<button type="button" class="tabs__btn" data-tab="prices">Цены</button>
 	<button type="button" class="tabs__btn" data-tab="blocks">Блоки</button>
@@ -59,6 +60,45 @@ $blockLabels = array(
 		<span class="field__label">Keywords (ключевые слова через запятую)</span>
 		<textarea name="keywords" rows="2"><?= h(isset($eSeo["keywords"]) ? $eSeo["keywords"] : "") ?></textarea>
 	</label>
+	<div class="tab__actions"><button type="submit" class="btn btn--primary">Сохранить</button></div>
+</form>
+
+<!-- ===== Герой: цена в плашке + картинки (герой и текст) ===== -->
+<form class="tab card js-tab-form" data-tab="hero" data-action="svc_save_hero" id="hero-form">
+	<label class="field">
+		<span class="field__label">Цена в плашке (только число)</span>
+		<input type="text" name="hero_price" value="<?= h(isset($editPage["hero_price"]) ? $editPage["hero_price"] : "") ?>">
+		<span class="field__hint">Показывается как «от N₽ за услугу» в углу картинки. Пусто — плашка скрыта.</span>
+	</label>
+
+	<div class="himg-grid">
+		<div class="himg js-himg">
+			<span class="field__label">Картинка в герое (справа)</span>
+			<?php $eHeroImg = isset($editPage["hero_image"]) ? $editPage["hero_image"] : ""; ?>
+			<img<?= $eHeroImg !== "" ? ' src="' . h($eHeroImg) . '"' : "" ?> alt="" class="himg__img<?= $eHeroImg === "" ? " is-empty" : "" ?>">
+			<input type="hidden" name="hero_image" class="himg__path" value="<?= h($eHeroImg) ?>">
+			<div class="himg__actions">
+				<button type="button" class="btn btn--small js-himg-photo"><?= $eHeroImg === "" ? "Загрузить" : "Заменить" ?></button>
+				<button type="button" class="btn btn--small js-himg-clear">Убрать</button>
+			</div>
+			<input type="file" class="himg__file" accept="image/jpeg,image/png,image/webp" hidden>
+			<span class="field__hint">Пусто — общая картинка по умолчанию.</span>
+		</div>
+
+		<div class="himg js-himg">
+			<span class="field__label">Картинка у текста (слева от текста)</span>
+			<?php $eTextImg = isset($editPage["text_image"]) ? $editPage["text_image"] : ""; ?>
+			<img<?= $eTextImg !== "" ? ' src="' . h($eTextImg) . '"' : "" ?> alt="" class="himg__img<?= $eTextImg === "" ? " is-empty" : "" ?>">
+			<input type="hidden" name="text_image" class="himg__path" value="<?= h($eTextImg) ?>">
+			<div class="himg__actions">
+				<button type="button" class="btn btn--small js-himg-photo"><?= $eTextImg === "" ? "Загрузить" : "Заменить" ?></button>
+				<button type="button" class="btn btn--small js-himg-clear">Убрать</button>
+			</div>
+			<input type="file" class="himg__file" accept="image/jpeg,image/png,image/webp" hidden>
+			<span class="field__hint">Пусто — текст на всю ширину, без картинки.</span>
+		</div>
+	</div>
+
 	<div class="tab__actions"><button type="submit" class="btn btn--primary">Сохранить</button></div>
 </form>
 

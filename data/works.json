@@ -1,0 +1,38 @@
+{
+	"visible": true,
+	"title": "Примеры наших работ",
+	"items": [
+		{
+			"text": "Уничтожение плесени",
+			"year": "2025",
+			"location": "Москва, метро Фили",
+			"slug": "obrabotka-ot-pleseni",
+			"before": "/source/img/works/work_1_before.webp",
+			"after": "/source/img/works/work_1_after.webp"
+		},
+		{
+			"text": "Уничтожение борщевика",
+			"year": "2026",
+			"location": "Истра",
+			"slug": "unichtozhenie-borshchevika",
+			"before": "/source/img/works/work_2_before.webp",
+			"after": "/source/img/works/work_2_after.webp"
+		},
+		{
+			"text": "Демонтаж, Дезинфекция, Осушение квартиры",
+			"year": "2024",
+			"location": "Москва, метро Селигерская",
+			"slug": "uborka-posle-zatopleniya",
+			"before": "/source/img/works/work_3_before.webp",
+			"after": "/source/img/works/work_3_after.webp"
+		},
+		{
+			"text": "Уничтожение шершней",
+			"year": "2023",
+			"location": "Красногорский район",
+			"slug": "izbavitsya-ot-shershney",
+			"before": "/source/img/works/work_4_before.webp",
+			"after": "/source/img/works/work_4_after.webp"
+		}
+	]
+}

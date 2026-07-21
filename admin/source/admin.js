@@ -308,6 +308,10 @@
 			if (form.id === "slider-form") {
 				body.set("slider_json", JSON.stringify(window.collectSlider()));
 			}
+			// примеры работ: карточки собираются своим модулем
+			if (form.id === "works-form") {
+				body.set("works_json", JSON.stringify(window.collectWorks()));
+			}
 
 			fetch("/admin/php/actions.php", { method: "POST", body: body })
 				.then(function (r) { return r.json(); })
@@ -753,6 +757,199 @@
 			.finally(function () {
 				btn.disabled = false;
 				btn.textContent = "Заменить фото";
+				input.value = "";
+			});
+	});
+})();
+
+/* ===== примеры работ: карточки «до/после» ===== */
+(function () {
+	"use strict";
+
+	var form = document.getElementById("works-form");
+	if (!form) { return; }
+
+	var CSRF = document.body.dataset.csrf || "";
+	var cardsBox = document.getElementById("works-cards");
+
+	function toast(text, type) {
+		var box = document.getElementById("toasts");
+		var el = document.createElement("div");
+		el.className = "toast" + (type ? " toast--" + type : "");
+		el.textContent = text;
+		box.appendChild(el);
+		setTimeout(function () { el.remove(); }, type === "error" ? 6000 : 2500);
+	}
+
+	// путь фото из нужного слота (до/после) карточки
+	function photoPath(card, role) {
+		return card.querySelector('[data-role="' + role + '"] .wcard__image').value;
+	}
+
+	// сборка формы в структуру для сохранения; дергается общим обработчиком
+	window.collectWorks = function () {
+		var items = [];
+		cardsBox.querySelectorAll(".js-wcard").forEach(function (c) {
+			items.push({
+				text: c.querySelector(".wcard__text").value,
+				year: c.querySelector(".wcard__year").value,
+				location: c.querySelector(".wcard__location").value,
+				slug: c.querySelector(".wcard__slug").value,
+				before: photoPath(c, "before"),
+				after: photoPath(c, "after")
+			});
+		});
+		return {
+			visible: document.getElementById("works-visible").checked,
+			title: form.title.value,
+			items: items
+		};
+	};
+
+	form.addEventListener("click", function (e) {
+		var t = e.target;
+
+		if (t.classList.contains("js-wc-del")) {
+			t.closest(".js-wcard").remove();
+			form.dispatchEvent(new Event("change", { bubbles: false }));
+		}
+		if (t.classList.contains("js-wc-move")) {
+			var el = t.closest(".js-wcard");
+			if (t.dataset.dir === "up" && el.previousElementSibling) {
+				el.parentNode.insertBefore(el, el.previousElementSibling);
+			}
+			if (t.dataset.dir === "down" && el.nextElementSibling) {
+				el.parentNode.insertBefore(el.nextElementSibling, el);
+			}
+			form.dispatchEvent(new Event("change", { bubbles: false }));
+		}
+		// «Загрузить/Заменить» открывает скрытый input file своего слота
+		if (t.classList.contains("js-wc-photo")) {
+			t.closest(".wcard__photo").querySelector(".wcard__file").click();
+		}
+	});
+
+	document.getElementById("wc-add").addEventListener("click", function () {
+		cardsBox.appendChild(document.getElementById("tpl-wcard").content.firstElementChild.cloneNode(true));
+	});
+
+	// выбор файла → сразу загрузка на сервер → превью и путь в слоте
+	form.addEventListener("change", function (e) {
+		if (!e.target.classList || !e.target.classList.contains("wcard__file")) { return; }
+		var input = e.target;
+		var file = input.files[0];
+		if (!file) { return; }
+		if (file.size > 10 * 1024 * 1024) {
+			toast("Файл слишком большой — загрузите фото до 10 МБ", "error");
+			input.value = "";
+			return;
+		}
+
+		var photo = input.closest(".wcard__photo");
+		var btn = photo.querySelector(".js-wc-photo");
+		btn.disabled = true;
+		btn.textContent = "Загружается…";
+
+		var body = new FormData();
+		body.set("action", "works_upload");
+		body.set("csrf", CSRF);
+		body.set("file", file);
+
+		fetch("/admin/php/actions.php", { method: "POST", body: body })
+			.then(function (r) { return r.json(); })
+			.then(function (json) {
+				if (!json.ok) { toast(json.error || "Не получилось загрузить фото", "error"); return; }
+				photo.querySelector(".wcard__image").value = json.path;
+				var img = photo.querySelector(".wcard__img");
+				img.src = json.path;
+				img.classList.remove("is-empty");
+				toast("Фото загружено — не забудьте сохранить", "ok");
+			})
+			.catch(function () {
+				toast("Не получилось связаться с сервером. Проверьте интернет и попробуйте ещё раз.", "error");
+			})
+			.finally(function () {
+				btn.disabled = false;
+				btn.textContent = "Заменить";
+				input.value = "";
+			});
+	});
+})();
+
+
+/* ===== редактор услуги, вкладка «Герой»: картинки услуги ===== */
+(function () {
+	"use strict";
+
+	var form = document.getElementById("hero-form");
+	if (!form) { return; }
+
+	var CSRF = document.body.dataset.csrf || "";
+
+	function toast(text, type) {
+		var box = document.getElementById("toasts");
+		var el = document.createElement("div");
+		el.className = "toast" + (type ? " toast--" + type : "");
+		el.textContent = text;
+		box.appendChild(el);
+		setTimeout(function () { el.remove(); }, type === "error" ? 6000 : 2500);
+	}
+
+	form.addEventListener("click", function (e) {
+		var t = e.target;
+		// «Загрузить/Заменить» → открыть скрытый input file своего слота
+		if (t.classList.contains("js-himg-photo")) {
+			t.closest(".js-himg").querySelector(".himg__file").click();
+		}
+		// «Убрать» → сброс пути (услуга вернётся к дефолту)
+		if (t.classList.contains("js-himg-clear")) {
+			var slot = t.closest(".js-himg");
+			slot.querySelector(".himg__path").value = "";
+			var img = slot.querySelector(".himg__img");
+			img.removeAttribute("src");
+			img.classList.add("is-empty");
+			form.dispatchEvent(new Event("change", { bubbles: false }));
+		}
+	});
+
+	// выбор файла → загрузка на сервер → превью и путь в слоте
+	form.addEventListener("change", function (e) {
+		if (!e.target.classList || !e.target.classList.contains("himg__file")) { return; }
+		var input = e.target;
+		var file = input.files[0];
+		if (!file) { return; }
+		if (file.size > 10 * 1024 * 1024) {
+			toast("Файл слишком большой — загрузите фото до 10 МБ", "error");
+			input.value = "";
+			return;
+		}
+
+		var slot = input.closest(".js-himg");
+		var btn = slot.querySelector(".js-himg-photo");
+		btn.disabled = true;
+		btn.textContent = "Загружается…";
+
+		var body = new FormData();
+		body.set("action", "svc_image_upload");
+		body.set("csrf", CSRF);
+		body.set("file", file);
+
+		fetch("/admin/php/actions.php", { method: "POST", body: body })
+			.then(function (r) { return r.json(); })
+			.then(function (json) {
+				if (!json.ok) { toast(json.error || "Не получилось загрузить фото", "error"); return; }
+				slot.querySelector(".himg__path").value = json.path;
+				var img = slot.querySelector(".himg__img");
+				img.src = json.path;
+				img.classList.remove("is-empty");
+				toast("Фото загружено — не забудьте сохранить", "ok");
+			})
+			.catch(function () {
+				toast("Не получилось связаться с сервером. Проверьте интернет и попробуйте ещё раз.", "error");
+			})
+			.finally(function () {
+				btn.disabled = false;
+				btn.textContent = "Заменить";
 				input.value = "";
 			});
 	});

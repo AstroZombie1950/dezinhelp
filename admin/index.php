@@ -60,6 +60,7 @@ foreach ($groups as $g) { $groupNames[$g["id"]] = $g["title"]; }
 			<a href="/admin/" class="<?= $page === "services" ? "is-active" : "" ?>">Услуги</a>
 			<a href="/admin/?page=prices" class="<?= $page === "prices" ? "is-active" : "" ?>">Прайс главной</a>
 			<a href="/admin/?page=slider" class="<?= $page === "slider" ? "is-active" : "" ?>">Слайдер главной</a>
+			<a href="/admin/?page=works" class="<?= $page === "works" ? "is-active" : "" ?>">Примеры работ</a>
 			<a href="/admin/?page=trash" class="<?= $page === "trash" ? "is-active" : "" ?>">Корзина<?= $trash ? " (" . count($trash) . ")" : "" ?></a>
 			<a href="/" target="_blank" rel="noopener">Открыть сайт ↗</a>
 		</nav>
@@ -93,6 +94,11 @@ foreach ($groups as $g) { $groupNames[$g["id"]] = $g["title"]; }
 
 		<?php $homeSlider = json_read(data_path("home-services")); ?>
 		<?php require __DIR__ . "/views/home-slider.php"; ?>
+
+	<?php elseif ($page === "works"): ?>
+
+		<?php $works = json_read(data_path("works")); ?>
+		<?php require __DIR__ . "/views/works.php"; ?>
 
 	<?php elseif ($page === "trash"): ?>
 

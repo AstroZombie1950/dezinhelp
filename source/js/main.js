@@ -402,6 +402,51 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	}
 
+	// ===== примеры работ: слайдер «до/после» (та же схема — клоны по краям) =====
+	var worksTrack = document.querySelector(".js-works-track");
+	if (worksTrack) {
+		var worksCarousel = worksTrack.closest(".works__carousel");
+		var WORKS_CLONE = parseInt(worksTrack.dataset.clone, 10); // клонов с каждой стороны
+		var WORKS_REAL = parseInt(worksTrack.dataset.real, 10);   // реальных карточек
+
+		function worksStep() {
+			var card = worksTrack.querySelector(".work-card");
+			if (!card) { return worksTrack.clientWidth; }
+			var gap = parseInt(getComputedStyle(worksTrack).columnGap || getComputedStyle(worksTrack).gap || "20", 10);
+			return card.offsetWidth + (isNaN(gap) ? 20 : gap);
+		}
+
+		// стартуем на первой настоящей карточке (после клонов слева), без анимации
+		function worksSetPosition(index) {
+			worksTrack.style.scrollBehavior = "auto";
+			worksTrack.scrollLeft = index * worksStep();
+			worksTrack.style.scrollBehavior = "";
+		}
+		worksSetPosition(WORKS_CLONE);
+		window.addEventListener("resize", function () { worksSetPosition(WORKS_CLONE); });
+
+		// заехали в клоны — бесшовно телепортируем на реальную позицию
+		var worksSettleTimer = null;
+		worksTrack.addEventListener("scroll", function () {
+			clearTimeout(worksSettleTimer);
+			worksSettleTimer = setTimeout(function () {
+				var index = Math.round(worksTrack.scrollLeft / worksStep());
+				if (index < WORKS_CLONE) {
+					worksSetPosition(index + WORKS_REAL);
+				} else if (index >= WORKS_CLONE + WORKS_REAL) {
+					worksSetPosition(index - WORKS_REAL);
+				}
+			}, 120);
+		}, { passive: true });
+
+		worksCarousel.querySelectorAll(".works__btn").forEach(function (btn) {
+			btn.addEventListener("click", function () {
+				var dir = btn.dataset.dir === "prev" ? -1 : 1;
+				worksTrack.scrollBy({ left: dir * worksStep(), behavior: "smooth" });
+			});
+		});
+	}
+
 	// ===== основной текст услуги: сворачивание с анимацией =====
 	// max-height нельзя анимировать от auto, поэтому подставляем реальную высоту содержимого
 	var collapse = document.querySelector(".js-collapse");
@@ -513,5 +558,50 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 
 		quizRender();
+	}
+
+	// ===== счётчики блока «цифры»: анимация от нуля при попадании в вьюпорт =====
+	var statNums = document.querySelectorAll(".stats__num");
+	if (statNums.length) {
+		var statsReduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+		// разбор data-count: одиночное «1812» или диапазон «4–12»
+		function parseCount(raw) {
+			var m = raw.match(/^(\d+)\s*[–-]\s*(\d+)$/);
+			if (m) { return { range: true, a: +m[1], b: +m[2], sep: raw.indexOf("–") > -1 ? "–" : "-" }; }
+			return { range: false, a: +raw };
+		}
+
+		// один прогон: от 0 к финалу за dur, замедление к концу (easeOutCubic)
+		function runCount(el) {
+			var c = parseCount(el.dataset.count);
+			if (statsReduce) { el.textContent = el.dataset.count; return; } // без анимации
+			var dur = 1600, start = null;
+			function frame(t) {
+				if (start === null) { start = t; }
+				var p = Math.min((t - start) / dur, 1);
+				var e = 1 - Math.pow(1 - p, 3);
+				// диапазон крутим обоими концами сразу
+				el.textContent = c.range
+					? Math.round(c.a * e) + c.sep + Math.round(c.b * e)
+					: Math.round(c.a * e);
+				if (p < 1) { requestAnimationFrame(frame); }
+			}
+			requestAnimationFrame(frame);
+		}
+
+		// запуск один раз, когда число показалось на экране
+		var statsSeen = new WeakSet();
+		var statsIO = new IntersectionObserver(function (entries) {
+			entries.forEach(function (en) {
+				if (en.isIntersecting && !statsSeen.has(en.target)) {
+					statsSeen.add(en.target);
+					runCount(en.target);
+					statsIO.unobserve(en.target);
+				}
+			});
+		}, { threshold: 0.4 });
+
+		statNums.forEach(function (el) { statsIO.observe(el); });
 	}
 });

@@ -64,7 +64,7 @@ $homeServices = data_load("home-services");
 			<h1 class="hero__title"><span class="hero__title-mark">Санитарные услуги СЭС</span> в Центральном Федеральном округе</h1>
 
 			<!-- лид-абзац; ключевые слова — фирменным акцентом -->
-			<p class="hero__lead">МосКомДез — Избавим качественно и быстро от <span class="hero__hl">насекомых</span>, <span class="hero__hl">грызунов</span>, <span class="hero__hl">плесени</span>, <span class="hero__hl">запахов</span> и <span class="hero__hl">сорняков</span> в любом помещении и на участках, вылечим <span class="hero__hl">деревья</span> от болезней и паразитов. Цена СЭС услуг одна из самых низких в Москве и МО</p>
+			<p class="hero__lead">МосКомДез — Избавим качественно и быстро от <a class="hero__hl" href="/unichtozhenie-nasekomyh/">насекомых</a>, <a class="hero__hl" href="/izbavitsya-ot-krys/">грызунов</a>, <a class="hero__hl" href="/obrabotka-ot-pleseni/">плесени</a>, <a class="hero__hl" href="/udalenie-zapahov/">запахов</a> и <a class="hero__hl" href="/unichtozhenie-borshchevika/">сорняков</a> в любом помещении и на участках, вылечим <a class="hero__hl" href="/lechenie-derevev/">деревья</a> от болезней и паразитов. Цена СЭС услуг одна из самых низких в Москве и МО</p>
 
 			<!-- две колонки: слева контент+форма, справа рабочий -->
 			<div class="hero__cols">
@@ -73,36 +73,7 @@ $homeServices = data_load("home-services");
 				<div class="hero__left">
 
 					<!-- чек-лист преимуществ (галочки — SVG, маркеры — акцент) -->
-					<ul class="hero__checks">
-						<li class="hero__check">
-							<span class="hero__check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12.5l2.5 2.5 5-5.5"/></svg></span>
-							<div class="hero__check-body">
-								<div class="hero__check-title">Устраним проблему <mark class="hero__mark">за 1 час на 100%.</mark></div>
-								<div class="hero__check-sub">Если не поможет — приедем бесплатно еще раз!</div>
-							</div>
-						</li>
-						<li class="hero__check">
-							<span class="hero__check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12.5l2.5 2.5 5-5.5"/></svg></span>
-							<div class="hero__check-body">
-								<div class="hero__check-title">Гарантия <mark class="hero__mark">до 2-х лет.</mark></div>
-								<div class="hero__check-sub">Прописана в договоре.</div>
-							</div>
-						</li>
-						<li class="hero__check">
-							<span class="hero__check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12.5l2.5 2.5 5-5.5"/></svg></span>
-							<div class="hero__check-body">
-								<div class="hero__check-title"><mark class="hero__mark">Лицензия</mark> СЭС</div>
-								<div class="hero__check-sub">Сотрудники предъявят документы по приезду.</div>
-							</div>
-						</li>
-						<li class="hero__check">
-							<span class="hero__check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12.5l2.5 2.5 5-5.5"/></svg></span>
-							<div class="hero__check-body">
-								<div class="hero__check-title"><mark class="hero__mark">НАШЛИ ДЕШЕВЛЕ?</mark></div>
-								<div class="hero__check-sub">Мы сделаем цену еще ниже!</div>
-							</div>
-						</li>
-					</ul>
+					<?php require __DIR__ . "/source/include/hero-checks.php"; ?>
 
 					<!-- выноска-призыв над формой (хвостик указывает вниз) -->
 					<div class="hero__bubble">СКИДКА 10%, ОСТАВЬТЕ ЗАЯВКУ ЗДЕСЬ</div>
@@ -182,6 +153,9 @@ $homeServices = data_load("home-services");
 
 	<?php require __DIR__ . "/source/include/block-methods.php"; ?>
 
+	<!-- цифры о компании: счётчики с анимацией от нуля -->
+	<?php require __DIR__ . "/source/include/block-stats.php"; ?>
+
 	<!-- бегущая строка: только сертифицированные препараты -->
 	<?php $marqueeItems = array_fill(0, 8, "ТОЛЬКО СЕРТИФИЦИРОВАННЫЕ ПРЕПАРАТЫ"); ?>
 	<?php require __DIR__ . "/source/include/block-marquee.php"; ?>
@@ -192,7 +166,13 @@ $homeServices = data_load("home-services");
 
 	<?php require __DIR__ . "/source/include/block-reviews.php"; ?>
 
+	<!-- примеры работ: слайдер «до/после» -->
+	<?php require __DIR__ . "/source/include/block-works.php"; ?>
+
 	<?php require __DIR__ . "/source/include/block-coverage.php"; ?>
+
+	<!-- населённые пункты выезда: список городов -->
+	<?php require __DIR__ . "/source/include/block-cities.php"; ?>
 
 	<?php $faqData = data_load("faq"); $faqItems = $faqData["items"]; $faqTitle = $faqData["title"]; ?>
 	<?php require __DIR__ . "/source/include/block-faq.php"; ?>
