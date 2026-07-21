@@ -25,4 +25,9 @@ return array(
 	// секреты — используются только сервером (order.php), в HTML не попадают
 	"telegram_bot_token" => "",
 	"telegram_chat_id"   => "",
+
+	// учётка админки: хэш пароля делается командой
+	// php -r "echo password_hash('пароль', PASSWORD_DEFAULT), PHP_EOL;"
+	"admin_user"          => "",
+	"admin_password_hash" => "",
 );

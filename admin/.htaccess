@@ -1,0 +1,19 @@
+# Листинг папок запрещаем
+Options -Indexes
+
+# php-файлы служебной папки снаружи не нужны — всё ходит через actions.php
+<FilesMatch "^(lib|auth)\.php$">
+	<IfModule mod_authz_core.c>
+		Require all denied
+	</IfModule>
+	<IfModule !mod_authz_core.c>
+		Order allow,deny
+		Deny from all
+	</IfModule>
+</FilesMatch>
+
+# админку не кэшируем и не индексируем
+<IfModule mod_headers.c>
+	Header set Cache-Control "no-store"
+	Header set X-Robots-Tag "noindex, nofollow"
+</IfModule>
