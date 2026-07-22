@@ -56,11 +56,23 @@ foreach ($groups as $g) { $groupNames[$g["id"]] = $g["title"]; }
 	<!-- шапка админки -->
 	<header class="topbar">
 		<div class="topbar__brand">МосКомДез <span>· админка</span></div>
+		<?php // блоки главной собраны в одну выпадашку — открыта, когда открыт любой из них
+		$homePages = array("prices", "slider", "works");
+		$homeOpen  = in_array($page, $homePages, true);
+		?>
 		<nav class="topbar__nav">
 			<a href="/admin/" class="<?= $page === "services" ? "is-active" : "" ?>">Услуги</a>
-			<a href="/admin/?page=prices" class="<?= $page === "prices" ? "is-active" : "" ?>">Прайс главной</a>
-			<a href="/admin/?page=slider" class="<?= $page === "slider" ? "is-active" : "" ?>">Слайдер главной</a>
-			<a href="/admin/?page=works" class="<?= $page === "works" ? "is-active" : "" ?>">Примеры работ</a>
+
+			<div class="topbar__drop<?= $homeOpen ? " is-current" : "" ?>">
+				<button type="button" class="topbar__drop-btn js-drop">Главная <span class="topbar__caret">▾</span></button>
+				<div class="topbar__drop-menu">
+					<a href="/admin/?page=prices" class="<?= $page === "prices" ? "is-active" : "" ?>">Прайс главной</a>
+					<a href="/admin/?page=slider" class="<?= $page === "slider" ? "is-active" : "" ?>">Слайдер главной</a>
+					<a href="/admin/?page=works" class="<?= $page === "works" ? "is-active" : "" ?>">Примеры работ</a>
+				</div>
+			</div>
+
+			<a href="/admin/?page=settings" class="<?= $page === "settings" ? "is-active" : "" ?>">Настройки</a>
 			<a href="/admin/?page=trash" class="<?= $page === "trash" ? "is-active" : "" ?>">Корзина<?= $trash ? " (" . count($trash) . ")" : "" ?></a>
 			<a href="/" target="_blank" rel="noopener">Открыть сайт ↗</a>
 		</nav>
@@ -99,6 +111,15 @@ foreach ($groups as $g) { $groupNames[$g["id"]] = $g["title"]; }
 
 		<?php $works = json_read(data_path("works")); ?>
 		<?php require __DIR__ . "/views/works.php"; ?>
+
+	<?php elseif ($page === "settings"): ?>
+
+		<?php
+		// публичные данные сайта + действующий логин (хэш пароля в форму не отдаём)
+		$site      = json_read(data_path("site"));
+		$authCreds = auth_creds();
+		?>
+		<?php require __DIR__ . "/views/settings.php"; ?>
 
 	<?php elseif ($page === "trash"): ?>
 

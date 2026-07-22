@@ -89,6 +89,58 @@ body {
 .topbar__nav a:hover { color: #fff; }
 .topbar__nav a.is-active { color: #fff; background: rgba(255, 255, 255, .12); }
 
+/* выпадашка «Главная»: кнопка + меню под ней */
+.topbar__drop { position: relative; }
+
+.topbar__drop-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	line-height: 1;
+	font: inherit;
+	background: none;
+	border: none;
+	color: #cfd9e4;
+	padding: 6px 12px;
+	border-radius: 8px;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.topbar__drop-btn:hover { color: #fff; }
+.topbar__caret { font-size: 10px; transition: transform .15s ease; }
+
+/* открытый пункт — как активная ссылка; is-current — когда открыт один из блоков главной */
+.topbar__drop.is-current > .topbar__drop-btn,
+.topbar__drop.is-open > .topbar__drop-btn { color: #fff; background: rgba(255, 255, 255, .12); }
+.topbar__drop.is-open .topbar__caret { transform: rotate(180deg); }
+
+.topbar__drop-menu {
+	display: none;
+	position: absolute;
+	top: calc(100% + 6px);
+	left: 0;
+	min-width: 190px;
+	background: var(--a-card);
+	border-radius: var(--a-radius);
+	box-shadow: var(--a-shadow);
+	padding: 6px;
+	z-index: 40;
+}
+
+.topbar__drop.is-open .topbar__drop-menu { display: block; }
+
+.topbar__nav .topbar__drop-menu a {
+	display: block;
+	color: var(--a-navy);
+	padding: 8px 12px;
+	border-radius: 8px;
+	white-space: nowrap;
+}
+
+.topbar__nav .topbar__drop-menu a:hover { background: var(--a-bg); color: var(--a-navy); }
+.topbar__nav .topbar__drop-menu a.is-active { background: var(--a-blue); color: #fff; }
+
 .topbar__logout {
 	display: inline-flex;
 	align-items: center;
@@ -356,6 +408,25 @@ input[type="checkbox"] {
 	.wrap { padding: 20px 12px 40px; }
 	.table th, .table td { padding: 8px 8px; }
 	.table__c { width: 56px; }
+
+	/* топбар здесь скроллится по горизонтали и обрезал бы выпадающее меню —
+	   поэтому раскрываем его пунктами в общую строку, кнопку прячем */
+	.topbar__drop { display: contents; }
+	.topbar__drop-btn { display: none; }
+	.topbar__drop-menu {
+		display: contents;
+		position: static;
+		background: none;
+		box-shadow: none;
+		padding: 0;
+	}
+	.topbar__drop.is-open .topbar__drop-menu { display: contents; } /* остался после ресайза окна */
+	.topbar__nav .topbar__drop-menu a { color: #cfd9e4; padding: 6px 12px; }
+	.topbar__nav .topbar__drop-menu a.is-active { color: #fff; background: rgba(255, 255, 255, .12); }
+
+	/* строка телефона в настройках: поля друг под другом */
+	.phone-row { grid-template-columns: 1fr; }
+	.phone-row .icon-btn { justify-self: start; }
 }
 
 /* ===== редактор страницы услуги ===== */
@@ -843,4 +914,47 @@ input[type="checkbox"] {
 	.wcard { flex-wrap: wrap; }
 	.wcard__row { flex-direction: column; }
 	.himg-grid { grid-template-columns: 1fr; }
+}
+/* ===== настройки ===== */
+
+/* подпись-пояснение над группой полей (у .field__hint она идёт под полем) */
+.field__hint--top { margin: -2px 0 10px; }
+
+/* строка телефона: два поля + кнопка удаления */
+.phone-row {
+	display: grid;
+	grid-template-columns: 1fr 1fr auto;
+	gap: 12px;
+	align-items: end;
+	margin-bottom: 4px;
+}
+
+.phone-row .field { margin-bottom: 10px; }
+.phone-row .icon-btn { margin-bottom: 16px; }
+
+.row-actions { margin: 4px 0 22px; }
+
+/* отбивка последнего поля формы доступа от полей нового пароля */
+.field--sep {
+	margin-top: 22px;
+	padding-top: 18px;
+	border-top: 1px solid var(--a-border);
+}
+
+/* предупреждение над формой доступа */
+.notice {
+	border-radius: var(--a-radius);
+	padding: 16px 18px;
+	margin-bottom: 22px;
+	line-height: 1.5;
+}
+
+.notice p { margin: 0 0 8px; }
+.notice p:last-child { margin-bottom: 0; }
+.notice__title { font-weight: 700; margin-bottom: 8px; }
+
+.notice--warn {
+	background: #fdf1f1;
+	border: 1px solid #f3c9c9;
+	color: #8c2b2b;
 }

@@ -561,6 +561,99 @@ case "svc_image_upload":
 
 	respond(true, array("path" => "/source/img/services/" . $name));
 
+// --- настройки сайта ---
+
+// вкладка «Данные сайта»: публичные контакты в data/site.json.
+// Секреты (токен Telegram, chat_id) тут не трогаются — они только в config.php
+case "settings_save_site":
+	// телефоны: параллельные массивы «как показывать» / «номер для ссылки»
+	$disp = isset($_POST["phone_display"]) ? (array) $_POST["phone_display"] : array();
+	$tels = isset($_POST["phone_tel"]) ? (array) $_POST["phone_tel"] : array();
+
+	$phones = array();
+	foreach ($disp as $i => $d) {
+		$d = trim((string) $d);
+		$t = trim((string) (isset($tels[$i]) ? $tels[$i] : ""));
+		if ($d === "" && $t === "") { continue; } // пустая строка — просто лишняя
+		if ($d === "" || $t === "") { fail("Телефон №" . ($i + 1) . " заполнен наполовину — нужны оба поля"); }
+
+		// в ссылку tel: пускаем только плюс и цифры
+		$t = preg_replace("/[^0-9+]/", "", $t);
+		if (!preg_match("/^\\+?\\d{10,15}$/", $t)) {
+			fail("Телефон №" . ($i + 1) . ": в поле для ссылки нужны только цифры, например +74951093200");
+		}
+		$phones[] = array("display" => $d, "tel" => $t);
+	}
+	if (!$phones) { fail("Оставьте хотя бы один телефон"); }
+
+	$email = isset($_POST["email"]) ? trim($_POST["email"]) : "";
+	if ($email === "" || !filter_var($email, FILTER_VALIDATE_EMAIL)) { fail("Проверьте e-mail — адрес выглядит неправильно"); }
+
+	// ссылки мессенджеров: либо http(s), либо заглушка «#» (иконка останется без перехода)
+	$msg = array();
+	foreach (array("telegram", "max", "whatsapp") as $k) {
+		$v = isset($_POST["msg_" . $k]) ? trim($_POST["msg_" . $k]) : "";
+		if ($v === "") { $v = "#"; }
+		if ($v !== "#" && !preg_match("#^https?://#i", $v)) {
+			fail("Ссылка на " . $k . " должна начинаться с https:// — или поставьте #, если ссылки нет");
+		}
+		$msg[$k] = $v;
+	}
+
+	$siteUrl = isset($_POST["site_url"]) ? trim($_POST["site_url"]) : "";
+	if ($siteUrl !== "" && !preg_match("#^https?://#i", $siteUrl)) { fail("Адрес сайта должен начинаться с https://"); }
+
+	$address = isset($_POST["address"]) ? trim($_POST["address"]) : "";
+	if ($address === "") { fail("Заполните адрес"); }
+
+	// порядок ключей файла фиксируем — так его удобнее читать глазами
+	json_write(data_path("site"), array(
+		"site_url"   => rtrim($siteUrl, "/"),
+		"phones"     => $phones,
+		"email"      => $email,
+		"address"    => $address,
+		"legal"      => isset($_POST["legal"]) ? trim($_POST["legal"]) : "",
+		"license"    => isset($_POST["license"]) ? trim($_POST["license"]) : "",
+		"messengers" => $msg,
+	));
+	respond(true);
+
+// вкладка «Доступ»: логин и пароль входа в панель.
+// Пишем в data/auth.json — config.php при этом не меняется и остаётся запасным входом,
+// пока файл не создан. Действующий пароль спрашиваем всегда.
+case "settings_save_auth":
+	$cur  = isset($_POST["current_pass"]) ? (string) $_POST["current_pass"] : "";
+	$user = isset($_POST["new_user"]) ? trim($_POST["new_user"]) : "";
+	$p1   = isset($_POST["new_pass"]) ? (string) $_POST["new_pass"] : "";
+	$p2   = isset($_POST["new_pass2"]) ? (string) $_POST["new_pass2"] : "";
+
+	if ($cur === "") { fail("Введите действующий пароль"); }
+	if (!auth_check_password($cur)) {
+		sleep(1); // тормозим перебор
+		fail("Действующий пароль введён неверно");
+	}
+
+	if (!preg_match("/^[A-Za-z0-9._-]{3,32}$/", $user)) {
+		fail("Логин: латинские буквы, цифры, точка, дефис или подчёркивание, от 3 до 32 символов");
+	}
+
+	// пароль меняем, только если поля заполнены; пустые — значит меняли один логин
+	$creds = auth_creds();
+	$hash  = $creds["hash"];
+	if ($p1 !== "" || $p2 !== "") {
+		if ($p1 !== $p2) { fail("Новый пароль и его повтор не совпадают"); }
+
+		// длина в символах, а не в байтах; без mbstring — его может не быть на хостинге
+		$len = preg_match_all("/./us", $p1);
+		if ($len === false) { $len = strlen($p1); }
+		if ($len < 8) { fail("Пароль должен быть не короче 8 символов"); }
+		$hash = password_hash($p1, PASSWORD_DEFAULT);
+	}
+	if ($hash === "") { fail("Не получилось сохранить пароль — задайте новый"); }
+
+	json_write(data_path("auth"), array("user" => $user, "password_hash" => $hash));
+	respond(true, array("user" => $user));
+
 default:
 	fail("Неизвестное действие");
 }

@@ -33,6 +33,21 @@
 		setTimeout(function () { el.remove(); }, type === "error" ? 6000 : 2500);
 	}
 
+	// ===== выпадающее меню в шапке =====
+	// клик по кнопке открывает своё меню и закрывает соседние; клик мимо — закрывает всё
+	document.addEventListener("click", function (e) {
+		var btn = e.target.closest(".js-drop");
+		document.querySelectorAll(".topbar__drop.is-open").forEach(function (d) {
+			if (!btn || d !== btn.parentNode) { d.classList.remove("is-open"); }
+		});
+		if (btn) { btn.parentNode.classList.toggle("is-open"); }
+	});
+
+	document.addEventListener("keydown", function (e) {
+		if (e.key !== "Escape") { return; }
+		document.querySelectorAll(".topbar__drop.is-open").forEach(function (d) { d.classList.remove("is-open"); });
+	});
+
 	// ===== модалки =====
 	function modalOpen(id) { document.getElementById(id).classList.add("is-open"); }
 	function modalClose(el) { el.closest(".modal").classList.remove("is-open"); }
@@ -325,6 +340,10 @@
 					if (json.seo_html !== undefined) {
 						form.seo_html.value = json.seo_html;
 						form.seo_html.dispatchEvent(new CustomEvent("editor:refresh"));
+					}
+					// доступ: пароли в полях после сохранения не держим
+					if (form.id === "settings-auth-form") {
+						form.querySelectorAll("input[type=\"password\"]").forEach(function (i) { i.value = ""; });
 					}
 					markClean(form.dataset.tab);
 					toast("Сохранено", "ok");
@@ -952,5 +971,37 @@
 				btn.textContent = "Заменить";
 				input.value = "";
 			});
+	});
+})();
+
+/* ===== настройки: список телефонов ===== */
+(function () {
+	"use strict";
+
+	var list = document.getElementById("phones-list");
+	if (!list) { return; } // не на странице настроек
+
+	var addBtn = document.getElementById("phone-add");
+
+	// новая строка — копия первой с очищенными полями
+	addBtn.addEventListener("click", function () {
+		var row = list.querySelector(".js-phone-row").cloneNode(true);
+		row.querySelectorAll("input").forEach(function (i) { i.value = ""; });
+		list.appendChild(row);
+		row.querySelector("input").focus();
+		list.dispatchEvent(new Event("input", { bubbles: true })); // пометить вкладку правленой
+	});
+
+	// удаление: последнюю строку не убираем, просто чистим — телефон нужен хотя бы один
+	list.addEventListener("click", function (e) {
+		var btn = e.target.closest(".js-phone-del");
+		if (!btn) { return; }
+		var rows = list.querySelectorAll(".js-phone-row");
+		if (rows.length > 1) {
+			btn.closest(".js-phone-row").remove();
+		} else {
+			rows[0].querySelectorAll("input").forEach(function (i) { i.value = ""; });
+		}
+		list.dispatchEvent(new Event("input", { bubbles: true }));
 	});
 })();
