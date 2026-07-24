@@ -1,45 +1,8 @@
 {
 	"hero": {
-		"bg": "/source/img/hero/smoke.webp",
 		"worker": "/source/img/hero/worker.webp",
 		"worker_alt": "Специалист МосКомДез в защитном костюме",
-		"price": "1500",
-		"checks": [
-			{
-				"icon": "i-urgent",
-				"text": "Срочность"
-			},
-			{
-				"icon": "i-anon",
-				"text": "Анонимность"
-			},
-			{
-				"icon": "i-turnkey",
-				"text": "Решение под ключ"
-			},
-			{
-				"icon": "i-guarantee",
-				"text": "Гарантия до 3-5 лет"
-			},
-			{
-				"icon": "i-safe",
-				"text": "Безопасно для детей, мебели"
-			},
-			{
-				"icon": "i-pay",
-				"text": "Любая форма оплаты"
-			},
-			{
-				"icon": "i-control",
-				"text": "Производственный контроль"
-			}
-		],
-		"form": {
-			"eyebrow": "Круглосуточная поддержка",
-			"title": "Получите подробную консультацию",
-			"subtitle": "Заполните поля для связи с вами",
-			"button": "Получить консультацию"
-		}
+		"price": "1500"
 	},
 	"gallery": {
 		"visible": true,

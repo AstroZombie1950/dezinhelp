@@ -2,3 +2,6 @@
 
 # секреты и реальные контактные данные (создаётся из config.sample.php)
 /source/php/config.php
+
+# база Sypex Geo — 37 МБ, качается с sypexgeo.net, в репозитории не нужна
+/source/php/geo/SxGeoCity.dat

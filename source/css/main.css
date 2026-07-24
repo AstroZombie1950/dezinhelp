@@ -563,30 +563,37 @@ button {
 }
 
 /* --- правая колонка: рабочий + плашка цены --- */
+/* квадрат: все геро-картинки нормализованы под холст 800×800 с кругом по центру,
+   поэтому плашка цены всегда встаёт в одну точку относительно круга */
 .hero__figure {
 	position: relative;
+	width: 100%;
+	max-width: 700px;         /* крупнее — закрывает воздух справа */
+	margin-left: auto;        /* прижимаем к правому краю */
+	margin-top: -24px;        /* чуть поднимаем, чтобы верх шёл вровень с текстом */
+	aspect-ratio: 1;
 }
 
 .hero__worker {
 	display: block;
 	width: 100%;
-	max-width: 700px;         /* крупнее — закрывает воздух справа */
-	height: auto;
-	margin-left: auto;        /* прижимаем к правому краю */
-	margin-top: -24px;        /* чуть поднимаем, чтобы верх шёл вровень с текстом */
+	height: 100%;
+	object-fit: contain;
 }
 
-/* плашка цены поверх нижней части рабочего */
+/* плашка цены поверх нижней части рабочего.
+   позиция и размер — в долях квадрата, поэтому на любой ширине лежит
+   на круге одинаково; 96px — нижний предел, чтобы текст не мельчал */
 .hero__price {
 	position: absolute;
-	right: 20px;
-	bottom: 20px;
+	right: 1.4%;
+	bottom: 14%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	width: 116px;
-	height: 116px;
+	width: max(96px, 18.5%);
+	height: max(96px, 18.5%);
 	background: var(--gradient-brand);
 	color: #fff;
 	border-radius: 18px;
@@ -1991,17 +1998,21 @@ body.modal-open {
 	max-width: 540px;
 }
 
-/* правая колонка: картинка услуги + плашка цены в углу */
+/* правая колонка: картинка услуги + плашка цены в углу.
+   квадрат и вписывание — как на главной, картинки нормализованы одинаково */
 .hero-srv__figure {
 	position: relative;
+	width: 100%;
+	max-width: 700px;
+	margin-left: auto;
+	aspect-ratio: 1;
 }
 
 .hero-srv__img {
 	display: block;
 	width: 100%;
-	max-width: 700px;
-	height: auto;
-	margin-left: auto;
+	height: 100%;
+	object-fit: contain;
 }
 
 .hero-srv__note {
@@ -2700,9 +2711,14 @@ body.modal-open {
 	}
 
 	/* рабочий по центру */
-	.hero__worker {
+	.hero__figure {
 		margin: 0 auto;
 		max-width: 460px;
+	}
+
+	/* число в плашке мельче: сама плашка на планшете уже минимальные 96px */
+	.hero__price-num {
+		font-size: 30px;
 	}
 
 	/* блок специалиста: фон-персонаж убираем, зоны в столбик */
@@ -2775,7 +2791,7 @@ body.modal-open {
 		order: 1;
 	}
 
-	.hero-srv__img {
+	.hero-srv__figure {
 		margin: 0 auto;
 		max-width: 460px;
 	}
@@ -2812,6 +2828,12 @@ body.modal-open {
 
 /* --- крупный телефон / малый планшет --- */
 @media (max-width: 768px) {
+	/* квадратная картинка геро съедает высоту — ужимаем, чтобы форма была ближе */
+	.hero__figure,
+	.hero-srv__figure {
+		max-width: 380px;
+	}
+
 	/* города: 3 → 2 колонки */
 	.cities__list {
 		column-count: 2;
@@ -2970,12 +2992,9 @@ body.modal-open {
 		font-size: 19px;
 	}
 
-	/* плашку цены чуть уменьшаем, чтобы не наезжала */
-	.hero__price {
-		width: 96px;
-		height: 96px;
-		right: 10px;
-		bottom: 10px;
+	.hero__figure,
+	.hero-srv__figure {
+		max-width: 320px;
 	}
 
 	.hero__price-num {

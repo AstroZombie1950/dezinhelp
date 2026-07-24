@@ -104,7 +104,7 @@ $homeServices = data_load("home-services");
 				<!-- правая колонка: рабочий + плашка цены -->
 				<div class="hero__right">
 					<div class="hero__figure">
-						<img class="hero__worker" src="/source/img/hero/worker.webp" alt="Специалист службы дезинфекции в защитном костюме" width="880" height="619" loading="eager">
+						<img class="hero__worker" src="/source/img/hero/worker.webp" alt="Специалист службы дезинфекции в защитном костюме" width="800" height="800" loading="eager">
 						<div class="hero__price">
 							<span class="hero__price-top">от</span>
 							<span class="hero__price-num">1500<span class="hero__price-cur">₽</span></span>

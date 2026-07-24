@@ -26,6 +26,10 @@ return array(
 	"telegram_bot_token" => "",
 	"telegram_chat_id"   => "",
 
+	// ключ DaData для определения города по IP (гео-стенд geotest.php).
+	// Бесплатный тариф: 10 000 запросов в сутки. Секретный ключ не нужен.
+	"dadata_token" => "",
+
 	// учётка админки: хэш пароля делается командой
 	// php -r "echo password_hash('пароль', PASSWORD_DEFAULT), PHP_EOL;"
 	"admin_user"          => "",
