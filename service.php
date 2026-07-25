@@ -73,13 +73,15 @@ $descr  = isset($seo["description"]) ? $seo["description"] : "";
 	<link rel="icon" type="image/x-icon" href="/favicon.ico">
 	<meta name="theme-color" content="#ffffff">
 
-	<!-- шрифт Roboto -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700;800&display=swap" rel="stylesheet">
+	<!-- шрифт Roboto — свои файлы, @font-face в main.css -->
+	<link rel="preload" href="/source/fonts/roboto-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+	<link rel="preload" href="/source/fonts/roboto-latin.woff2" as="font" type="font/woff2" crossorigin>
 
 	<!-- стили -->
-	<link rel="stylesheet" href="/source/css/main.css">
+	<link rel="stylesheet" href="<?= h(asset("/source/css/main.css")) ?>">
+
+	<!-- счётчики аналитики — один файл на все страницы сайта -->
+	<?php require __DIR__ . "/source/include/matrika.html"; ?>
 </head>
 <body>
 
@@ -115,7 +117,7 @@ $descr  = isset($seo["description"]) ? $seo["description"] : "";
 					<form class="hero__form js-form" action="/source/php/order.php" method="post">
 						<input type="hidden" name="source" value="Услуга: <?= h($service["name"]) ?> — герой">
 						<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-						<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" required>
+						<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" aria-label="Номер телефона" required>
 						<button type="submit" class="btn btn--primary btn--block">Оставить заявку</button>
 						<div class="form-status" role="status"></div>
 						<div class="hero__form-note">Нажимая на кнопку, я соглашаюсь с <a href="/politika/">правилами обработки данных</a></div>
@@ -135,7 +137,7 @@ $descr  = isset($seo["description"]) ? $seo["description"] : "";
 				<!-- правая колонка: картинка услуги + плашка цены в углу (плашка — та же, что на главной) -->
 				<div class="hero-srv__right">
 					<div class="hero-srv__figure">
-						<img class="hero-srv__img" src="<?= h($heroImg) ?>" alt="<?= h($heroImgAlt) ?>" loading="eager">
+						<img class="hero-srv__img" src="<?= h($heroImg) ?>" alt="<?= h($heroImgAlt) ?>" fetchpriority="high" decoding="async">
 						<?php if ($heroPrice !== ""): ?>
 						<div class="hero__price">
 							<span class="hero__price-top">от</span>
@@ -272,6 +274,6 @@ $descr  = isset($seo["description"]) ? $seo["description"] : "";
 	<?php $schemaFaq = !empty($blocks["faq"]) && !empty($page["faq"]) ? $page["faq"] : array(); ?>
 	<?php require __DIR__ . "/source/include/schema.php"; ?>
 
-	<script src="/source/js/main.js"></script>
+	<script src="<?= h(asset("/source/js/main.js")) ?>"></script>
 </body>
 </html>

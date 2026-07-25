@@ -65,5 +65,18 @@ $siteUrl = city_scheme() . "://" . city_host();
 // экранирование вывода в HTML
 function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }
 
+// Адрес статики: минифицированная версия, если она есть и не устарела, плюс
+// метка времени файла. Хостинг отдаёт css/js с недельным кэшем — без метки
+// посетитель неделю сидел бы на старой версии.
+function asset($path) {
+	$root = dirname(__DIR__, 2);
+	$min  = preg_replace('/\.(css|js)$/', '.min.$1', $path);
+	if ($min !== $path && is_file($root . $min) && filemtime($root . $min) >= filemtime($root . $path)) {
+		$path = $min;
+	}
+	$file = $root . $path;
+	return is_file($file) ? $path . "?v=" . filemtime($file) : $path;
+}
+
 $servicesData   = data_load("services");
 $footerServices = services_footer($servicesData["services"]);

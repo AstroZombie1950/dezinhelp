@@ -44,17 +44,22 @@ $homeServices = data_load("home-services");
 	<!-- цвет темы для мобильных браузеров -->
 	<meta name="theme-color" content="#ffffff">
 
-	<!-- шрифт Roboto (как на referense-сайте safelychange.ru) -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700;800&display=swap" rel="stylesheet">
+	<!-- шрифт Roboto (как на referense-сайте safelychange.ru) — свои файлы,
+	     @font-face в main.css. Кириллица и латиница нужны для первого экрана -->
+	<link rel="preload" href="/source/fonts/roboto-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+	<link rel="preload" href="/source/fonts/roboto-latin.woff2" as="font" type="font/woff2" crossorigin>
 
 	<!-- стили -->
-	<link rel="stylesheet" href="/source/css/main.css">
+	<link rel="stylesheet" href="<?= h(asset("/source/css/main.css")) ?>">
+
+	<!-- счётчики аналитики — один файл на все страницы сайта -->
+	<?php require __DIR__ . "/source/include/matrika.html"; ?>
 </head>
 <body>
 
 	<?php require __DIR__ . "/source/include/header.html"; ?>
+
+	<main>
 
 	<!-- герой: заголовок · абзац · чек-лист + форма · рабочий с ценой -->
 	<section class="hero" id="hero">
@@ -82,7 +87,7 @@ $homeServices = data_load("home-services");
 					<form class="hero__form js-form" action="/source/php/order.php" method="post">
 						<input type="hidden" name="source" value="Герой — заявка">
 						<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-						<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" required>
+						<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" aria-label="Номер телефона" required>
 						<button type="submit" class="btn btn--primary btn--block">Оставить заявку</button>
 						<div class="form-status" role="status"></div>
 						<div class="hero__form-note">Нажимая на кнопку, я соглашаюсь с <a href="/politika/">правилами обработки данных</a></div>
@@ -104,7 +109,7 @@ $homeServices = data_load("home-services");
 				<!-- правая колонка: рабочий + плашка цены -->
 				<div class="hero__right">
 					<div class="hero__figure">
-						<img class="hero__worker" src="/source/img/hero/worker.webp" alt="Специалист службы дезинфекции в защитном костюме, {CITY}" width="800" height="800" loading="eager">
+						<img class="hero__worker" src="/source/img/hero/worker.webp" srcset="/source/img/hero/worker-400.webp 400w, /source/img/hero/worker-560.webp 560w, /source/img/hero/worker.webp 800w" sizes="(max-width: 480px) 320px, (max-width: 768px) 380px, (max-width: 1024px) 460px, 700px" alt="Специалист службы дезинфекции в защитном костюме, {CITY}" width="800" height="800" fetchpriority="high" decoding="async">
 						<div class="hero__price">
 							<span class="hero__price-top">от</span>
 							<span class="hero__price-num">1500<span class="hero__price-cur">₽</span></span>
@@ -135,7 +140,7 @@ $homeServices = data_load("home-services");
 	<?php require __DIR__ . "/source/include/block-process.php"; ?>
 
 	<!-- типы объектов -->
-	<section class="section section--alt" id="objects">
+	<section class="section section--alt section--cv" id="objects">
 		<div class="container">
 			<h2 class="section__title">Работаем на всех типах объектов {CITY_IN}</h2>
 			<div class="objects">
@@ -177,6 +182,8 @@ $homeServices = data_load("home-services");
 	<?php $faqData = data_load("faq"); $faqItems = $faqData["items"]; $faqTitle = $faqData["title"]; ?>
 	<?php require __DIR__ . "/source/include/block-faq.php"; ?>
 
+	</main>
+
 	<?php require __DIR__ . "/source/include/footer.html"; ?>
 
 	<?php require __DIR__ . "/source/include/modal.php"; ?>
@@ -193,6 +200,6 @@ $homeServices = data_load("home-services");
 	<?php $schemaFaq = $faqItems; ?>
 	<?php require __DIR__ . "/source/include/schema.php"; ?>
 
-	<script src="/source/js/main.js"></script>
+	<script src="<?= h(asset("/source/js/main.js")) ?>"></script>
 </body>
 </html>

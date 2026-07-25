@@ -55,7 +55,7 @@ if (!empty($quizData["visible"]) && $qSteps):
 
 						<div class="quiz__final-form">
 							<div class="quiz__field-label"><?= h($qFinal["phone_label"]) ?></div>
-							<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel">
+							<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" aria-label="Номер телефона">
 
 							<div class="quiz__field-label"><?= h($qFinal["contacts_label"]) ?></div>
 							<div class="quiz__contacts">

@@ -3,7 +3,7 @@
 // На главной данные из data/faq.json, на странице услуги — из файла услуги.
 if (!empty($faqItems)):
 ?>
-<section class="section" id="faq">
+<section class="section section--cv" id="faq">
 	<div class="container">
 		<h2 class="section__title"><?= h($faqTitle) ?></h2>
 		<div class="faq__list">

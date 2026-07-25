@@ -43,7 +43,7 @@ if (!empty($pricesData["visible"]) && $pGroups):
 	<form class="price-form js-form" action="/source/php/order.php" method="post">
 		<input type="hidden" name="source" value="Цены — заказ обработки">
 		<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-		<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" required>
+		<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" aria-label="Номер телефона" required>
 		<button type="submit" class="btn btn--primary"><?= h($pricesButton) ?></button>
 		<div class="form-status" role="status"></div>
 	</form>

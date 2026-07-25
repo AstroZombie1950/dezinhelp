@@ -32,8 +32,8 @@
 						<a class="msg-circle msg-circle--max" href="<?= h($msg["max"]) ?>" target="_blank" rel="noopener" aria-label="Max"><svg><use href="#i-max"></use></svg></a>
 						<a class="msg-circle msg-circle--wa" href="<?= h($msg["whatsapp"]) ?>" target="_blank" rel="noopener" aria-label="WhatsApp"><svg><use href="#i-wa"></use></svg></a>
 					</div>
-					<input type="text" name="name" placeholder="Ваше имя" required>
-					<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
+					<input type="text" name="name" placeholder="Ваше имя" autocomplete="name" aria-label="Ваше имя" required>
+					<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" aria-label="Номер телефона" required>
 					<button type="submit" class="btn btn--accent btn--block">Получить консультацию</button>
 					<div class="form-status" role="status"></div>
 					<div class="hero__form-note">Отправляя свои данные, вы соглашаетесь с <a href="/politika/">политикой конфиденциальности</a></div>

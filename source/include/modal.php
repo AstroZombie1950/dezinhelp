@@ -8,9 +8,9 @@
 		<form class="hero__form js-form" action="/source/php/order.php" method="post">
 			<input type="hidden" name="source" value="Заявка на обработку">
 			<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-			<input type="text" name="name" placeholder="Ваше имя" required>
-			<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
-			<input type="text" name="comment" placeholder="Комментарий (необязательно)">
+			<input type="text" name="name" placeholder="Ваше имя" autocomplete="name" aria-label="Ваше имя" required>
+			<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" aria-label="Номер телефона" required>
+			<input type="text" name="comment" placeholder="Комментарий (необязательно)" aria-label="Комментарий">
 			<button type="submit" class="btn btn--primary btn--block">Отправить заявку</button>
 			<div class="form-status" role="status"></div>
 			<div class="hero__form-note">Отправляя свои данные, вы соглашаетесь с <a href="/politika/">политикой конфиденциальности</a></div>

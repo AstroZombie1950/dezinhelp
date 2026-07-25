@@ -25,9 +25,7 @@ foreach ($groups as $g) { $groupNames[$g["id"]] = $g["title"]; }
 	<meta name="robots" content="noindex, nofollow">
 	<title>Админка — МосКомДез</title>
 	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap" rel="stylesheet">
+	<link rel="preload" href="/source/fonts/roboto-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 	<link rel="stylesheet" href="/admin/source/admin.css">
 </head>
 <body data-csrf="<?= h($csrf) ?>">

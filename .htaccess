@@ -23,8 +23,10 @@ ErrorDocument 404 /404.php
 	RewriteCond %{THE_REQUEST} \s/+index\.php[\s?] [NC]
 	RewriteRule ^ / [R=301,L]
 
-	# карта сайта генерится PHP, но отдаём её по привычному адресу
+	# карта сайта и robots генерятся PHP (нужен текущий хост),
+	# но отдаём их по привычным адресам
 	RewriteRule ^sitemap\.xml$ sitemap.php [L]
+	RewriteRule ^robots\.txt$ robots.php [L]
 
 	# реальные файлы и папки отдаём как есть, роутер их не трогает
 	RewriteCond %{REQUEST_FILENAME} -f [OR]

@@ -4,7 +4,7 @@
 $cov = data_load("coverage");
 if (!empty($cov["visible"])):
 ?>
-<section class="section" id="coverage">
+<section class="section section--cv" id="coverage">
 	<div class="container">
 		<h2 class="section__title"><?= h($cov["title"]) ?></h2>
 		<div class="coverage">
