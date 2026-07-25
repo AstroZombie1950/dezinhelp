@@ -1,12 +1,12 @@
 {
 	"hero": {
 		"worker": "/source/img/hero/worker.webp",
-		"worker_alt": "Специалист МосКомДез в защитном костюме",
+		"worker_alt": "Специалист МосКомДез в защитном костюме, {CITY}",
 		"price": "1500"
 	},
 	"gallery": {
 		"visible": true,
-		"title": "Объекты санобработки",
+		"title": "Объекты санобработки {CITY_IN}",
 		"images": [
 			{
 				"src": "/source/img/gallery/1.webp",
@@ -14,7 +14,7 @@
 			},
 			{
 				"src": "/source/img/gallery/2.webp",
-				"alt": "Жилые кварталы Москвы"
+				"alt": "Жилые кварталы {CITY_GENITIVE}"
 			},
 			{
 				"src": "/source/img/gallery/3.webp",
@@ -42,6 +42,6 @@
 		"button": "Заказать обработку"
 	},
 	"services": {
-		"title": "Виды услуг"
+		"title": "Виды услуг {CITY_IN}"
 	}
 }

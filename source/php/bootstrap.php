@@ -9,6 +9,35 @@ $config = file_exists($configFile) ? require $configFile : require __DIR__ . "/c
 // данные из /data — редактируются через админку
 require __DIR__ . "/data.php";
 
+// --- город из поддомена: решается до любого вывода ---
+require __DIR__ . "/city.php";
+$cityState = city_resolve();
+
+// moskva.site.ru → основной домен, тем же путём
+if ($cityState["status"] === "redirect") {
+	header("Location: " . $cityState["url"], true, 301);
+	exit;
+}
+
+// поддомена нет в реестре — честный 404, а не копия сайта
+if ($cityState["status"] === "unknown") {
+	require __DIR__ . "/../../404.php";
+	exit;
+}
+
+$city = $cityState["city"];
+
+// городские версии из поиска убираем: мета-тег плюс заголовок ответа.
+// robots.txt не запрещаем — робот должен зайти и увидеть noindex
+$robots = !empty($city["index"]) ? "index, follow" : "noindex, follow";
+if (empty($city["index"])) {
+	header("X-Robots-Tag: noindex, follow");
+}
+
+// плейсхолдеры {CITY...} меняются во всём HTML страницы разом
+city_placeholders($city);
+ob_start("city_render");
+
 // публичные контакты правятся в админке: data/site.json перекрывает одноимённые
 // поля конфига. Нет файла или поля — остаётся старое значение из config.php.
 // Секреты (токен Telegram, chat_id) живут только в конфиге и сюда не попадают.
@@ -28,8 +57,10 @@ $msg    = $config["messengers"];
 $legal   = isset($site["legal"]) ? $site["legal"] : "";
 $license = isset($site["license"]) ? $site["license"] : "";
 
-// базовый адрес сайта без хвостового слеша — для sitemap и canonical
-$siteUrl = isset($config["site_url"]) ? rtrim($config["site_url"], "/") : "";
+// базовый адрес сайта без хвостового слеша — для sitemap и canonical.
+// Считается от текущего хоста, поэтому canonical и og:url сами держатся
+// на том поддомене, который открыл посетитель
+$siteUrl = city_scheme() . "://" . city_host();
 
 // экранирование вывода в HTML
 function h($s) { return htmlspecialchars($s, ENT_QUOTES, "UTF-8"); }

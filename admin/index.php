@@ -72,6 +72,7 @@ foreach ($groups as $g) { $groupNames[$g["id"]] = $g["title"]; }
 				</div>
 			</div>
 
+			<a href="/admin/?page=cities" class="<?= $page === "cities" ? "is-active" : "" ?>">Города</a>
 			<a href="/admin/?page=settings" class="<?= $page === "settings" ? "is-active" : "" ?>">Настройки</a>
 			<a href="/admin/?page=trash" class="<?= $page === "trash" ? "is-active" : "" ?>">Корзина<?= $trash ? " (" . count($trash) . ")" : "" ?></a>
 			<a href="/" target="_blank" rel="noopener">Открыть сайт ↗</a>
@@ -111,6 +112,11 @@ foreach ($groups as $g) { $groupNames[$g["id"]] = $g["title"]; }
 
 		<?php $works = json_read(data_path("works")); ?>
 		<?php require __DIR__ . "/views/works.php"; ?>
+
+	<?php elseif ($page === "cities"): ?>
+
+		<?php $citiesData = json_read(data_path("cities")); ?>
+		<?php require __DIR__ . "/views/cities.php"; ?>
 
 	<?php elseif ($page === "settings"): ?>
 

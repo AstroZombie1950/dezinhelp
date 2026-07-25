@@ -24,7 +24,7 @@
 				<form class="veterans__form js-form" action="/source/php/order.php" method="post">
 					<input type="hidden" name="source" value="Назначить специалиста">
 					<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-					<div class="veterans__form-title">Назначить специалиста</div>
+					<div class="veterans__form-title">Назначить специалиста {CITY_IN}</div>
 					<div class="veterans__form-sub">Заполните поля для связи с вами</div>
 					<!-- мессенджеры цветными кружками (наш набор: tg / max / wa) -->
 					<div class="veterans__messengers">

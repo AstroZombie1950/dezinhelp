@@ -1,7 +1,7 @@
 {
 	"home": {
 		"visible": true,
-		"title": "Методы обработки",
+		"title": "Методы обработки {CITY_IN}",
 		"cards": [
 			{
 				"title": "Горячий туман",

@@ -3,12 +3,16 @@
 // lastmod берём с файла контента: админка правит JSON, дата обновляется сама.
 require __DIR__ . "/source/php/bootstrap.php";
 
+// карта нужна только основному домену: городские версии закрыты от индексации
+if (empty($city["main"])) {
+	require __DIR__ . "/404.php";
+	exit;
+}
+
 header("Content-Type: application/xml; charset=utf-8");
 
-// без site_url в конфиге собираем базу из запроса — sitemap требует абсолютных адресов
-$base = $siteUrl !== ""
-	? $siteUrl
-	: ((!empty($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] !== "off" ? "https" : "http") . "://" . $_SERVER["HTTP_HOST"]);
+// база — текущий хост: sitemap требует абсолютных адресов
+$base = $siteUrl;
 
 // главная + все видимые услуги; priority и changefreq не выводим — их всё равно игнорируют
 $urls = array(

@@ -20,6 +20,11 @@ if (!empty($_POST["website"])) {
 	exit;
 }
 
+// город берём с хоста, а не из формы: подделать нельзя и вёрстку править не нужно
+require __DIR__ . "/city.php";
+$orderCity = city_resolve();
+$cityName  = isset($orderCity["city"]["name"]) ? $orderCity["city"]["name"] : "";
+
 // сбор полей
 $name    = trim($_POST["name"] ?? "");
 $phone   = trim($_POST["phone"] ?? "");
@@ -81,6 +86,7 @@ if (isset($_POST["q0"]) || isset($_POST["contact_method"])) {
 // текст сообщения
 $lines = array();
 $lines[] = "🆕 Новая заявка: " . $source;
+if ($cityName !== "") { $lines[] = "🏙 Город: " . $cityName; }
 if ($name !== "")    { $lines[] = "👤 Имя: " . $name; }
 $lines[] = "📞 Телефон: " . $phone;
 if ($quizContact !== "") { $lines[] = "📲 Способ связи: " . $quizContact; }

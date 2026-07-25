@@ -654,6 +654,70 @@ case "settings_save_auth":
 	json_write(data_path("auth"), array("user" => $user, "password_hash" => $hash));
 	respond(true, array("user" => $user));
 
+case "cities_save":
+	// реестр городов: по нему резолвятся поддомены и склоняются названия в текстах
+	$in = json_decode(isset($_POST["cities_json"]) ? (string) $_POST["cities_json"] : "", true);
+	if (!is_array($in) || !isset($in["cities"])) { fail("Не получилось прочитать данные формы — обновите страницу"); }
+
+	// основной город панель не задаёт — он берётся из действующего реестра.
+	// Так его нельзя переназначить из формы и случайно обезглавить главный домен
+	$cityCurrent = json_read(data_path("cities"));
+	$mainSlug    = "";
+	foreach ((array) (isset($cityCurrent["cities"]) ? $cityCurrent["cities"] : array()) as $c) {
+		if (!empty($c["main"])) { $mainSlug = isset($c["slug"]) ? $c["slug"] : ""; break; }
+	}
+
+	$cityRows = array();
+	$seenSlug = array();
+	$mainCnt  = 0;
+	foreach ((array) $in["cities"] as $i => $c) {
+		$name = isset($c["name"]) ? trim($c["name"]) : "";
+		$slug = isset($c["slug"]) ? strtolower(trim($c["slug"])) : "";
+		if ($name === "" && $slug === "") { continue; } // пустая строка — просто лишняя
+		if ($name === "") { fail("Строка №" . ($i + 1) . ": заполните название города"); }
+		if (!slug_valid($slug)) {
+			fail("Город «" . $name . "»: в поддомене только латинские буквы, цифры и дефис");
+		}
+		if (isset($seenSlug[$slug])) { fail("Поддомен «" . $slug . "» указан дважды"); }
+		$seenSlug[$slug] = true;
+
+		$forms = array();
+		foreach (array("in", "genitive", "to") as $f) {
+			$forms[$f] = isset($c[$f]) ? trim($c[$f]) : "";
+			if ($forms[$f] === "") { fail("Город «" . $name . "»: заполните все формы названия"); }
+		}
+
+		// реестр без основного города (первое сохранение) — основным станет первая строка
+		$isMain = $mainSlug !== "" ? ($slug === $mainSlug) : ($mainCnt === 0 && count($cityRows) === 0);
+		if ($isMain) { $mainCnt++; }
+
+		$cityRows[] = array(
+			"slug"          => $slug,
+			"name"          => $name,
+			"in"            => $forms["in"],
+			"genitive"      => $forms["genitive"],
+			"to"            => $forms["to"],
+			"prepositional" => isset($c["prepositional"]) ? trim($c["prepositional"]) : "",
+			"main"          => $isMain,
+			// основной город выключить нельзя: без него основной домен отдаст 404
+			"enabled"       => $isMain ? true : !empty($c["enabled"]),
+			"index"         => !empty($c["index"]),
+		);
+	}
+
+	if (!$cityRows) { fail("Оставьте хотя бы один город"); }
+	if ($mainCnt !== 1) {
+		fail("Основной город потерялся: верните строку с поддоменом «" . $mainSlug . "» — на нём стоит главный домен сайта");
+	}
+
+	json_write(data_path("cities"), array(
+		"comment" => "Реестр городов. slug — поддомен, main:true — основной домен, index — отдавать ли в поиск.",
+		"visible" => !empty($in["visible"]),
+		"title"   => isset($in["title"]) ? trim($in["title"]) : "",
+		"cities"  => $cityRows,
+	));
+	respond(true);
+
 default:
 	fail("Неизвестное действие");
 }

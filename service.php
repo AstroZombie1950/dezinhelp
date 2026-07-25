@@ -56,7 +56,7 @@ $descr  = isset($seo["description"]) ? $seo["description"] : "";
 	<meta name="description" content="<?= h($descr) ?>">
 	<meta name="keywords" content="<?= h(isset($seo["keywords"]) ? $seo["keywords"] : "") ?>">
 	<meta name="author" content="МосКомДез">
-	<meta name="robots" content="index, follow">
+	<meta name="robots" content="<?= h($robots) ?>">
 	<link rel="canonical" href="<?= h($url) ?>">
 
 	<!-- Open Graph -->
@@ -268,6 +268,9 @@ $descr  = isset($seo["description"]) ? $seo["description"] : "";
 			<img class="lightbox__img" src="" alt="">
 		</div>
 	</div>
+
+	<?php $schemaFaq = !empty($blocks["faq"]) && !empty($page["faq"]) ? $page["faq"] : array(); ?>
+	<?php require __DIR__ . "/source/include/schema.php"; ?>
 
 	<script src="/source/js/main.js"></script>
 </body>

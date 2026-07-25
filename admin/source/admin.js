@@ -327,6 +327,10 @@
 			if (form.id === "works-form") {
 				body.set("works_json", JSON.stringify(window.collectWorks()));
 			}
+			// города: строки таблицы собираются своим модулем
+			if (form.id === "cities-form") {
+				body.set("cities_json", JSON.stringify(window.collectCities()));
+			}
 
 			fetch("/admin/php/actions.php", { method: "POST", body: body })
 				.then(function (r) { return r.json(); })
@@ -1004,4 +1008,85 @@
 		}
 		list.dispatchEvent(new Event("input", { bubbles: true }));
 	});
+})();
+// ===== города: строки реестра =====
+// Таблица собирается в один JSON, как прайс и примеры работ.
+(function () {
+	var list = document.getElementById("cities-list");
+	if (!list) { return; }
+
+	var addBtn = document.getElementById("city-add");
+
+	function toast(text, type) {
+		var box = document.getElementById("toasts");
+		var el = document.createElement("div");
+		el.className = "toast" + (type ? " toast--" + type : "");
+		el.textContent = text;
+		box.appendChild(el);
+		setTimeout(function () { el.remove(); }, type === "error" ? 6000 : 2500);
+	}
+
+	addBtn.addEventListener("click", function () {
+		var rows = list.querySelectorAll(".js-city-row");
+		var row  = rows[rows.length - 1].cloneNode(true);
+		row.querySelectorAll("input[type=text]").forEach(function (i) { i.value = ""; });
+		row.querySelector("[data-f=enabled]").checked = true;
+		row.querySelector("[data-f=enabled]").disabled = false;
+		row.querySelector("[data-f=index]").checked = false;
+
+		// новый город основным быть не может: основной задаётся только в файле реестра
+		row.classList.remove("is-main");
+		row.dataset.main = "";
+		var mainLabel = row.querySelector(".table__slug");
+		if (mainLabel) { mainLabel.remove(); }
+		if (!row.querySelector(".js-city-del")) {
+			row.querySelector(".table__actions").innerHTML =
+				'<button type="button" class="icon-btn icon-btn--danger js-city-del" title="Удалить город">✕</button>';
+		}
+		list.appendChild(row);
+		row.querySelector("[data-f=name]").focus();
+		list.dispatchEvent(new Event("input", { bubbles: true }));
+	});
+
+	list.addEventListener("click", function (e) {
+		var btn = e.target.closest(".js-city-del");
+		if (!btn) { return; }
+		var row = btn.closest(".js-city-row");
+
+		// основной город удалять нельзя: без него главный домен останется без данных
+		if (row.dataset.main) { return; }
+		if (list.querySelectorAll(".js-city-row").length > 1) {
+			row.remove();
+			list.dispatchEvent(new Event("input", { bubbles: true }));
+		}
+	});
+
+	window.collectCities = function () {
+		var rows = [];
+		list.querySelectorAll(".js-city-row").forEach(function (r) {
+			var val = function (f) {
+				var el = r.querySelector("[data-f=" + f + "]");
+				return el ? el.value.trim() : "";
+			};
+			var on = function (f) {
+				var el = r.querySelector("[data-f=" + f + "]");
+				return el ? el.checked : false;
+			};
+			rows.push({
+				slug:          val("slug"),
+				name:          val("name"),
+				in:            val("in"),
+				genitive:      val("genitive"),
+				to:            val("to"),
+				prepositional: val("prepositional"),
+				enabled:       on("enabled"),
+				index:         on("index")
+			});
+		});
+		return {
+			visible: document.getElementById("cities-visible").checked,
+			title:   document.getElementById("cities-title").value.trim(),
+			cities:  rows
+		};
+	};
 })();

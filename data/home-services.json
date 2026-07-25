@@ -1,6 +1,6 @@
 {
 	"visible": true,
-	"title": "Цены на наши услуги",
+	"title": "Цены на наши услуги {CITY_IN}",
 	"cards": [
 		{
 			"image": "/source/img/our_services/1.webp",

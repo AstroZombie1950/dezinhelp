@@ -4,7 +4,7 @@
 	<div class="modal__overlay" data-modal-close></div>
 	<div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="order-modal-title">
 		<button type="button" class="modal__close" data-modal-close aria-label="Закрыть">&times;</button>
-		<h2 class="modal__title" id="order-modal-title">Оставить заявку на обработку</h2>
+		<h2 class="modal__title" id="order-modal-title">Оставить заявку на обработку {CITY_IN}</h2>
 		<form class="hero__form js-form" action="/source/php/order.php" method="post">
 			<input type="hidden" name="source" value="Заявка на обработку">
 			<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">

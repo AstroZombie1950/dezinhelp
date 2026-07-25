@@ -14,28 +14,28 @@ $homeServices = data_load("home-services");
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-	<!-- основное SEO -->
-	<title>МосКомДез — служба дезинфекции, дезинсекции и дератизации</title>
-	<meta name="description" content="Уничтожение тараканов, клопов, грызунов, клещей и других вредителей. Профессиональная дезинфекция, дезинсекция и дератизация в Москве и области. Гарантия, лицензия, выезд в день заявки.">
-	<meta name="keywords" content="дезинфекция, дезинсекция, дератизация, уничтожение тараканов, уничтожение клопов, обработка от клещей, СЭС, МосКомДез">
+	<!-- основное SEO: {CITY_IN} подставляется по поддомену -->
+	<title>МосКомДез — служба дезинфекции, дезинсекции и дератизации {CITY_IN}</title>
+	<meta name="description" content="Уничтожение тараканов, клопов, грызунов, клещей и других вредителей. Профессиональная дезинфекция, дезинсекция и дератизация {CITY_IN} и области. Гарантия, лицензия, выезд в день заявки.">
+	<meta name="keywords" content="дезинфекция {CITY_IN}, дезинсекция {CITY_IN}, дератизация {CITY_IN}, уничтожение тараканов, уничтожение клопов, обработка от клещей, СЭС, МосКомДез">
 	<meta name="author" content="МосКомДез">
-	<meta name="robots" content="index, follow">
-	<link rel="canonical" href="https://dezinhelp.ru/">
+	<meta name="robots" content="<?= h($robots) ?>">
+	<link rel="canonical" href="<?= h($siteUrl) ?>/">
 
 	<!-- Open Graph -->
 	<meta property="og:type" content="website">
-	<meta property="og:title" content="МосКомДез — служба дезинфекции, дезинсекции и дератизации">
+	<meta property="og:title" content="МосКомДез — служба дезинфекции, дезинсекции и дератизации {CITY_IN}">
 	<meta property="og:description" content="Уничтожение тараканов, клопов, грызунов, клещей и других вредителей. Гарантия, лицензия, выезд в день заявки.">
-	<meta property="og:url" content="https://dezinhelp.ru/">
+	<meta property="og:url" content="<?= h($siteUrl) ?>/">
 	<meta property="og:site_name" content="МосКомДез">
 	<meta property="og:locale" content="ru_RU">
-	<meta property="og:image" content="/source/img/og-cover.jpg">
+	<meta property="og:image" content="<?= h($siteUrl) ?>/source/img/og-cover.jpg">
 
 	<!-- Twitter card -->
 	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:title" content="МосКомДез — служба дезинфекции, дезинсекции и дератизации">
+	<meta name="twitter:title" content="МосКомДез — служба дезинфекции, дезинсекции и дератизации {CITY_IN}">
 	<meta name="twitter:description" content="Уничтожение тараканов, клопов, грызунов, клещей и других вредителей. Гарантия, лицензия, выезд в день заявки.">
-	<meta name="twitter:image" content="/source/img/og-cover.jpg">
+	<meta name="twitter:image" content="<?= h($siteUrl) ?>/source/img/og-cover.jpg">
 
 	<!-- favicon -->
 	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -61,10 +61,10 @@ $homeServices = data_load("home-services");
 		<div class="container">
 
 			<!-- заголовок на всю ширину (акцент-заливка на «Санитарные услуги СЭС») -->
-			<h1 class="hero__title"><span class="hero__title-mark">Санитарные услуги СЭС</span> в Центральном Федеральном округе</h1>
+			<h1 class="hero__title"><span class="hero__title-mark">Санитарные услуги СЭС</span> {CITY_IN}</h1>
 
 			<!-- лид-абзац; ключевые слова — фирменным акцентом -->
-			<p class="hero__lead">МосКомДез — Избавим качественно и быстро от <a class="hero__hl" href="/unichtozhenie-nasekomyh/">насекомых</a>, <a class="hero__hl" href="/izbavitsya-ot-krys/">грызунов</a>, <a class="hero__hl" href="/obrabotka-ot-pleseni/">плесени</a>, <a class="hero__hl" href="/udalenie-zapahov/">запахов</a> и <a class="hero__hl" href="/unichtozhenie-borshchevika/">сорняков</a> в любом помещении и на участках, вылечим <a class="hero__hl" href="/lechenie-derevev/">деревья</a> от болезней и паразитов. Цена СЭС услуг одна из самых низких в Москве и МО</p>
+			<p class="hero__lead">МосКомДез — Избавим качественно и быстро от <a class="hero__hl" href="/unichtozhenie-nasekomyh/">насекомых</a>, <a class="hero__hl" href="/izbavitsya-ot-krys/">грызунов</a>, <a class="hero__hl" href="/obrabotka-ot-pleseni/">плесени</a>, <a class="hero__hl" href="/udalenie-zapahov/">запахов</a> и <a class="hero__hl" href="/unichtozhenie-borshchevika/">сорняков</a> в любом помещении и на участках, вылечим <a class="hero__hl" href="/lechenie-derevev/">деревья</a> от болезней и паразитов. Цена СЭС услуг одна из самых низких {CITY_IN} и МО</p>
 
 			<!-- две колонки: слева контент+форма, справа рабочий -->
 			<div class="hero__cols">
@@ -104,7 +104,7 @@ $homeServices = data_load("home-services");
 				<!-- правая колонка: рабочий + плашка цены -->
 				<div class="hero__right">
 					<div class="hero__figure">
-						<img class="hero__worker" src="/source/img/hero/worker.webp" alt="Специалист службы дезинфекции в защитном костюме" width="800" height="800" loading="eager">
+						<img class="hero__worker" src="/source/img/hero/worker.webp" alt="Специалист службы дезинфекции в защитном костюме, {CITY}" width="800" height="800" loading="eager">
 						<div class="hero__price">
 							<span class="hero__price-top">от</span>
 							<span class="hero__price-num">1500<span class="hero__price-cur">₽</span></span>
@@ -137,7 +137,7 @@ $homeServices = data_load("home-services");
 	<!-- типы объектов -->
 	<section class="section section--alt" id="objects">
 		<div class="container">
-			<h2 class="section__title">Работаем на всех типах объектов</h2>
+			<h2 class="section__title">Работаем на всех типах объектов {CITY_IN}</h2>
 			<div class="objects">
 				<div class="objects__item"><svg class="objects__icon"><use href="#i-food"></use></svg><span>Предприятия питания</span></div>
 				<div class="objects__item"><svg class="objects__icon"><use href="#i-hotel"></use></svg><span>Гостиничный бизнес</span></div>
@@ -189,6 +189,9 @@ $homeServices = data_load("home-services");
 			<img class="lightbox__img" src="" alt="">
 		</div>
 	</div>
+
+	<?php $schemaFaq = $faqItems; ?>
+	<?php require __DIR__ . "/source/include/schema.php"; ?>
 
 	<script src="/source/js/main.js"></script>
 </body>

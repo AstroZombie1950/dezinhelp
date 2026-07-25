@@ -1919,7 +1919,19 @@ body.modal-open {
 	color: var(--color-text);
 }
 
-/* акцент на домашнем городе (вместо жёлтого донора — фирменный зелёный) */
+/* ссылка на городскую версию сайта — выглядит как обычный пункт списка */
+.cities__link {
+	color: inherit;
+	text-decoration: none;
+	transition: color .15s;
+}
+
+.cities__link:hover {
+	color: var(--color-primary);
+	text-decoration: underline;
+}
+
+/* акцент на текущем городе (вместо жёлтого донора — фирменный зелёный) */
 .cities__city--home {
 	font-weight: 700;
 	color: var(--color-primary);

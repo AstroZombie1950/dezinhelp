@@ -2,6 +2,14 @@
 // Общие хелперы админки: пути, чтение/запись JSON, ответы.
 // Запись всегда через json_write(): валидация → бэкап → атомарный rename.
 
+// админка живёт только на основном домене: на городских поддоменах её нет,
+// иначе это 79 лишних точек входа в логин
+require_once __DIR__ . "/../../source/php/city.php";
+if (city_resolve()["status"] !== "main") {
+	require __DIR__ . "/../../404.php";
+	exit;
+}
+
 define("DATA_DIR",   realpath(__DIR__ . "/../../data"));
 define("TRASH_DIR",  DATA_DIR . "/.trash");
 define("BACKUP_DIR", DATA_DIR . "/.backup");
