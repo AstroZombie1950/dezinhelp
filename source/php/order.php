@@ -22,14 +22,23 @@ if (!empty($_POST["website"])) {
 
 // город берём с хоста, а не из формы: подделать нельзя и вёрстку править не нужно
 require __DIR__ . "/city.php";
+city_config($config);
 $orderCity = city_resolve();
 $cityName  = isset($orderCity["city"]["name"]) ? $orderCity["city"]["name"] : "";
 
+// обрезка по символам без mbstring: длинные поля не должны раздувать сообщение
+// (Telegram не принимает больше 4096 символов — заявка не дошла бы вовсе)
+function order_cut($s, $max)
+{
+	if (preg_match('/^.{0,' . $max . '}/us', $s, $m)) { return $m[0]; }
+	return substr($s, 0, $max);
+}
+
 // сбор полей
-$name    = trim($_POST["name"] ?? "");
-$phone   = trim($_POST["phone"] ?? "");
-$comment = trim($_POST["comment"] ?? "");
-$source  = trim($_POST["source"] ?? "Сайт");
+$name    = order_cut(trim($_POST["name"] ?? ""), 100);
+$phone   = order_cut(trim($_POST["phone"] ?? ""), 32);
+$comment = order_cut(trim($_POST["comment"] ?? ""), 500);
+$source  = order_cut(trim($_POST["source"] ?? "Сайт"), 100);
 
 // имя обязательно, кроме форм с флагом name_optional (герой — как у донора)
 if (empty($_POST["name_optional"]) && array_key_exists("name", $_POST) && $name === "") {
@@ -43,6 +52,51 @@ $digits = preg_replace("/\D+/", "", $phone);
 if (strlen($digits) !== 11) {
 	http_response_code(422);
 	echo json_encode(array("ok" => false, "error" => "phone"));
+	exit;
+}
+
+// лимит частоты: не больше 5 заявок с одного IP за 10 минут — иначе скриптом
+// можно залить чат Telegram. IP — REMOTE_ADDR: заголовки типа X-Forwarded-For
+// подделываются, для лимита они не годятся
+function order_rate_ok($ip, $limit = 5, $window = 600)
+{
+	if ($ip === "") { return true; }
+	$file = __DIR__ . "/../../data/.ratelimit.json";
+	$fh = @fopen($file, "c+");
+	if (!$fh) { return true; } // файл недоступен — заявки важнее лимита
+	flock($fh, LOCK_EX);
+	$all = json_decode((string) stream_get_contents($fh), true);
+	if (!is_array($all)) { $all = array(); }
+
+	// старые отметки выбрасываем по всем адресам — файл не растёт
+	$from = time() - $window;
+	foreach ($all as $k => $times) {
+		$all[$k] = array_values(array_filter((array) $times, function ($t) use ($from) { return $t > $from; }));
+		if (!$all[$k]) { unset($all[$k]); }
+	}
+
+	$ok = count(isset($all[$ip]) ? $all[$ip] : array()) < $limit;
+	if ($ok) { $all[$ip][] = time(); }
+
+	ftruncate($fh, 0);
+	rewind($fh);
+	fwrite($fh, json_encode($all));
+	flock($fh, LOCK_UN);
+	fclose($fh);
+	return $ok;
+}
+
+if (!order_rate_ok(isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : "")) {
+	http_response_code(429);
+	echo json_encode(array("ok" => false, "error" => "rate"));
+	exit;
+}
+
+// согласие в квизе проверяет и сервер, а не только браузер.
+// признак квиза — поле «способ связи»: в других формах его нет
+if (isset($_POST["contact_method"]) && empty($_POST["consent"])) {
+	http_response_code(422);
+	echo json_encode(array("ok" => false, "error" => "consent"));
 	exit;
 }
 
@@ -120,7 +174,8 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
 curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 $response = curl_exec($ch);
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-curl_close($ch);
+// curl_close не зовём: с PHP 8.0 он ничего не делает, а с 8.5 — deprecated,
+// и предупреждение ломало бы JSON-ответ
 
 if ($httpCode === 200) {
 	echo json_encode(array("ok" => true));

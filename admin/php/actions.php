@@ -362,48 +362,7 @@ case "home_slider_save":
 
 // загрузка фото карточки: любой jpeg/png/webp кропается в квадрат 400×400 и жмётся в webp
 case "home_slider_upload":
-	if (empty($_FILES["file"]) || $_FILES["file"]["error"] === UPLOAD_ERR_INI_SIZE || $_FILES["file"]["error"] === UPLOAD_ERR_FORM_SIZE) {
-		fail("Файл слишком большой — загрузите фото до 10 МБ");
-	}
-	if ($_FILES["file"]["error"] !== UPLOAD_ERR_OK || !is_uploaded_file($_FILES["file"]["tmp_name"])) {
-		fail("Не получилось загрузить файл — попробуйте ещё раз");
-	}
-	if ($_FILES["file"]["size"] > 10 * 1024 * 1024) { fail("Файл слишком большой — загрузите фото до 10 МБ"); }
-
-	$info = getimagesize($_FILES["file"]["tmp_name"]);
-	if (!$info) { fail("Это не похоже на картинку — нужен файл JPG, PNG или WebP"); }
-
-	switch ($info[2]) {
-		case IMAGETYPE_JPEG: $src = imagecreatefromjpeg($_FILES["file"]["tmp_name"]); break;
-		case IMAGETYPE_PNG:  $src = imagecreatefrompng($_FILES["file"]["tmp_name"]); break;
-		case IMAGETYPE_WEBP: $src = imagecreatefromwebp($_FILES["file"]["tmp_name"]); break;
-		default: fail("Такой формат не подходит — нужен файл JPG, PNG или WebP");
-	}
-	if (!$src) { fail("Не получилось прочитать картинку — попробуйте другой файл"); }
-
-	// кроп «cover»: масштабируем по меньшей стороне и вырезаем центр
-	$sw = imagesx($src); $sh = imagesy($src);
-	$side = min($sw, $sh);
-	$sx = (int) (($sw - $side) / 2);
-	$sy = (int) (($sh - $side) / 2);
-
-	$dst = imagecreatetruecolor(400, 400);
-	// прозрачность png заливаем белым — карточки на сайте на светлом фоне
-	$white = imagecolorallocate($dst, 255, 255, 255);
-	imagefill($dst, 0, 0, $white);
-	imagecopyresampled($dst, $src, 0, 0, $sx, $sy, 400, 400, $side, $side);
-	imagedestroy($src);
-
-	$name = "u" . date("Ymd-His") . "-" . substr(bin2hex(random_bytes(3)), 0, 4) . ".webp";
-	$dir  = realpath(__DIR__ . "/../../source/img/our_services");
-	if (!$dir) { fail("Папка для фотографий не найдена на сервере"); }
-	if (!imagewebp($dst, $dir . "/" . $name, 82)) {
-		imagedestroy($dst);
-		fail("Не получилось сохранить фотографию на сервере");
-	}
-	imagedestroy($dst);
-
-	respond(true, array("path" => "/source/img/our_services/" . $name));
+	respond(true, array("path" => upload_image_webp("our_services", "u", 400, 82)));
 
 // примеры работ: вся форма приходит одним JSON-полем
 case "works_save":
@@ -450,47 +409,7 @@ case "works_save":
 
 // загрузка фото примера: любой jpeg/png/webp кропается в квадрат 640×640 и жмётся в webp
 case "works_upload":
-	if (empty($_FILES["file"]) || $_FILES["file"]["error"] === UPLOAD_ERR_INI_SIZE || $_FILES["file"]["error"] === UPLOAD_ERR_FORM_SIZE) {
-		fail("Файл слишком большой — загрузите фото до 10 МБ");
-	}
-	if ($_FILES["file"]["error"] !== UPLOAD_ERR_OK || !is_uploaded_file($_FILES["file"]["tmp_name"])) {
-		fail("Не получилось загрузить файл — попробуйте ещё раз");
-	}
-	if ($_FILES["file"]["size"] > 10 * 1024 * 1024) { fail("Файл слишком большой — загрузите фото до 10 МБ"); }
-
-	$info = getimagesize($_FILES["file"]["tmp_name"]);
-	if (!$info) { fail("Это не похоже на картинку — нужен файл JPG, PNG или WebP"); }
-
-	switch ($info[2]) {
-		case IMAGETYPE_JPEG: $src = imagecreatefromjpeg($_FILES["file"]["tmp_name"]); break;
-		case IMAGETYPE_PNG:  $src = imagecreatefrompng($_FILES["file"]["tmp_name"]); break;
-		case IMAGETYPE_WEBP: $src = imagecreatefromwebp($_FILES["file"]["tmp_name"]); break;
-		default: fail("Такой формат не подходит — нужен файл JPG, PNG или WebP");
-	}
-	if (!$src) { fail("Не получилось прочитать картинку — попробуйте другой файл"); }
-
-	// кроп «cover»: масштабируем по меньшей стороне и вырезаем центр
-	$sw = imagesx($src); $sh = imagesy($src);
-	$side = min($sw, $sh);
-	$sx = (int) (($sw - $side) / 2);
-	$sy = (int) (($sh - $side) / 2);
-
-	$dst = imagecreatetruecolor(640, 640);
-	$white = imagecolorallocate($dst, 255, 255, 255);
-	imagefill($dst, 0, 0, $white);
-	imagecopyresampled($dst, $src, 0, 0, $sx, $sy, 640, 640, $side, $side);
-	imagedestroy($src);
-
-	$name = "w" . date("Ymd-His") . "-" . substr(bin2hex(random_bytes(3)), 0, 4) . ".webp";
-	$dir  = realpath(__DIR__ . "/../../source/img/works");
-	if (!$dir) { fail("Папка для фотографий не найдена на сервере"); }
-	if (!imagewebp($dst, $dir . "/" . $name, 82)) {
-		imagedestroy($dst);
-		fail("Не получилось сохранить фотографию на сервере");
-	}
-	imagedestroy($dst);
-
-	respond(true, array("path" => "/source/img/works/" . $name));
+	respond(true, array("path" => upload_image_webp("works", "w", 640, 82)));
 
 // вкладка «Герой»: цена в плашке + пути картинок (герой и текст)
 case "svc_save_hero":
@@ -513,53 +432,7 @@ case "svc_save_hero":
 // загрузка картинки услуги (герой / текст): даунскейл до 900px по ширине без кропа,
 // прозрачность сохраняем (png без фона для текста), результат — webp
 case "svc_image_upload":
-	if (empty($_FILES["file"]) || $_FILES["file"]["error"] === UPLOAD_ERR_INI_SIZE || $_FILES["file"]["error"] === UPLOAD_ERR_FORM_SIZE) {
-		fail("Файл слишком большой — загрузите фото до 10 МБ");
-	}
-	if ($_FILES["file"]["error"] !== UPLOAD_ERR_OK || !is_uploaded_file($_FILES["file"]["tmp_name"])) {
-		fail("Не получилось загрузить файл — попробуйте ещё раз");
-	}
-	if ($_FILES["file"]["size"] > 10 * 1024 * 1024) { fail("Файл слишком большой — загрузите фото до 10 МБ"); }
-
-	$info = getimagesize($_FILES["file"]["tmp_name"]);
-	if (!$info) { fail("Это не похоже на картинку — нужен файл JPG, PNG или WebP"); }
-
-	switch ($info[2]) {
-		case IMAGETYPE_JPEG: $src = imagecreatefromjpeg($_FILES["file"]["tmp_name"]); break;
-		case IMAGETYPE_PNG:  $src = imagecreatefrompng($_FILES["file"]["tmp_name"]); break;
-		case IMAGETYPE_WEBP: $src = imagecreatefromwebp($_FILES["file"]["tmp_name"]); break;
-		default: fail("Такой формат не подходит — нужен файл JPG, PNG или WebP");
-	}
-	if (!$src) { fail("Не получилось прочитать картинку — попробуйте другой файл"); }
-
-	// даунскейл по ширине, пропорции сохраняем; апскейл не делаем
-	$sw = imagesx($src); $sh = imagesy($src);
-	$maxW = 900;
-	if ($sw > $maxW) { $nw = $maxW; $nh = (int) round($sh * $maxW / $sw); }
-	else { $nw = $sw; $nh = $sh; }
-
-	$dst = imagecreatetruecolor($nw, $nh);
-	// сохраняем прозрачность (для png без фона)
-	imagealphablending($dst, false);
-	imagesavealpha($dst, true);
-	$transparent = imagecolorallocatealpha($dst, 0, 0, 0, 127);
-	imagefilledrectangle($dst, 0, 0, $nw, $nh, $transparent);
-	imagecopyresampled($dst, $src, 0, 0, 0, 0, $nw, $nh, $sw, $sh);
-	imagedestroy($src);
-
-	$dir = __DIR__ . "/../../source/img/services";
-	if (!is_dir($dir)) { @mkdir($dir, 0755, true); }
-	$dir = realpath($dir);
-	if (!$dir) { fail("Папка для фотографий не найдена на сервере"); }
-
-	$name = "s" . date("Ymd-His") . "-" . substr(bin2hex(random_bytes(3)), 0, 4) . ".webp";
-	if (!imagewebp($dst, $dir . "/" . $name, 84)) {
-		imagedestroy($dst);
-		fail("Не получилось сохранить фотографию на сервере");
-	}
-	imagedestroy($dst);
-
-	respond(true, array("path" => "/source/img/services/" . $name));
+	respond(true, array("path" => upload_image_webp("services", "s", 0, 84)));
 
 // --- настройки сайта ---
 

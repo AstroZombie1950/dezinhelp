@@ -3,7 +3,7 @@
 		<div class="container">
 			<h2 class="section__title">Наши сертификаты</h2>
 			<div class="certs__carousel">
-				<div class="certs__track js-certs-track">
+				<div class="certs__track js-certs-track" data-real="6" data-clone="4">
 
 					<!-- клоны последних 4 карточек — стоят перед реальными для прокрутки влево -->
 					<?php foreach (array(3, 4, 5, 6) as $i): ?>

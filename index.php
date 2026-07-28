@@ -9,51 +9,16 @@ $homeServices = data_load("home-services");
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-	<!-- кодировка и адаптив -->
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-	<!-- основное SEO: {CITY_IN} подставляется по поддомену -->
-	<title>МосКомДез — служба дезинфекции, дезинсекции и дератизации {CITY_IN}</title>
-	<meta name="description" content="Уничтожение тараканов, клопов, грызунов, клещей и других вредителей. Профессиональная дезинфекция, дезинсекция и дератизация {CITY_IN} и области. Гарантия, лицензия, выезд в день заявки.">
-	<meta name="keywords" content="дезинфекция {CITY_IN}, дезинсекция {CITY_IN}, дератизация {CITY_IN}, уничтожение тараканов, уничтожение клопов, обработка от клещей, СЭС, МосКомДез">
-	<meta name="author" content="МосКомДез">
-	<meta name="robots" content="<?= h($robots) ?>">
-	<link rel="canonical" href="<?= h($siteUrl) ?>/">
-
-	<!-- Open Graph -->
-	<meta property="og:type" content="website">
-	<meta property="og:title" content="МосКомДез — служба дезинфекции, дезинсекции и дератизации {CITY_IN}">
-	<meta property="og:description" content="Уничтожение тараканов, клопов, грызунов, клещей и других вредителей. Гарантия, лицензия, выезд в день заявки.">
-	<meta property="og:url" content="<?= h($siteUrl) ?>/">
-	<meta property="og:site_name" content="МосКомДез">
-	<meta property="og:locale" content="ru_RU">
-	<meta property="og:image" content="<?= h($siteUrl) ?>/source/img/og-cover.jpg">
-
-	<!-- Twitter card -->
-	<meta name="twitter:card" content="summary_large_image">
-	<meta name="twitter:title" content="МосКомДез — служба дезинфекции, дезинсекции и дератизации {CITY_IN}">
-	<meta name="twitter:description" content="Уничтожение тараканов, клопов, грызунов, клещей и других вредителей. Гарантия, лицензия, выезд в день заявки.">
-	<meta name="twitter:image" content="<?= h($siteUrl) ?>/source/img/og-cover.jpg">
-
-	<!-- favicon -->
-	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-	<link rel="icon" type="image/x-icon" href="/favicon.ico">
-
-	<!-- цвет темы для мобильных браузеров -->
-	<meta name="theme-color" content="#ffffff">
-
-	<!-- шрифт Roboto (как на referense-сайте safelychange.ru) — свои файлы,
-	     @font-face в main.css. Кириллица и латиница нужны для первого экрана -->
-	<link rel="preload" href="/source/fonts/roboto-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-	<link rel="preload" href="/source/fonts/roboto-latin.woff2" as="font" type="font/woff2" crossorigin>
-
-	<!-- стили -->
-	<link rel="stylesheet" href="<?= h(asset("/source/css/main.css")) ?>">
-
-	<!-- счётчики аналитики — один файл на все страницы сайта -->
-	<?php require __DIR__ . "/source/include/matrika.html"; ?>
+	<?php
+	// общий <head> страниц сайта; {CITY_IN} подставляется по поддомену
+	$headTitle     = "МосКомДез — служба дезинфекции, дезинсекции и дератизации {CITY_IN}";
+	$headDescr     = "Уничтожение тараканов, клопов, грызунов, клещей и других вредителей. Профессиональная дезинфекция, дезинсекция и дератизация {CITY_IN} и области. Гарантия, лицензия, выезд в день заявки.";
+	$headOgDescr   = "Уничтожение тараканов, клопов, грызунов, клещей и других вредителей. Гарантия, лицензия, выезд в день заявки.";
+	$headKeywords  = "дезинфекция {CITY_IN}, дезинсекция {CITY_IN}, дератизация {CITY_IN}, уничтожение тараканов, уничтожение клопов, обработка от клещей, СЭС, МосКомДез";
+	$headCanonical = $siteUrl . "/";
+	$headOgType    = "website";
+	require __DIR__ . "/source/include/head.php";
+	?>
 </head>
 <body>
 

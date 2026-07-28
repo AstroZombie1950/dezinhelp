@@ -2,6 +2,7 @@
 // Страница 404. Зовётся из service.php (слаг не найден) и из ErrorDocument в .htaccess.
 // Намеренно самостоятельная: ни шапки, ни футера, ни данных — только выход на главную.
 http_response_code(404);
+require_once __DIR__ . "/source/php/asset.php";
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -18,7 +19,7 @@ http_response_code(404);
 
 	<link rel="preload" href="/source/fonts/roboto-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 
-	<link rel="stylesheet" href="/source/css/main.css">
+	<link rel="stylesheet" href="<?= asset("/source/css/main.css") ?>">
 </head>
 <body>
 

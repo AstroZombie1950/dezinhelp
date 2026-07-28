@@ -3,7 +3,7 @@
 // $pricesLayout: "cols" — две колонки (главная), "full" — на всю ширину (страница услуги).
 // $pricesButton — текст кнопки под таблицами; пусто = формы нет.
 $pGroups = array();
-foreach ($pricesData["groups"] as $g) {
+foreach ((array) (isset($pricesData["groups"]) ? $pricesData["groups"] : array()) as $g) {
 	if (isset($g["visible"]) && !$g["visible"]) { continue; }   // подраздел скрыт через админку
 	if (empty($g["items"])) { continue; }
 	$pGroups[] = $g;

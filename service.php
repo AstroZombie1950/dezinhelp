@@ -21,12 +21,17 @@ if (!$page) {
 }
 
 // приводим адрес к каноническому: нижний регистр + хвостовой слеш.
-// одно место на оба случая — /Obrabotka-Ot-Klopov и /obrabotka-ot-klopov
-$path = "/" . $canonical . "/";
-if (parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH) !== $path) {
-	header("Location: " . $path, true, 301);
+// одно место на оба случая — /Obrabotka-Ot-Klopov и /obrabotka-ot-klopov.
+// query string сохраняем: UTM-метки рекламы не должны теряться на редиректе
+// (берём её из REQUEST_URI — в QUERY_STRING роутер уже подмешал свой slug)
+if (parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH) !== "/" . $canonical . "/") {
+	parse_str((string) parse_url($_SERVER["REQUEST_URI"], PHP_URL_QUERY), $queryParams);
+	unset($queryParams["slug"]); // служебный параметр роутера — в чистом адресе не нужен
+	$query = http_build_query($queryParams);
+	header("Location: /" . $canonical . "/" . ($query !== "" ? "?" . $query : ""), true, 301);
 	exit;
 }
+$path = "/" . $canonical . "/";
 
 // общие данные страниц услуг: хиро, галерея, заголовки — одно место на все 27
 $servicePage  = data_load("service-page");
@@ -46,42 +51,15 @@ $descr  = isset($seo["description"]) ? $seo["description"] : "";
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-	<!-- кодировка и адаптив -->
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-	<!-- основное SEO: всё из data/services/<slug>.json -->
-	<title><?= h($title) ?></title>
-	<meta name="description" content="<?= h($descr) ?>">
-	<meta name="keywords" content="<?= h(isset($seo["keywords"]) ? $seo["keywords"] : "") ?>">
-	<meta name="author" content="МосКомДез">
-	<meta name="robots" content="<?= h($robots) ?>">
-	<link rel="canonical" href="<?= h($url) ?>">
-
-	<!-- Open Graph -->
-	<meta property="og:type" content="article">
-	<meta property="og:title" content="<?= h($title) ?>">
-	<meta property="og:description" content="<?= h($descr) ?>">
-	<meta property="og:url" content="<?= h($url) ?>">
-	<meta property="og:site_name" content="МосКомДез">
-	<meta property="og:locale" content="ru_RU">
-	<meta property="og:image" content="<?= h($siteUrl) ?>/source/img/og-cover.jpg">
-
-	<!-- favicon -->
-	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-	<link rel="icon" type="image/x-icon" href="/favicon.ico">
-	<meta name="theme-color" content="#ffffff">
-
-	<!-- шрифт Roboto — свои файлы, @font-face в main.css -->
-	<link rel="preload" href="/source/fonts/roboto-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-	<link rel="preload" href="/source/fonts/roboto-latin.woff2" as="font" type="font/woff2" crossorigin>
-
-	<!-- стили -->
-	<link rel="stylesheet" href="<?= h(asset("/source/css/main.css")) ?>">
-
-	<!-- счётчики аналитики — один файл на все страницы сайта -->
-	<?php require __DIR__ . "/source/include/matrika.html"; ?>
+	<?php
+	// общий <head>; SEO-данные — из data/services/<slug>.json
+	$headTitle     = $title;
+	$headDescr     = $descr;
+	$headKeywords  = isset($seo["keywords"]) ? $seo["keywords"] : "";
+	$headCanonical = $url;
+	$headOgType    = "article";
+	require __DIR__ . "/source/include/head.php";
+	?>
 </head>
 <body>
 

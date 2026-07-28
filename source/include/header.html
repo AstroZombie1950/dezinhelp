@@ -34,8 +34,10 @@
 	<header class="header" id="top">
 		<div class="container header__row">
 			<!-- лого -->
-			<a href="/" class="header__logo" aria-label="МосКомДез — служба дезинфекции">
+			<a href="/" class="header__logo" aria-label="МосКомДез — служба дезинфекции {CITY_IN}">
 				<img class="header__logo-img" src="/source/img/logo.svg" alt="МосКомДез" width="131" height="46">
+				<!-- городская подпись: меняется вместе с поддоменом -->
+				<span class="header__logo-city">СЭС г. {CITY}</span>
 			</a>
 
 			<!-- меню (центр на десктопе, бургер-панель на мобиле) -->

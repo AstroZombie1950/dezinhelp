@@ -4,10 +4,25 @@ document.addEventListener("DOMContentLoaded", function () {
 	var header = document.querySelector(".header");
 	var burger = document.querySelector(".header__burger");
 
-	// мобильное меню
+	// мобильное меню: панель во весь экран, поэтому фон под ней не должен скроллиться
 	if (burger) {
+		function closeNav() {
+			header.classList.remove("is-nav-open");
+			document.body.classList.remove("modal-open");
+		}
+
 		burger.addEventListener("click", function () {
-			header.classList.toggle("is-nav-open");
+			var open = header.classList.toggle("is-nav-open");
+			document.body.classList.toggle("modal-open", open);
+		});
+
+		// переход по пункту меню закрывает панель — иначе она остаётся поверх страницы
+		document.querySelectorAll(".nav__link, .nav__submenu-link").forEach(function (link) {
+			link.addEventListener("click", closeNav);
+		});
+
+		document.addEventListener("keydown", function (e) {
+			if (e.key === "Escape" && header.classList.contains("is-nav-open")) { closeNav(); }
 		});
 	}
 
@@ -212,96 +227,58 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	}
 
-	// ===== слайдер услуг: скролл + клоны по краям, механика как у сертификатов =====
-	var srvTrack = document.querySelector(".js-srv-track");
-	if (srvTrack) {
-		var srvCarousel = srvTrack.closest(".srv__carousel");
-		var SRV_CLONE = parseInt(srvTrack.dataset.clone, 10); // клонов с каждой стороны
-		var SRV_REAL = parseInt(srvTrack.dataset.real, 10);   // реальных карточек
+	// ===== бесшовные карусели: клоны по краям, скролл целыми карточками =====
+	// одна механика на услуги, сертификаты, галерею и примеры работ.
+	// число клонов и реальных карточек приходит с разметки: data-clone / data-real
+	function initCarousel(trackSelector, cardSelector, btnSelector) {
+		var track = document.querySelector(trackSelector);
+		if (!track) { return; }
+		var carousel = track.parentElement;
+		var CLONE = parseInt(track.dataset.clone, 10); // клонов с каждой стороны
+		var REAL = parseInt(track.dataset.real, 10);   // реальных карточек
 
-		function srvStep() {
-			var card = srvTrack.querySelector(".srv-card");
-			if (!card) { return srvTrack.clientWidth; }
-			var gap = parseInt(getComputedStyle(srvTrack).columnGap || getComputedStyle(srvTrack).gap || "20", 10);
+		function step() {
+			var card = track.querySelector(cardSelector);
+			if (!card) { return track.clientWidth; }
+			var gap = parseInt(getComputedStyle(track).columnGap || getComputedStyle(track).gap || "20", 10);
 			return card.offsetWidth + (isNaN(gap) ? 20 : gap);
 		}
 
 		// стартуем на первой настоящей карточке (после клонов слева), без анимации
-		function srvSetPosition(index) {
-			srvTrack.style.scrollBehavior = "auto";
-			srvTrack.scrollLeft = index * srvStep();
-			srvTrack.style.scrollBehavior = "";
+		function setPosition(index) {
+			track.style.scrollBehavior = "auto";
+			track.scrollLeft = index * step();
+			track.style.scrollBehavior = "";
 		}
-		srvSetPosition(SRV_CLONE);
-		window.addEventListener("resize", function () { srvSetPosition(SRV_CLONE); });
+		setPosition(CLONE);
+		window.addEventListener("resize", function () { setPosition(CLONE); });
 
 		// после остановки скролла — если заехали в зону клонов, бесшовно телепортируем на реальную позицию
-		var srvSettleTimer = null;
-		srvTrack.addEventListener("scroll", function () {
-			clearTimeout(srvSettleTimer);
-			srvSettleTimer = setTimeout(function () {
-				var index = Math.round(srvTrack.scrollLeft / srvStep());
-				if (index < SRV_CLONE) {
-					srvSetPosition(index + SRV_REAL);
-				} else if (index >= SRV_CLONE + SRV_REAL) {
-					srvSetPosition(index - SRV_REAL);
+		var settleTimer = null;
+		track.addEventListener("scroll", function () {
+			clearTimeout(settleTimer);
+			settleTimer = setTimeout(function () {
+				var index = Math.round(track.scrollLeft / step());
+				if (index < CLONE) {
+					setPosition(index + REAL);
+				} else if (index >= CLONE + REAL) {
+					setPosition(index - REAL);
 				}
 			}, 120);
 		}, { passive: true });
 
-		srvCarousel.querySelectorAll(".srv__btn").forEach(function (btn) {
+		carousel.querySelectorAll(btnSelector).forEach(function (btn) {
 			btn.addEventListener("click", function () {
 				var dir = btn.dataset.dir === "prev" ? -1 : 1;
-				srvTrack.scrollBy({ left: dir * srvStep(), behavior: "smooth" });
+				track.scrollBy({ left: dir * step(), behavior: "smooth" });
 			});
 		});
 	}
 
-	// ===== карусель сертификатов: скролл + клоны по краям для бесшовной прокрутки =====
-	var certsTrack = document.querySelector(".js-certs-track");
-	if (certsTrack) {
-		var certsCarousel = certsTrack.closest(".certs__carousel");
-		var CERTS_CLONE = 4; // клонов с каждой стороны
-		var CERTS_REAL = 6;  // реальных сертификатов
-
-		function certStep() {
-			var card = certsTrack.querySelector(".cert-card");
-			if (!card) { return certsTrack.clientWidth; }
-			var gap = parseInt(getComputedStyle(certsTrack).columnGap || getComputedStyle(certsTrack).gap || "20", 10);
-			return card.offsetWidth + (isNaN(gap) ? 20 : gap);
-		}
-
-		// стартуем на первой настоящей карточке (после клонов слева), без анимации
-		function certsSetPosition(index) {
-			certsTrack.style.scrollBehavior = "auto";
-			certsTrack.scrollLeft = index * certStep();
-			certsTrack.style.scrollBehavior = "";
-		}
-		certsSetPosition(CERTS_CLONE);
-		window.addEventListener("resize", function () { certsSetPosition(CERTS_CLONE); });
-
-		// после остановки скролла — если заехали в зону клонов, бесшовно телепортируем на реальную позицию
-		var certsSettleTimer = null;
-		certsTrack.addEventListener("scroll", function () {
-			clearTimeout(certsSettleTimer);
-			certsSettleTimer = setTimeout(function () {
-				var step = certStep();
-				var index = Math.round(certsTrack.scrollLeft / step);
-				if (index < CERTS_CLONE) {
-					certsSetPosition(index + CERTS_REAL);
-				} else if (index >= CERTS_CLONE + CERTS_REAL) {
-					certsSetPosition(index - CERTS_REAL);
-				}
-			}, 120);
-		}, { passive: true });
-
-		certsCarousel.querySelectorAll(".certs__btn").forEach(function (btn) {
-			btn.addEventListener("click", function () {
-				var dir = btn.dataset.dir === "prev" ? -1 : 1;
-				certsTrack.scrollBy({ left: dir * certStep(), behavior: "smooth" });
-			});
-		});
-	}
+	initCarousel(".js-srv-track", ".srv-card", ".srv__btn");     // слайдер услуг
+	initCarousel(".js-certs-track", ".cert-card", ".certs__btn"); // сертификаты
+	initCarousel(".js-gal-track", ".gal__item", ".gal__btn");     // объекты санобработки
+	initCarousel(".js-works-track", ".work-card", ".works__btn"); // примеры «до/после»
 
 	// ===== лайтбокс сертификатов: увеличенный просмотр по клику =====
 	var certLightbox = document.getElementById("cert-lightbox");
@@ -354,96 +331,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		toTop.addEventListener("click", function () {
 			window.scrollTo({ top: 0, behavior: "smooth" });
-		});
-	}
-
-	// ===== объекты санобработки: слайдер (та же схема, что у услуг — клоны по краям) =====
-	var galTrack = document.querySelector(".js-gal-track");
-	if (galTrack) {
-		var galCarousel = galTrack.closest(".gal__carousel");
-		var GAL_CLONE = parseInt(galTrack.dataset.clone, 10); // клонов с каждой стороны
-		var GAL_REAL = parseInt(galTrack.dataset.real, 10);   // реальных фото
-
-		function galStep() {
-			var item = galTrack.querySelector(".gal__item");
-			if (!item) { return galTrack.clientWidth; }
-			var gap = parseInt(getComputedStyle(galTrack).columnGap || getComputedStyle(galTrack).gap || "20", 10);
-			return item.offsetWidth + (isNaN(gap) ? 20 : gap);
-		}
-
-		// стартуем на первом настоящем фото, без анимации
-		function galSetPosition(index) {
-			galTrack.style.scrollBehavior = "auto";
-			galTrack.scrollLeft = index * galStep();
-			galTrack.style.scrollBehavior = "";
-		}
-		galSetPosition(GAL_CLONE);
-		window.addEventListener("resize", function () { galSetPosition(GAL_CLONE); });
-
-		// заехали в клоны — бесшовно телепортируем на реальную позицию
-		var galSettleTimer = null;
-		galTrack.addEventListener("scroll", function () {
-			clearTimeout(galSettleTimer);
-			galSettleTimer = setTimeout(function () {
-				var index = Math.round(galTrack.scrollLeft / galStep());
-				if (index < GAL_CLONE) {
-					galSetPosition(index + GAL_REAL);
-				} else if (index >= GAL_CLONE + GAL_REAL) {
-					galSetPosition(index - GAL_REAL);
-				}
-			}, 120);
-		}, { passive: true });
-
-		galCarousel.querySelectorAll(".gal__btn").forEach(function (btn) {
-			btn.addEventListener("click", function () {
-				var dir = btn.dataset.dir === "prev" ? -1 : 1;
-				galTrack.scrollBy({ left: dir * galStep(), behavior: "smooth" });
-			});
-		});
-	}
-
-	// ===== примеры работ: слайдер «до/после» (та же схема — клоны по краям) =====
-	var worksTrack = document.querySelector(".js-works-track");
-	if (worksTrack) {
-		var worksCarousel = worksTrack.closest(".works__carousel");
-		var WORKS_CLONE = parseInt(worksTrack.dataset.clone, 10); // клонов с каждой стороны
-		var WORKS_REAL = parseInt(worksTrack.dataset.real, 10);   // реальных карточек
-
-		function worksStep() {
-			var card = worksTrack.querySelector(".work-card");
-			if (!card) { return worksTrack.clientWidth; }
-			var gap = parseInt(getComputedStyle(worksTrack).columnGap || getComputedStyle(worksTrack).gap || "20", 10);
-			return card.offsetWidth + (isNaN(gap) ? 20 : gap);
-		}
-
-		// стартуем на первой настоящей карточке (после клонов слева), без анимации
-		function worksSetPosition(index) {
-			worksTrack.style.scrollBehavior = "auto";
-			worksTrack.scrollLeft = index * worksStep();
-			worksTrack.style.scrollBehavior = "";
-		}
-		worksSetPosition(WORKS_CLONE);
-		window.addEventListener("resize", function () { worksSetPosition(WORKS_CLONE); });
-
-		// заехали в клоны — бесшовно телепортируем на реальную позицию
-		var worksSettleTimer = null;
-		worksTrack.addEventListener("scroll", function () {
-			clearTimeout(worksSettleTimer);
-			worksSettleTimer = setTimeout(function () {
-				var index = Math.round(worksTrack.scrollLeft / worksStep());
-				if (index < WORKS_CLONE) {
-					worksSetPosition(index + WORKS_REAL);
-				} else if (index >= WORKS_CLONE + WORKS_REAL) {
-					worksSetPosition(index - WORKS_REAL);
-				}
-			}, 120);
-		}, { passive: true });
-
-		worksCarousel.querySelectorAll(".works__btn").forEach(function (btn) {
-			btn.addEventListener("click", function () {
-				var dir = btn.dataset.dir === "prev" ? -1 : 1;
-				worksTrack.scrollBy({ left: dir * worksStep(), behavior: "smooth" });
-			});
 		});
 	}
 
@@ -603,5 +490,149 @@ document.addEventListener("DOMContentLoaded", function () {
 		}, { threshold: 0.4 });
 
 		statNums.forEach(function (el) { statsIO.observe(el); });
+	}
+
+	// ===== город посетителя: определение, подтверждение, выбор из списка =====
+	// Порядок: спрашиваем геолокацию браузера, при отказе определяем по IP (DaData).
+	// Город из нашего реестра — уводим на его поддомен, чужой — остаёмся на Москве.
+	// Дальше поп-ап «Нужна обработка в …?»: «Да» — остаться, «Нет» — список городов.
+	var geoAsk = document.getElementById("geo-ask");
+	var cityPicker = document.getElementById("city-picker");
+	if (geoAsk && cityPicker) {
+		var citySlug = geoAsk.dataset.slug;
+		var cityBase = geoAsk.dataset.base || "";
+		var CITY_COOKIE = "dh_city";       // что определили — второй раз сервисы не дёргаем
+		var CITY_OK_COOKIE = "dh_city_ok"; // город подтверждён посетителем
+
+		// куку ставим на весь домен: поддомены должны видеть ответ друг друга
+		function cookieDomain() {
+			if (cityBase.indexOf(".") === -1) { return ""; }  // localhost
+			if (/^[\d.]+$/.test(cityBase)) { return ""; }     // IP вместо домена
+			return "; domain=." + cityBase;
+		}
+
+		function cookieGet(name) {
+			var m = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+			return m ? decodeURIComponent(m[1]) : "";
+		}
+
+		function cookieSet(name, value, days) {
+			document.cookie = name + "=" + encodeURIComponent(value) + "; path=/; max-age="
+				+ (days * 86400) + cookieDomain() + "; samesite=lax";
+		}
+
+		// --- поп-ап подтверждения ---
+		function askShow() {
+			if (cookieGet(CITY_OK_COOKIE)) { return; }
+			geoAsk.hidden = false;
+			setTimeout(function () { geoAsk.classList.add("is-open"); }, 20);
+		}
+
+		function askHide() {
+			geoAsk.classList.remove("is-open");
+			setTimeout(function () { geoAsk.hidden = true; }, 250);
+		}
+
+		geoAsk.querySelector(".js-geo-yes").addEventListener("click", function () {
+			cookieSet(CITY_OK_COOKIE, "1", 180);
+			cookieSet(CITY_COOKIE, citySlug, 180);
+			askHide();
+		});
+
+		geoAsk.querySelector(".js-geo-no").addEventListener("click", function () {
+			askHide();
+			pickerOpen();
+		});
+
+		// крестик — вопрос не задаём до конца сессии, но выбор не запоминаем
+		geoAsk.querySelector("[data-geo-close]").addEventListener("click", function () {
+			document.cookie = CITY_OK_COOKIE + "=1; path=/" + cookieDomain() + "; samesite=lax";
+			askHide();
+		});
+
+		// --- список городов ---
+		var citySearch = cityPicker.querySelector(".js-city-search");
+		var cityItems = cityPicker.querySelectorAll(".city-picker__item");
+		var cityEmpty = cityPicker.querySelector(".js-city-empty");
+
+		function pickerOpen() {
+			cityPicker.classList.add("is-open");
+			cityPicker.setAttribute("aria-hidden", "false");
+			document.body.classList.add("modal-open");
+			// на десктопе сразу в поиск, на тач-экранах фокус выдёргивает клавиатуру
+			if (window.innerWidth > 768) { citySearch.focus(); }
+		}
+
+		function pickerClose() {
+			cityPicker.classList.remove("is-open");
+			cityPicker.setAttribute("aria-hidden", "true");
+			document.body.classList.remove("modal-open");
+		}
+
+		cityPicker.querySelectorAll("[data-picker-close]").forEach(function (el) {
+			el.addEventListener("click", pickerClose);
+		});
+
+		document.addEventListener("keydown", function (e) {
+			if (e.key === "Escape" && cityPicker.classList.contains("is-open")) { pickerClose(); }
+		});
+
+		// поиск по списку: без учёта регистра и «ё», совпадение с любого места названия
+		function cityNorm(s) {
+			return s.toLowerCase().replace(/ё/g, "е").trim();
+		}
+
+		citySearch.addEventListener("input", function () {
+			var q = cityNorm(citySearch.value);
+			var shown = 0;
+			cityItems.forEach(function (item) {
+				var hit = q === "" || cityNorm(item.dataset.name).indexOf(q) !== -1;
+				item.hidden = !hit;
+				if (hit) { shown++; }
+			});
+			cityEmpty.hidden = shown > 0;
+		});
+
+		// выбор города вручную — и в поп-апе, и в списке на главной: запоминаем и не переспрашиваем
+		document.querySelectorAll(".js-city-choose, .cities__link").forEach(function (link) {
+			link.addEventListener("click", function () {
+				cookieSet(CITY_OK_COOKIE, "1", 180);
+				cookieSet(CITY_COOKIE, link.dataset.slug || "", 180);
+			});
+		});
+
+		// --- определение города ---
+		function detectSend(query) {
+			fetch("/source/php/detect.php" + query, { headers: { "Accept": "application/json" } })
+				.then(function (r) { return r.json(); })
+				.then(function (res) {
+					cookieSet(CITY_COOKIE, res.slug || citySlug, 30);
+					// определился другой город — открываем его версию тем же путём
+					if (res.ok && res.slug && res.slug !== citySlug && res.origin) {
+						location.replace(res.origin + location.pathname + location.search);
+						return;
+					}
+					askShow();
+				})
+				.catch(function () { askShow(); });
+		}
+
+		function detect() {
+			if (!navigator.geolocation) { detectSend(""); return; }
+			navigator.geolocation.getCurrentPosition(
+				function (pos) {
+					detectSend("?lat=" + pos.coords.latitude + "&lon=" + pos.coords.longitude);
+				},
+				function () { detectSend(""); },  // отказ, таймаут, http — определяем по IP
+				{ timeout: 8000, maximumAge: 600000 }
+			);
+		}
+
+		// определяем один раз на посетителя, дальше только подтверждение
+		if (cookieGet(CITY_COOKIE)) {
+			askShow();
+		} else {
+			detect();
+		}
 	}
 });

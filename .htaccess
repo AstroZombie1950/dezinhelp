@@ -12,10 +12,15 @@ ErrorDocument 404 /404.php
 	# первым, иначе следующее правило рубит его вместе со всей папкой (403)
 	RewriteRule ^source/php/order\.php$ - [L]
 
+	# detect.php — определение города, страница дёргает его через fetch
+	RewriteRule ^source/php/detect\.php$ - [L]
+
 	# /data — контент страниц и прайс, наружу отдавать незачем
 	# /source/php — конфиг и хелперы
+	# /source/include — куски шаблонов, сами по себе не страницы
 	RewriteRule ^data/ - [F,L]
 	RewriteRule ^source/php/ - [F,L]
+	RewriteRule ^source/include/ - [F,L]
 
 	# --- Роутинг страниц услуг ---
 	# /index.php — дубль главной, уводим на / (THE_REQUEST смотрит исходный
@@ -65,6 +70,8 @@ Options -Indexes
 
 # --- Кэш статики ---
 # картинки и шрифты меняются редко — год; css/js — месяц (при правках меняем имя или ?v=)
+# woff2 объявляем явно: без AddType Apache может не знать этот MIME, и ExpiresByType не сработает
+AddType font/woff2 .woff2
 <IfModule mod_expires.c>
 	ExpiresActive On
 	ExpiresByType image/webp "access plus 1 year"

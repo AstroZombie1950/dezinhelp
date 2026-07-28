@@ -15,7 +15,7 @@ if (!empty($cityReg["visible"]) && $cityItems):
 				<?php if ($c["slug"] === $city["slug"]): ?>
 			<li class="cities__city cities__city--home" aria-current="page"><?= h($c["name"]) ?></li>
 				<?php else: ?>
-			<li class="cities__city"><a class="cities__link" href="<?= h(city_url($c)) ?>"><?= h($c["name"]) ?></a></li>
+			<li class="cities__city"><a class="cities__link" href="<?= h(city_url($c)) ?>" data-slug="<?= h($c["slug"]) ?>"><?= h($c["name"]) ?></a></li>
 				<?php endif; ?>
 			<?php endforeach; ?>
 		</ul>

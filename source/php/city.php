@@ -50,6 +50,14 @@ function city_by_slug($slug)
 
 // --- текущий запрос ---
 
+// конфиг от вызывающего кода (bootstrap, order.php) — чтобы не читать файл повторно
+function city_config($config = null)
+{
+	static $cfg = null;
+	if ($config !== null) { $cfg = $config; }
+	return $cfg;
+}
+
 // хост без порта, в нижнем регистре
 function city_host()
 {
@@ -72,9 +80,13 @@ function city_base_domain()
 	static $base = null;
 	if ($base !== null) { return $base; }
 
-	$file = __DIR__ . "/config.php";
-	if (!file_exists($file)) { $file = __DIR__ . "/config.sample.php"; }
-	$cfg  = file_exists($file) ? require $file : array();
+	// конфиг уже загружен вызывающим кодом — берём его; иначе читаем сами
+	$cfg = city_config();
+	if ($cfg === null) {
+		$file = __DIR__ . "/config.php";
+		if (!file_exists($file)) { $file = __DIR__ . "/config.sample.php"; }
+		$cfg = file_exists($file) ? require $file : array();
+	}
 	$base = isset($cfg["base_domain"]) ? strtolower(trim($cfg["base_domain"])) : "";
 
 	if ($base === "") {

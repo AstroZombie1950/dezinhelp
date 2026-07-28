@@ -1,7 +1,7 @@
 <?php
 // Порядок обработки. Данные — data/process.json, правится через админку.
 $process = data_load("process");
-if (!empty($process["visible"]) && $process["steps"]):
+if (!empty($process["visible"]) && !empty($process["steps"])):
 ?>
 <section class="section" id="process">
 	<div class="container">

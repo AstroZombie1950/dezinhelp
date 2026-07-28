@@ -11,11 +11,14 @@ $adminConfig = file_exists($configFile)
 // учётка, изменённая через панель; лежит в закрытой от веба /data
 define("AUTH_FILE", __DIR__ . "/../../data/auth.json");
 
-// сессия со своим именем и кука только для админки
+// сессия со своим именем и кука только для админки.
+// secure — по фактическому протоколу: на HTTPS кука не уйдёт открытым текстом,
+// а локалка по http продолжит работать
 session_name("dezadmin");
 session_set_cookie_params(array(
 	"path"     => "/admin/",
 	"httponly" => true,
+	"secure"   => city_scheme() === "https",
 	"samesite" => "Lax",
 ));
 session_start();

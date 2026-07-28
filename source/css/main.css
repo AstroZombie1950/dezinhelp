@@ -217,7 +217,9 @@ button {
 
 .header__logo {
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 3px;
 	flex-shrink: 0;
 }
 
@@ -226,6 +228,18 @@ button {
 	display: block;
 	height: 46px;
 	width: auto;
+}
+
+/* городская подпись под лого: меняется вместе с поддоменом */
+.header__logo-city {
+	display: block;
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 1.2;
+	letter-spacing: 0.6px;
+	text-transform: uppercase;
+	color: var(--color-brand);
+	white-space: nowrap;
 }
 
 /* меню занимает центр, ссылки по центру строки */
@@ -1957,6 +1971,183 @@ body.modal-open {
 	stroke-linejoin: round;
 }
 
+/* ===== поп-ап «ваш город»: подтверждение определённого города =====
+   Висит над кнопкой звонка, показывается из main.js после определения города. */
+.geo-ask {
+	position: fixed;
+	right: 24px;
+	bottom: 96px;             /* кружок звонка 56 + отступ 24 + зазор 16 */
+	z-index: 95;              /* выше плавающих кнопок (90), ниже шапки (100) */
+	width: 300px;
+	max-width: calc(100vw - 32px);
+	padding: 18px 20px 16px;
+	background: #fff;
+	border: 1px solid var(--color-border);
+	border-top: 3px solid var(--color-primary);
+	border-radius: var(--radius-sm);
+	box-shadow: var(--shadow-hover);
+	opacity: 0;
+	transform: translateY(10px);
+	transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.geo-ask.is-open {
+	opacity: 1;
+	transform: none;
+}
+
+.geo-ask__text {
+	font-size: 16px;
+	font-weight: 700;
+	padding-right: 20px;      /* место под крестик */
+	margin-bottom: 14px;
+}
+
+.geo-ask__actions {
+	display: flex;
+	gap: 10px;
+}
+
+.geo-ask__actions .btn {
+	flex: 1;
+}
+
+.geo-ask__close {
+	position: absolute;
+	top: 6px;
+	right: 8px;
+	width: 28px;
+	height: 28px;
+	border: none;
+	background: none;
+	font-size: 24px;
+	line-height: 1;
+	color: var(--color-text-muted);
+	cursor: pointer;
+}
+
+.geo-ask__close:hover {
+	color: var(--color-text);
+}
+
+/* ===== выбор города: список на весь экран с поиском ===== */
+.city-picker {
+	position: fixed;
+	inset: 0;
+	z-index: 210;             /* выше модалки заявки и лайтбокса */
+	display: none;
+}
+
+.city-picker.is-open {
+	display: block;
+}
+
+.city-picker__overlay {
+	position: absolute;
+	inset: 0;
+	background: rgba(16, 32, 55, 0.75);
+}
+
+.city-picker__dialog {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	width: calc(100% - 40px);
+	max-width: 900px;
+	max-height: calc(100vh - 80px);
+	margin: 40px auto;
+	padding: 28px 32px 24px;
+	background: #fff;
+	border-radius: var(--radius);
+	box-shadow: var(--shadow-hover);
+}
+
+.city-picker__title {
+	font-size: 24px;
+	font-weight: 800;
+	margin: 0 30px 4px 0;
+}
+
+.city-picker__note {
+	color: var(--color-text-muted);
+	font-size: 14px;
+	margin-bottom: 16px;
+}
+
+.city-picker__search {
+	width: 100%;
+	padding: 12px 16px;
+	font-family: inherit;
+	font-size: 15px;
+	color: var(--color-text);
+	background: var(--color-bg-page);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	margin-bottom: 16px;
+}
+
+.city-picker__search:focus {
+	outline: none;
+	border-color: var(--color-primary);
+}
+
+/* список прокручивается внутри окна; колонки — сеткой, чтобы фильтр не ломал раскладку */
+.city-picker__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	overflow-y: auto;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 2px 20px;
+	align-content: start;
+}
+
+.city-picker__link {
+	display: block;
+	padding: 8px 4px;
+	font-size: 15px;
+	color: var(--color-link);
+	border-radius: 6px;
+}
+
+.city-picker__link:hover {
+	background: var(--color-bg-alt);
+}
+
+/* текущий город — не ссылка, а отметка */
+.city-picker__current {
+	display: block;
+	padding: 8px 4px;
+	font-size: 15px;
+	font-weight: 700;
+	color: var(--color-primary-dark);
+}
+
+.city-picker__empty {
+	padding: 12px 4px;
+	color: var(--color-text-muted);
+}
+
+.city-picker__close {
+	position: absolute;
+	top: 14px;
+	right: 18px;
+	width: 32px;
+	height: 32px;
+	border: none;
+	background: none;
+	font-size: 30px;
+	line-height: 1;
+	color: var(--color-text-muted);
+	cursor: pointer;
+}
+
+.city-picker__close:hover {
+	color: var(--color-text);
+}
+
 /* ===== населённые пункты выезда (список городов) ===== */
 .cities__list {
 	list-style: none;
@@ -2765,6 +2956,11 @@ body.modal-open {
 		column-count: 3;
 	}
 
+	/* выбор города: 4 → 3 колонки */
+	.city-picker__list {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
 	/* герой в одну колонку: рабочий сверху, контент+форма ниже */
 	.hero__cols {
 		grid-template-columns: 1fr;
@@ -2925,6 +3121,27 @@ body.modal-open {
 	/* лого чуть меньше, телефоны компактнее */
 	.header__logo-img {
 		height: 40px;
+	}
+
+	.header__logo-city {
+		font-size: 10px;
+		letter-spacing: 0.3px;
+	}
+
+	/* выбор города: 3 → 2 колонки, окно ближе к краям */
+	.city-picker__list {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.city-picker__dialog {
+		width: calc(100% - 24px);
+		max-height: calc(100vh - 40px);
+		margin: 20px auto;
+		padding: 24px 20px 20px;
+	}
+
+	.city-picker__title {
+		font-size: 20px;
 	}
 
 	.header__phones {
@@ -3099,6 +3316,26 @@ body.modal-open {
 
 	.fab--top {
 		left: 16px;
+	}
+
+	/* поп-ап города — во всю ширину над плавающими кнопками (50 + 16 + 12) */
+	.geo-ask {
+		left: 12px;
+		right: 12px;
+		bottom: 78px;
+		width: auto;
+		max-width: none;
+	}
+
+	/* выбор города — во весь экран, окно без полей */
+	.city-picker__dialog {
+		width: 100%;
+		max-width: none;
+		height: 100%;
+		max-height: 100%;
+		margin: 0;
+		border-radius: 0;
+		padding: 20px 16px 16px;
 	}
 
 	.hero-srv__title {

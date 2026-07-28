@@ -146,6 +146,74 @@ function sanitize_html($html)
 	return trim($html);
 }
 
+// Приём картинки из формы ($_FILES["file"]) с сохранением в webp. Общий для всех
+// загрузок админки; ошибки уходят через fail() с текстом для плашки.
+// $square > 0 — кроп «cover» в квадрат этой стороны на белом фоне (карточки);
+// $square = 0 — даунскейл до 900px по ширине, прозрачность сохраняется (png без фона).
+// Возвращает путь файла от корня сайта.
+function upload_image_webp($subdir, $prefix, $square, $quality)
+{
+	if (empty($_FILES["file"]) || $_FILES["file"]["error"] === UPLOAD_ERR_INI_SIZE || $_FILES["file"]["error"] === UPLOAD_ERR_FORM_SIZE) {
+		fail("Файл слишком большой — загрузите фото до 10 МБ");
+	}
+	if ($_FILES["file"]["error"] !== UPLOAD_ERR_OK || !is_uploaded_file($_FILES["file"]["tmp_name"])) {
+		fail("Не получилось загрузить файл — попробуйте ещё раз");
+	}
+	if ($_FILES["file"]["size"] > 10 * 1024 * 1024) { fail("Файл слишком большой — загрузите фото до 10 МБ"); }
+
+	$info = getimagesize($_FILES["file"]["tmp_name"]);
+	if (!$info) { fail("Это не похоже на картинку — нужен файл JPG, PNG или WebP"); }
+
+	switch ($info[2]) {
+		case IMAGETYPE_JPEG: $src = imagecreatefromjpeg($_FILES["file"]["tmp_name"]); break;
+		case IMAGETYPE_PNG:  $src = imagecreatefrompng($_FILES["file"]["tmp_name"]); break;
+		case IMAGETYPE_WEBP: $src = imagecreatefromwebp($_FILES["file"]["tmp_name"]); break;
+		default: fail("Такой формат не подходит — нужен файл JPG, PNG или WebP");
+	}
+	if (!$src) { fail("Не получилось прочитать картинку — попробуйте другой файл"); }
+
+	$sw = imagesx($src); $sh = imagesy($src);
+	if ($square > 0) {
+		// кроп «cover»: масштабируем по меньшей стороне и вырезаем центр;
+		// прозрачность png заливаем белым — карточки на сайте на светлом фоне
+		$side = min($sw, $sh);
+		$sx = (int) (($sw - $side) / 2);
+		$sy = (int) (($sh - $side) / 2);
+
+		$dst = imagecreatetruecolor($square, $square);
+		$white = imagecolorallocate($dst, 255, 255, 255);
+		imagefill($dst, 0, 0, $white);
+		imagecopyresampled($dst, $src, 0, 0, $sx, $sy, $square, $square, $side, $side);
+	} else {
+		// даунскейл по ширине, пропорции сохраняем; апскейл не делаем
+		$maxW = 900;
+		if ($sw > $maxW) { $nw = $maxW; $nh = (int) round($sh * $maxW / $sw); }
+		else { $nw = $sw; $nh = $sh; }
+
+		$dst = imagecreatetruecolor($nw, $nh);
+		imagealphablending($dst, false);
+		imagesavealpha($dst, true);
+		$transparent = imagecolorallocatealpha($dst, 0, 0, 0, 127);
+		imagefilledrectangle($dst, 0, 0, $nw, $nh, $transparent);
+		imagecopyresampled($dst, $src, 0, 0, 0, 0, $nw, $nh, $sw, $sh);
+	}
+	imagedestroy($src);
+
+	$dir = __DIR__ . "/../../source/img/" . $subdir;
+	if (!is_dir($dir)) { @mkdir($dir, 0755, true); }
+	$dir = realpath($dir);
+	if (!$dir) { fail("Папка для фотографий не найдена на сервере"); }
+
+	$name = $prefix . date("Ymd-His") . "-" . substr(bin2hex(random_bytes(3)), 0, 4) . ".webp";
+	if (!imagewebp($dst, $dir . "/" . $name, $quality)) {
+		imagedestroy($dst);
+		fail("Не получилось сохранить фотографию на сервере");
+	}
+	imagedestroy($dst);
+
+	return "/source/img/" . $subdir . "/" . $name;
+}
+
 // болванка контента новой услуги: страница откроется сразу, тексты дозаполнят
 function service_blank($name)
 {
