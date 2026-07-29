@@ -82,6 +82,8 @@ $descr  = isset($seo["description"]) ? $seo["description"] : "";
 			<div class="hero-srv__cols">
 
 				<div class="hero-srv__left">
+					<?php // чек-лист свой у каждой услуги; пусто — общий набор из hero-checks.php ?>
+					<?php $heroChecks = isset($page["hero_checks"]) ? $page["hero_checks"] : array(); ?>
 					<?php require __DIR__ . "/source/include/hero-checks.php"; ?>
 
 					<?php // сноска своя у каждой услуги; пусто — не выводим ?>

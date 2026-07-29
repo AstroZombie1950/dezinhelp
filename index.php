@@ -42,7 +42,8 @@ $homeServices = data_load("home-services");
 				<!-- левая колонка -->
 				<div class="hero__left">
 
-					<!-- чек-лист преимуществ (галочки — SVG, маркеры — акцент) -->
+					<!-- чек-лист преимуществ (галочки — SVG, маркеры — акцент); текст свой у главной -->
+					<?php $heroChecks = isset($site["hero_checks"]) ? $site["hero_checks"] : array(); ?>
 					<?php require __DIR__ . "/source/include/hero-checks.php"; ?>
 
 					<!-- выноска-призыв над формой (хвостик указывает вниз) -->

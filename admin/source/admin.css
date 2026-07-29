@@ -267,6 +267,7 @@ tr.is-hidden td.table__actions { opacity: 1; }
 }
 
 .badge--ok { background: #e8f3e2; color: #3e7028; }
+.badge--danger { background: #fce8e6; color: #b03a2e; }
 
 /* ===== кнопки и поля ===== */
 .btn {

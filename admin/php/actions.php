@@ -42,6 +42,25 @@ function svc_index($services, $slug)
 	return -1;
 }
 
+// чек-лист героя из формы: параллельные массивы заголовков и подписей.
+// Пункт без заголовка выбрасываем — на сайте он всё равно не выводится
+function hero_checks_post()
+{
+	$titles = isset($_POST["check_title"]) ? (array) $_POST["check_title"] : array();
+	$subs   = isset($_POST["check_sub"]) ? (array) $_POST["check_sub"] : array();
+
+	$out = array();
+	foreach ($titles as $i => $t) {
+		$t = trim((string) $t);
+		if ($t === "") { continue; }
+		$out[] = array(
+			"title" => $t,
+			"sub"   => trim((string) (isset($subs[$i]) ? $subs[$i] : "")),
+		);
+	}
+	return $out;
+}
+
 switch ($action) {
 
 // галочки «видима» и «в футере» — сохраняются сразу по клику
@@ -102,8 +121,10 @@ case "svc_add":
 	}
 	array_splice($index["services"], $pos, 0, array($row));
 
-	json_write($servicesFile, $index);
+	// сперва файл с содержимым, потом индекс: если запись не удастся, услуга
+	// не окажется в меню без страницы (такая ссылка отдаёт 404)
 	json_write(service_path($slug), service_blank($name));
+	json_write($servicesFile, $index);
 	respond(true, array("slug" => $slug));
 
 // удаление: сперва dry-прогон — говорим, что заденет; по подтверждению переносим в корзину
@@ -204,13 +225,16 @@ case "svc_restore":
 	for ($k = count($services) - 1; $k >= 0; $k--) {
 		if ($services[$k]["group"] === $groupId) { $pos = $k + 1; break; }
 	}
-	array_splice($index["services"], $pos, 0, array($row));
-	json_write($servicesFile, $index);
-
-	// контент обратно из корзины
+	// контент обратно из корзины; файла там нет — заводим пустую страницу,
+	// иначе услуга вернётся в меню ссылкой на 404
 	if (file_exists(trash_path($slug))) {
 		if (!rename(trash_path($slug), service_path($slug))) { fail("Не получилось вернуть файл из корзины"); }
+	} elseif (!file_exists(service_path($slug))) {
+		json_write(service_path($slug), service_blank($m["name"]));
 	}
+
+	array_splice($index["services"], $pos, 0, array($row));
+	json_write($servicesFile, $index);
 
 	unset($meta[$slug]);
 	json_write(trash_meta_path(), $meta);
@@ -426,7 +450,17 @@ case "svc_save_hero":
 	$pg["hero_image"] = (strpos($hi, "/source/img/") === 0) ? $hi : "";
 	$pg["text_image"] = (strpos($ti, "/source/img/") === 0) ? $ti : "";
 
+	// чек-лист услуги; пустой список — на странице подставится общий набор
+	$pg["hero_checks"] = hero_checks_post();
+
 	json_write(service_path($slug), $pg);
+	respond(true);
+
+// чек-лист героя главной: лежит в site.json рядом с контактами
+case "home_save_hero":
+	$siteData = json_read(data_path("site"));
+	$siteData["hero_checks"] = hero_checks_post();
+	json_write(data_path("site"), $siteData);
 	respond(true);
 
 // загрузка картинки услуги (герой / текст): даунскейл до 900px по ширине без кропа,
@@ -479,15 +513,19 @@ case "settings_save_site":
 	$address = isset($_POST["address"]) ? trim($_POST["address"]) : "";
 	if ($address === "") { fail("Заполните адрес"); }
 
+	// чек-лист героя главной правится на своей странице — переносим его как есть
+	$siteOld = json_read(data_path("site"));
+
 	// порядок ключей файла фиксируем — так его удобнее читать глазами
 	json_write(data_path("site"), array(
-		"site_url"   => rtrim($siteUrl, "/"),
-		"phones"     => $phones,
-		"email"      => $email,
-		"address"    => $address,
-		"legal"      => isset($_POST["legal"]) ? trim($_POST["legal"]) : "",
-		"license"    => isset($_POST["license"]) ? trim($_POST["license"]) : "",
-		"messengers" => $msg,
+		"site_url"    => rtrim($siteUrl, "/"),
+		"hero_checks" => isset($siteOld["hero_checks"]) ? $siteOld["hero_checks"] : array(),
+		"phones"      => $phones,
+		"email"       => $email,
+		"address"     => $address,
+		"legal"       => isset($_POST["legal"]) ? trim($_POST["legal"]) : "",
+		"license"     => isset($_POST["license"]) ? trim($_POST["license"]) : "",
+		"messengers"  => $msg,
 	));
 	respond(true);
 

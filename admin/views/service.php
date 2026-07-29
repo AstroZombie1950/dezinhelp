@@ -99,6 +99,10 @@ $blockLabels = array(
 		</div>
 	</div>
 
+	<?php // чек-лист свой у каждой услуги: пусто — подставится общий набор ?>
+	<?php $hcItems = isset($editPage["hero_checks"]) ? $editPage["hero_checks"] : array(); ?>
+	<?php require __DIR__ . "/hero-checks-fields.php"; ?>
+
 	<div class="tab__actions"><button type="submit" class="btn btn--primary">Сохранить</button></div>
 </form>
 

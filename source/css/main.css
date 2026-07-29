@@ -215,25 +215,42 @@ button {
 	height: 84px;
 }
 
+/* лого: слева знак, справа колонка «название + город» */
 .header__logo {
 	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	gap: 3px;
+	align-items: center;
+	gap: 10px;
 	flex-shrink: 0;
+	/* усы жука торчат выше кольца, поэтому оптический центр знака ниже
+	   геометрического — на столько же опускаем правую колонку */
+	--logo-nudge: 5px;
 }
 
-/* лого: высота по шапке, ширина автоматически */
-.header__logo-img {
+/* знак крупнее надписи — он и держит высоту блока */
+.header__logo-mark {
 	display: block;
-	height: 46px;
+	height: 56px;
 	width: auto;
 }
 
-/* городская подпись под лого: меняется вместе с поддоменом */
+.header__logo-body {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 4px;
+	transform: translateY(var(--logo-nudge));
+}
+
+.header__logo-name {
+	display: block;
+	height: 22px;
+	width: auto;
+}
+
+/* городская подпись под названием: меняется вместе с поддоменом */
 .header__logo-city {
 	display: block;
-	font-size: 11px;
+	font-size: 12px;
 	font-weight: 700;
 	line-height: 1.2;
 	letter-spacing: 0.6px;
@@ -1972,11 +1989,12 @@ body.modal-open {
 }
 
 /* ===== поп-ап «ваш город»: подтверждение определённого города =====
-   Висит над кнопкой звонка, показывается из main.js после определения города. */
+   На ПК висит в правом верхнем углу под шапкой, на мобиле — над кнопкой звонка.
+   Показывается из main.js после определения города. */
 .geo-ask {
 	position: fixed;
 	right: 24px;
-	bottom: 96px;             /* кружок звонка 56 + отступ 24 + зазор 16 */
+	top: 100px;               /* sticky-шапка 84 + зазор 16 */
 	z-index: 95;              /* выше плавающих кнопок (90), ниже шапки (100) */
 	width: 300px;
 	max-width: calc(100vw - 32px);
@@ -1987,7 +2005,7 @@ body.modal-open {
 	border-radius: var(--radius-sm);
 	box-shadow: var(--shadow-hover);
 	opacity: 0;
-	transform: translateY(10px);
+	transform: translateY(-10px);   /* выезжает сверху вниз */
 	transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
@@ -3119,13 +3137,29 @@ body.modal-open {
 	}
 
 	/* лого чуть меньше, телефоны компактнее */
-	.header__logo-img {
-		height: 40px;
+	.header__logo {
+		gap: 8px;
+		--logo-nudge: 4px;
+	}
+
+	.header__logo-mark {
+		height: 46px;
+	}
+
+	.header__logo-name {
+		height: 18px;
 	}
 
 	.header__logo-city {
 		font-size: 10px;
 		letter-spacing: 0.3px;
+	}
+
+	/* наверх поп-ап города поднимаем только на ПК — тут он остаётся над кнопкой звонка */
+	.geo-ask {
+		top: auto;
+		bottom: 96px;
+		transform: translateY(10px);
 	}
 
 	/* выбор города: 3 → 2 колонки, окно ближе к краям */
@@ -3282,6 +3316,24 @@ body.modal-open {
 		font-size: 19px;
 	}
 
+	/* лого ещё компактнее — рядом с ним стоят телефоны и бургер, на 360px счёт на пиксели */
+	.header__row {
+		gap: 12px;
+	}
+
+	.header__logo {
+		gap: 6px;
+		--logo-nudge: 3px;
+	}
+
+	.header__logo-mark {
+		height: 42px;
+	}
+
+	.header__logo-name {
+		height: 16px;
+	}
+
 	.hero__figure,
 	.hero-srv__figure {
 		max-width: 320px;
@@ -3318,13 +3370,15 @@ body.modal-open {
 		left: 16px;
 	}
 
-	/* поп-ап города — во всю ширину над плавающими кнопками (50 + 16 + 12) */
+	/* поп-ап города — во всю ширину над плавающими кнопками (50 + 16 + 12), как было */
 	.geo-ask {
 		left: 12px;
 		right: 12px;
+		top: auto;
 		bottom: 78px;
 		width: auto;
 		max-width: none;
+		transform: translateY(10px);   /* снизу вверх */
 	}
 
 	/* выбор города — во весь экран, окно без полей */

@@ -35,9 +35,13 @@
 		<div class="container header__row">
 			<!-- лого -->
 			<a href="/" class="header__logo" aria-label="МосКомДез — служба дезинфекции {CITY_IN}">
-				<img class="header__logo-img" src="/source/img/logo.svg" alt="МосКомДез" width="131" height="46">
-				<!-- городская подпись: меняется вместе с поддоменом -->
-				<span class="header__logo-city">СЭС г. {CITY}</span>
+				<!-- знак и надпись разрезаны на два файла: знак крупнее, справа от него — название и город -->
+				<img class="header__logo-mark" src="/source/img/logo-mark.svg" alt="" width="46" height="56" aria-hidden="true">
+				<span class="header__logo-body">
+					<img class="header__logo-name" src="/source/img/logo-text.svg" alt="МосКомДез" width="119" height="22">
+					<!-- городская подпись: меняется вместе с поддоменом -->
+					<span class="header__logo-city">СЭС г. {CITY}</span>
+				</span>
 			</a>
 
 			<!-- меню (центр на десктопе, бургер-панель на мобиле) -->

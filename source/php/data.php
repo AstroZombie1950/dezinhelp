@@ -24,6 +24,13 @@ function services_in_group($services, $groupId)
 	return $out;
 }
 
+// заголовок пункта чек-листа героя: [квадратные скобки] превращаются в маркер-подсветку.
+// текст экранируем до замены, поэтому разметку из данных сюда не протащить
+function hero_check_title($text)
+{
+	return preg_replace('/\[(.+?)\]/u', '<mark class="hero__mark">$1</mark>', h($text));
+}
+
 // делит текст на первый абзац и остаток: первый виден всегда, остальное под кнопкой
 function html_first_para($html)
 {

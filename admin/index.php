@@ -55,7 +55,7 @@ foreach ($groups as $g) { $groupNames[$g["id"]] = $g["title"]; }
 	<header class="topbar">
 		<div class="topbar__brand">МосКомДез <span>· админка</span></div>
 		<?php // блоки главной собраны в одну выпадашку — открыта, когда открыт любой из них
-		$homePages = array("prices", "slider", "works");
+		$homePages = array("hero", "prices", "slider", "works");
 		$homeOpen  = in_array($page, $homePages, true);
 		?>
 		<nav class="topbar__nav">
@@ -64,6 +64,7 @@ foreach ($groups as $g) { $groupNames[$g["id"]] = $g["title"]; }
 			<div class="topbar__drop<?= $homeOpen ? " is-current" : "" ?>">
 				<button type="button" class="topbar__drop-btn js-drop">Главная <span class="topbar__caret">▾</span></button>
 				<div class="topbar__drop-menu">
+					<a href="/admin/?page=hero" class="<?= $page === "hero" ? "is-active" : "" ?>">Герой главной</a>
 					<a href="/admin/?page=prices" class="<?= $page === "prices" ? "is-active" : "" ?>">Прайс главной</a>
 					<a href="/admin/?page=slider" class="<?= $page === "slider" ? "is-active" : "" ?>">Слайдер главной</a>
 					<a href="/admin/?page=works" class="<?= $page === "works" ? "is-active" : "" ?>">Примеры работ</a>
@@ -89,12 +90,27 @@ foreach ($groups as $g) { $groupNames[$g["id"]] = $g["title"]; }
 		foreach ($services as $s) { if ($s["slug"] === $editSlug) { $editSvc = $s; break; } }
 		$editPage = $editSvc ? json_read(service_path($editSlug)) : array();
 		?>
-		<?php if (!$editSvc || !$editPage): ?>
+		<?php if (!$editSvc): ?>
 		<h1 class="page-title">Услуга не найдена</h1>
 		<div class="empty">Такой услуги нет в списке. Возможно, её удалили. <a href="/admin/">Вернуться к списку</a></div>
+		<?php elseif (!$editPage): ?>
+		<?php // услуга в списке есть, а файла с содержимым нет: сайт на этот адрес отдаёт 404 ?>
+		<h1 class="page-title"><?= h($editSvc["name"]) ?></h1>
+		<div class="empty">
+			Услуга есть в списке, но файла с её содержимым нет:
+			<code>data/services/<?= h($editSlug) ?>.json</code>.<br>
+			Пока файла нет, страница <code>/<?= h($editSlug) ?>/</code> отдаёт 404. Загрузите файл на хостинг
+			или посмотрите <a href="/admin/?page=trash">корзину</a> — возможно, услугу удаляли.<br>
+			<a href="/admin/">Вернуться к списку</a>
+		</div>
 		<?php else: ?>
 		<?php require __DIR__ . "/views/service.php"; ?>
 		<?php endif; ?>
+
+	<?php elseif ($page === "hero"): ?>
+
+		<?php $site = json_read(data_path("site")); ?>
+		<?php require __DIR__ . "/views/home-hero.php"; ?>
 
 	<?php elseif ($page === "prices"): ?>
 
@@ -172,10 +188,13 @@ foreach ($groups as $g) { $groupNames[$g["id"]] = $g["title"]; }
 					// бейдж «цены: нет» — быстро видно, где прайс ещё пустой
 					$pg = json_read(service_path($s["slug"]));
 					$hasPrices = !empty($pg["prices"]["groups"]);
+					// файла контента нет — услуга висит в меню, а страница отдаёт 404
+					$noPage = !$pg;
 				?>
 				<tr data-slug="<?= h($s["slug"]) ?>">
 					<td>
 						<?= h($s["name"]) ?>
+						<?php if ($noPage): ?><span class="badge badge--danger" title="Нет файла data/services/<?= h($s["slug"]) ?>.json — страница отдаёт 404">нет страницы</span><?php endif; ?>
 						<div class="table__slug"><a href="/<?= h($s["slug"]) ?>/" target="_blank" rel="noopener">/<?= h($s["slug"]) ?>/</a></div>
 					</td>
 					<td class="table__c"><input type="checkbox" class="js-toggle" data-field="visible" <?= !empty($s["visible"]) ? "checked" : "" ?>></td>
