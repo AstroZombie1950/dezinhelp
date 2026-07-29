@@ -190,9 +190,9 @@ $descr  = isset($seo["description"]) ? $seo["description"] : "";
 	<?php require __DIR__ . "/source/include/block-process.php"; ?>
 	<?php endif; ?>
 
-	<!-- 7. методы обработки: две карточки и иллюстрация между ними -->
+	<!-- 7. методы обработки: та же сетка карточек, что на главной -->
 	<?php if (!empty($blocks["methods"])): ?>
-	<?php require __DIR__ . "/source/include/block-methods-service.php"; ?>
+	<?php require __DIR__ . "/source/include/block-methods.php"; ?>
 	<?php endif; ?>
 
 	<!-- 8. свидетельства -->
