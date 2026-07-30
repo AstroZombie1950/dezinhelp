@@ -1332,11 +1332,29 @@ button {
 	flex: 1;
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
 	text-align: center;
 	font-size: 13px;
 	font-weight: 600;
 	margin-bottom: 16px;
+}
+
+/* строки цен разделяем тонкой линией во всю ширину карточки (минус небольшие поля),
+   поэтому отступы даём паддингами, а не gap — иначе линия окажется не по центру */
+.srv-card__list li {
+	padding: 7px 0;
+	margin-inline: -10px;
+}
+
+.srv-card__list li:first-child {
+	padding-top: 0;
+}
+
+.srv-card__list li:last-child {
+	padding-bottom: 0;
+}
+
+.srv-card__list li + li {
+	border-top: 1px solid rgba(72, 128, 176, 0.22);
 }
 
 /* итоговое «от N ₽» — нашим синим вместо оранжевого донора */
@@ -2838,6 +2856,59 @@ body.modal-open {
 .e404 .btn--accent:hover {
 	background: var(--color-bg-alt);
 	color: var(--color-text);
+}
+
+/* ===== правовые страницы (политика конфиденциальности) ===== */
+.legal {
+	max-width: 900px;
+	margin: 0 auto;
+	font-size: 15px;
+	line-height: 1.7;
+}
+
+.legal__date {
+	margin-bottom: 28px;
+	color: var(--color-text-muted);
+	font-size: 14px;
+}
+
+.legal h2 {
+	margin: 32px 0 12px;
+	font-size: 20px;
+	font-weight: 800;
+	color: var(--color-primary-dark);
+}
+
+.legal p {
+	margin-bottom: 12px;
+}
+
+/* маркеры возвращаем: глобальный сброс списков их снимает */
+.legal ul {
+	margin-bottom: 12px;
+	padding-left: 22px;
+	list-style: disc;
+}
+
+.legal li {
+	margin-bottom: 8px;
+}
+
+/* реквизиты оператора — выделенной карточкой */
+.legal__meta {
+	padding: 18px 20px;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	background: var(--color-bg-alt);
+}
+
+.legal__meta p:last-child {
+	margin-bottom: 0;
+}
+
+.legal a {
+	color: var(--color-link);
+	text-decoration: underline;
 }
 
 /* ===== адаптив ===== */

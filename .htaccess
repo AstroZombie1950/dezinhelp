@@ -38,6 +38,9 @@ ErrorDocument 404 /404.php
 	RewriteCond %{REQUEST_FILENAME} -d
 	RewriteRule ^ - [L]
 
+	# политика конфиденциальности — своя страница; хвостовой слеш доводит она сама
+	RewriteRule ^politika/?$ politika.php [L]
+
 	# зарезервированные пути мимо роутера: слагом услуги стать не могут
 	RewriteRule ^(admin|source|data|contacts|politika)(/|$) - [L]
 
