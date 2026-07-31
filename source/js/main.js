@@ -48,6 +48,101 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	});
 
+	// ===== якоря: прокрутка ровно к началу блока =====
+	// Штатного scroll-padding-top мало: пока идёт плавная прокрутка, выше цели
+	// догружаются картинки и раскрываются блоки — высота меняется, и страница
+	// останавливается мимо. Поэтому целимся сами и после остановки поправляем.
+	function anchorOffset() {
+		// липкая шапка перекрывает верх блока — вычитаем её реальную высоту
+		var h = header ? header.getBoundingClientRect().height : 0;
+		return h + 12;
+	}
+
+	// мгновенный переход: scroll-behavior: smooth в css перебивает behavior "auto",
+	// поэтому на время прыжка гасим его на самом html
+	function jumpTo(top) {
+		var root = document.documentElement;
+		var prev = root.style.scrollBehavior;
+		root.style.scrollBehavior = "auto";
+		window.scrollTo(0, top < 0 ? 0 : top);
+		root.style.scrollBehavior = prev;
+	}
+
+	var noMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+	function scrollToAnchor(target, smooth) {
+		var top = window.pageYOffset + target.getBoundingClientRect().top - anchorOffset();
+		if (top < 0) { top = 0; }
+
+		if (!smooth || noMotion) { jumpTo(top); aim(target); return; }
+
+		// ждём тишины в 140 мс — значит анимация закончилась — и добираем разницу
+		var settle = null;
+		var guard = setTimeout(finish, 600);   // страница могла не сдвинуться вовсе
+		function finish() {
+			clearTimeout(settle);
+			clearTimeout(guard);
+			window.removeEventListener("scroll", onScroll);
+			aim(target);
+		}
+		function onScroll() {
+			clearTimeout(guard);
+			clearTimeout(settle);
+			settle = setTimeout(finish, 140);
+		}
+		window.addEventListener("scroll", onScroll, { passive: true });
+		window.scrollTo({ top: top, behavior: "smooth" });
+	}
+
+	// доводка после остановки: пока шла прокрутка, ниже догружались картинки —
+	// документ подрос, цель уехала, а первый прицел мог упереться в конец страницы.
+	// Поправляем несколько раз подряд, пока позиция не перестанет меняться.
+	function aim(target) {
+		var tries = 0;
+		(function fix() {
+			var delta = target.getBoundingClientRect().top - anchorOffset();
+			if (Math.abs(delta) > 2) { jumpTo(window.pageYOffset + delta); }
+			if (++tries < 8) { setTimeout(fix, 150); }
+		})();
+	}
+
+	// свой это адрес и та же самая страница — иначе пусть браузер уходит по ссылке
+	function samePage(url) {
+		if (url.host !== location.host) { return false; }
+		var a = url.pathname.replace(/index\.php$/, "");
+		var b = location.pathname.replace(/index\.php$/, "");
+		return a === b;
+	}
+
+	document.addEventListener("click", function (e) {
+		var link = e.target.closest ? e.target.closest('a[href*="#"]') : null;
+		if (!link || link.classList.contains("js-order-open")) { return; }
+
+		var url;
+		try { url = new URL(link.getAttribute("href"), location.href); } catch (err) { return; }
+		if (!samePage(url) || url.hash.length < 2) { return; }
+
+		var target = document.getElementById(decodeURIComponent(url.hash.slice(1)));
+		if (!target) { return; }
+
+		e.preventDefault();
+		if (history.replaceState) { history.pushState(null, "", url.hash); }
+		// панель меню закрывается в своём обработчике выше по всплытию и она fixed,
+		// поэтому на позицию цели не влияет — считаем сразу
+		scrollToAnchor(target, true);
+	});
+
+	// приход с якорем из адресной строки (например «/#methods» со страницы услуги):
+	// браузер прыгает до загрузки картинок, поэтому после load повторяем прицел
+	if (location.hash.length > 1) {
+		var landing = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+		if (landing) {
+			window.addEventListener("load", function () {
+				setTimeout(function () { scrollToAnchor(landing, false); }, 60);
+			});
+		}
+	}
+
 	// аккордеон FAQ
 	document.querySelectorAll(".faq-item__question").forEach(function (btn) {
 		btn.addEventListener("click", function () {
@@ -331,6 +426,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		toTop.addEventListener("click", function () {
 			window.scrollTo({ top: 0, behavior: "smooth" });
+		});
+	}
+
+	// ===== список городов: разворачивание свёрнутой части =====
+	// Обрезку по высоте делает css (только узкие экраны), здесь только переключение.
+	var citiesBox = document.querySelector(".js-cities");
+	var citiesToggle = citiesBox ? citiesBox.querySelector(".js-cities-toggle") : null;
+	if (citiesToggle) {
+		citiesToggle.addEventListener("click", function () {
+			var open = citiesBox.classList.toggle("is-open");
+			citiesToggle.textContent = open ? citiesToggle.dataset.less : citiesToggle.dataset.more;
+			citiesToggle.setAttribute("aria-expanded", open ? "true" : "false");
+			// свернули из середины списка — возвращаем к заголовку блока
+			if (!open) {
+				var section = citiesBox.closest(".section");
+				if (section && section.getBoundingClientRect().top < 0) { scrollToAnchor(section, false); }
+			}
 		});
 	}
 

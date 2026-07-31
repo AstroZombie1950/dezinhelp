@@ -6,6 +6,8 @@
 				<!-- левая зона: текст скидки + крупная «15%» -->
 				<div class="veterans__text">
 					<p class="veterans__lead">Ветеранам боевых действий, героям, ликвидаторам радиационных катастроф, ветеранам труда действует скидка</p>
+					<!-- на мобильном сюда же встаёт вырезанный из фона персонаж (css ::after) -->
+					<div class="veterans__figure">
 					<!-- SVG-скидка в фирменном градиенте (без красного донора) -->
 					<svg class="veterans__discount" viewBox="0 0 240 132" role="img" aria-label="Скидка 15 процентов">
 						<defs>
@@ -18,6 +20,7 @@
 						<text x="120" y="96" text-anchor="middle" font-family="Roboto, Arial, sans-serif" font-size="98" font-weight="800" fill="url(#discount-grad)">15%</text>
 						<text x="120" y="126" text-anchor="middle" font-family="Roboto, Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="8" fill="#5b918b">СКИДКА</text>
 					</svg>
+					</div>
 				</div>
 
 				<!-- правая зона: форма (белая карточка, как у донора) -->

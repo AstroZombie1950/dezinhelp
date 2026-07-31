@@ -73,8 +73,9 @@
 
 html {
 	scroll-behavior: smooth;
-	/* отступ якорей под липкую шапку */
-	scroll-padding-top: 90px;
+	/* отступ якорей под липкую шапку (шапка 84px + воздух); точную доводку
+	   делает js в main.js — это запас на случай отключённого js */
+	scroll-padding-top: 96px;
 }
 
 body {
@@ -2222,6 +2223,11 @@ body.modal-open {
 	color: var(--color-primary-dark);
 }
 
+/* «показать все» — только для свёрнутого списка на узких экранах */
+.cities__toggle {
+	display: none;
+}
+
 /* ===== цифры о компании (счётчики) ===== */
 .stats__lead {
 	max-width: 1000px;
@@ -3032,9 +3038,11 @@ body.modal-open {
 		font-size: 30px;
 	}
 
-	/* блок специалиста: фон-персонаж убираем, зоны в столбик */
+	/* блок специалиста: сквозной фон не работает в столбик, поэтому персонажа
+	   вырезаем из того же файла и ставим рядом со скидкой — палец смотрит на «15%».
+	   Цвет секции = подложка фотостудии, поэтому границы кадра не видно. */
 	.section--specialist {
-		background: var(--color-bg-alt);
+		background: #d7dae3;
 	}
 
 	/* блок скидки: колонка по центру экрана */
@@ -3050,10 +3058,33 @@ body.modal-open {
 		text-align: center;
 	}
 
-	/* «15% СКИДКА» тоже по центру */
+	/* строка «цифры + персонаж» */
+	.veterans__figure {
+		display: flex;
+		align-items: flex-start;
+		justify-content: center;
+		width: 100%;
+		max-width: 440px;
+		margin: 0 auto;
+	}
+
 	.veterans__discount {
-		margin-left: auto;
-		margin-right: auto;
+		flex: none;
+		width: 56%;
+		margin: 0;
+	}
+
+	/* кадр из фонового фото: человек от головы до колен, низ растворяется в фоне.
+	   Проценты подобраны под область 640..1165 × 60..740 исходника 1834×858. */
+	.veterans__figure::after {
+		content: "";
+		flex: none;
+		width: 44%;
+		margin-top: 3%;
+		aspect-ratio: 525 / 680;
+		background: url(/source/img/veterans/bg.webp) no-repeat 48.9% 33.7% / 349.3% auto;
+		-webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 98%);
+		mask-image: linear-gradient(to bottom, #000 60%, transparent 98%);
 	}
 
 	/* слайдер услуг: 2 целые карточки */
@@ -3130,9 +3161,61 @@ body.modal-open {
 		max-width: 380px;
 	}
 
-	/* города: 3 → 2 колонки */
+	/* города: 3 → 2 колонки, мельче и плотнее — 80 пунктов иначе тянутся на экран.
+	   Список обрезан по высоте, column-fill: auto заполняет колонки по порядку. */
 	.cities__list {
+		position: relative;
 		column-count: 2;
+		column-gap: 20px;
+		column-fill: auto;
+		height: 300px;
+		overflow: hidden;
+	}
+
+	.cities.is-open .cities__list {
+		height: auto;
+		column-fill: balance;
+	}
+
+	.cities__city {
+		padding: 3px 0;
+		font-size: 14px;
+		line-height: 1.35;
+	}
+
+	.cities__link {
+		padding: 3px 0;
+		min-height: 0;
+	}
+
+	/* подсказка, что список продолжается: нижняя кромка растворяется */
+	.cities__list::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		height: 56px;
+		background: linear-gradient(to bottom, rgba(245, 248, 250, 0), var(--color-bg-page));
+		pointer-events: none;
+	}
+
+	.cities.is-open .cities__list::after {
+		display: none;
+	}
+
+	.cities__toggle {
+		display: block;
+		position: relative;
+		margin: 16px auto 0;
+		padding: 10px 24px;
+		border: 1px solid var(--color-blue-dark);
+		border-radius: 999px;
+		background: transparent;
+		color: var(--color-blue-dark);
+		font-family: inherit;
+		font-size: 14px;
+		font-weight: 700;
 	}
 
 	/* цифры: 4 → 2 в ряд, числа мельче */
@@ -3298,9 +3381,21 @@ body.modal-open {
 
 /* --- малый телефон --- */
 @media (max-width: 480px) {
-	/* города: 2 → 1 колонка */
+	/* города: две колонки остаются и на телефоне — иначе список бесконечный.
+	   Держим их за счёт шрифта и узкого промежутка. */
 	.cities__list {
-		column-count: 1;
+		column-count: 2;
+		column-gap: 14px;
+		height: 288px;
+	}
+
+	.cities__city {
+		padding: 2px 0;
+		font-size: 13px;
+	}
+
+	.cities__link {
+		padding: 2px 0;
 	}
 
 	/* длинная цена (с ценой за сотку в скобках) не влезает рядом с названием —

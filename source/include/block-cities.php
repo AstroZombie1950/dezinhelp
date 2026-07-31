@@ -9,16 +9,21 @@ if (!empty($cityReg["visible"]) && $cityItems):
 <section class="section" id="cities">
 	<div class="container">
 		<h2 class="section__title"><?= h(isset($cityReg["title"]) ? $cityReg["title"] : "") ?></h2>
-		<!-- список в колонки: раскладку держит CSS (column-count) -->
-		<ul class="cities__list">
-			<?php foreach ($cityItems as $c): ?>
-				<?php if ($c["slug"] === $city["slug"]): ?>
-			<li class="cities__city cities__city--home" aria-current="page"><?= h($c["name"]) ?></li>
-				<?php else: ?>
-			<li class="cities__city"><a class="cities__link" href="<?= h(city_url($c)) ?>" data-slug="<?= h($c["slug"]) ?>"><?= h($c["name"]) ?></a></li>
-				<?php endif; ?>
-			<?php endforeach; ?>
-		</ul>
+		<!-- список в колонки: раскладку держит CSS (column-count).
+		     На узких экранах список обрезается по высоте, остальное — по кнопке. -->
+		<div class="cities js-cities">
+			<ul class="cities__list">
+				<?php foreach ($cityItems as $c): ?>
+					<?php if ($c["slug"] === $city["slug"]): ?>
+				<li class="cities__city cities__city--home" aria-current="page"><?= h($c["name"]) ?></li>
+					<?php else: ?>
+				<li class="cities__city"><a class="cities__link" href="<?= h(city_url($c)) ?>" data-slug="<?= h($c["slug"]) ?>"><?= h($c["name"]) ?></a></li>
+					<?php endif; ?>
+				<?php endforeach; ?>
+			</ul>
+			<!-- кнопка нужна только там, где список свёрнут — на десктопе её прячет css -->
+			<button type="button" class="cities__toggle js-cities-toggle" aria-expanded="false" data-more="Показать все города" data-less="Свернуть список">Показать все города</button>
+		</div>
 	</div>
 </section>
 <?php endif; ?>
