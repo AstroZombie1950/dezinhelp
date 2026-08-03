@@ -904,6 +904,476 @@ button {
 	background: rgba(16, 32, 55, 0.35);
 }
 
+/* ===== страница контактов ===== */
+/* компоновка донора: форма слева, тёмная карточка с контактами справа.
+   У донора карточка чёрная с жёлтыми уголками — у нас фирменный navy с градиентной подложкой */
+.contacts__title {
+	text-transform: uppercase;
+}
+
+.contacts {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+	gap: 48px;
+	align-items: start;
+}
+
+.contacts__lead {
+	margin: 0 0 20px;
+	font-size: 17px;
+	line-height: 1.5;
+}
+
+.contacts__lead mark {
+	background: var(--gradient-accent);
+	color: #fff;
+	padding: 1px 7px;
+	border-radius: 4px;
+}
+
+.contacts__form input,
+.contacts__form textarea,
+.contacts-cta__form input,
+.contacts-cta__form textarea {
+	width: 100%;
+	margin-bottom: 12px;
+	padding: 13px 16px;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	font-family: inherit;
+	font-size: 15px;
+	background: #fff;
+	color: var(--color-text);
+}
+
+.contacts__form textarea,
+.contacts-cta__form textarea {
+	resize: vertical;
+	min-height: 96px;
+}
+
+.contacts__form .btn {
+	margin-top: 6px;
+}
+
+/* карточка контактов */
+.contacts__card {
+	position: relative;
+	background: var(--color-bg-dark);
+	border-radius: 20px;
+	padding: 36px 40px;
+	color: var(--color-text-on-dark);
+}
+
+/* уголок-акцент вместо жёлтой штриховки донора */
+.contacts__card::before {
+	content: "";
+	position: absolute;
+	right: -12px;
+	bottom: -12px;
+	width: 92px;
+	height: 92px;
+	border-radius: 16px;
+	background: var(--gradient-brand);
+	z-index: -1;
+}
+
+.contacts__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.contacts__item {
+	display: flex;
+	align-items: flex-start;
+	gap: 18px;
+	padding: 14px 0;
+}
+
+.contacts__item + .contacts__item {
+	border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.contacts__icon {
+	flex-shrink: 0;
+	width: 44px;
+	height: 44px;
+	border-radius: 12px;
+	border: 1px solid rgba(255, 255, 255, 0.25);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.contacts__icon svg {
+	width: 22px;
+	height: 22px;
+	color: #fff;
+}
+
+.contacts__value {
+	align-self: center;
+	font-size: 17px;
+	line-height: 1.45;
+	min-width: 0;
+	word-break: break-word;
+}
+
+.contacts__value a {
+	color: #fff;
+	text-decoration: none;
+}
+
+.contacts__value a:hover {
+	text-decoration: underline;
+}
+
+/* мелкая подпись над адресом — как у донора */
+.contacts__label {
+	display: block;
+	font-size: 13px;
+	color: rgba(231, 237, 243, 0.65);
+}
+
+/* надзаголовок над картой */
+.contacts__eyebrow {
+	margin-bottom: 8px;
+	text-align: center;
+	font-size: 14px;
+	font-style: italic;
+	color: var(--color-text-muted);
+}
+
+.contacts__map {
+	border-radius: var(--radius);
+	overflow: hidden;
+	box-shadow: var(--shadow);
+	background: var(--color-bg);
+	/* карта тянется по ширине, высота — пропорцией, чтобы не резать точку на телефоне */
+	aspect-ratio: 21 / 9;
+}
+
+.contacts__map iframe {
+	display: block;
+	width: 100%;
+	height: 100%;
+	border: 0;
+}
+
+
+/* повторный призыв внизу страницы */
+.contacts-cta__inner {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+	gap: 48px;
+	align-items: center;
+	background: var(--gradient-brand);
+	border-radius: 20px;
+	padding: 44px 48px;
+	color: #fff;
+}
+
+.contacts-cta__title {
+	margin: 0 0 24px;
+	font-size: 32px;
+	font-weight: 800;
+	line-height: 1.15;
+	text-transform: uppercase;
+}
+
+.contacts-cta__checks {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.contacts-cta__checks li {
+	position: relative;
+	padding-left: 38px;
+	margin-bottom: 16px;
+	font-size: 17px;
+	font-weight: 700;
+	line-height: 1.35;
+}
+
+.contacts-cta__checks li:last-child {
+	margin-bottom: 0;
+}
+
+/* галочка в квадрате — тот же приём, что в чек-листе героя */
+.contacts-cta__checks li::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 1px;
+	width: 22px;
+	height: 22px;
+	border: 2px solid #fff;
+	border-radius: 5px;
+}
+
+.contacts-cta__checks li::after {
+	content: "";
+	position: absolute;
+	left: 7px;
+	top: 6px;
+	width: 7px;
+	height: 12px;
+	border: solid #fff;
+	border-width: 0 2.5px 2.5px 0;
+	transform: rotate(45deg);
+}
+
+.contacts-cta__form {
+	background: var(--color-bg);
+	border-radius: var(--radius);
+	padding: 26px;
+	color: var(--color-text);
+}
+
+.contacts-cta__form-title {
+	margin-bottom: 16px;
+	font-size: 20px;
+	font-weight: 800;
+}
+
+.contacts-cta__messengers {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 14px;
+}
+
+.contacts-cta__chat {
+	margin: 18px 0 12px;
+	font-weight: 700;
+}
+
+/* ===== лицензия и аттестация сотрудников ===== */
+/* компоновка как у донора (номер → заголовок → документ → список гарантий),
+   но в наших цветах: жёлтый фон и чёрные плашки заменены фирменным градиентом */
+.license__eyebrow {
+	margin-bottom: 10px;
+	text-align: center;
+	font-size: 14px;
+	font-style: italic;
+	color: var(--color-text-muted);
+}
+
+.license__title {
+	text-transform: uppercase;
+	margin-bottom: 32px;
+}
+
+/* документ по центру, на белой карточке — скан обычно светлый, так он не сливается с фоном */
+.license__doc {
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 14px;
+	background: var(--color-bg);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+}
+
+.license__img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: var(--radius-sm);
+}
+
+/* заглушка на месте скана: держит пропорции разворота удостоверения */
+.license__stub {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	aspect-ratio: 5 / 2;
+	border: 2px dashed var(--color-border);
+	border-radius: var(--radius-sm);
+	background: var(--color-bg-page);
+	color: var(--color-text-muted);
+	text-align: center;
+	padding: 20px;
+}
+
+.license__stub-icon {
+	width: 56px;
+	height: 56px;
+	color: var(--color-accent-text);
+}
+
+.license__stub-text {
+	font-size: 15px;
+	font-weight: 700;
+}
+
+.license__trust {
+	max-width: 820px;
+	margin: 36px auto 0;
+}
+
+/* подзаголовок плашкой — у донора чёрная, у нас фирменный градиент.
+   По центру, а не по левому краю как у донора: у нас вся секция центрованная */
+.license__subtitle {
+	margin: 0 0 22px;
+	text-align: center;
+	font-size: 26px;
+	font-weight: 800;
+	text-transform: uppercase;
+	line-height: 1.2;
+}
+
+.license__subtitle span {
+	background: var(--gradient-brand);
+	color: #fff;
+	padding: 4px 12px;
+	-webkit-box-decoration-break: clone;
+	box-decoration-break: clone;
+}
+
+.license__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.license__item {
+	position: relative;
+	padding-left: 34px;
+	margin-bottom: 16px;
+	font-size: 16px;
+	line-height: 1.5;
+}
+
+.license__item:last-child {
+	margin-bottom: 0;
+}
+
+/* «плюс» вместо маркера — как у донора, но в фирменном зелёном */
+.license__item::before {
+	content: "+";
+	position: absolute;
+	left: 0;
+	top: -1px;
+	width: 24px;
+	height: 24px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	background: var(--gradient-accent);
+	color: #fff;
+	font-size: 17px;
+	font-weight: 700;
+	line-height: 1;
+}
+
+/* ===== команда: круглые фото внахлёст ===== */
+/* каркас как у донора: кружки заходят друг на друга. Вместо ч/б → цвет при наведении
+   у нас фото цветные всегда, а при наведении кружок выходит вперёд, чуть увеличивается
+   и поворачивается — соседи по очереди в разные стороны. */
+.team {
+	--team-size: 208px;
+	--team-lap: calc(var(--team-size) / 10);   /* насколько кружки заходят друг на друга */
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: flex-start;
+	margin: 0 auto;
+	/* отрицательный отступ висит на всех элементах, включая первый в строке, — иначе
+	   после переноса строка съезжала бы. Padding возвращает ряд на место. */
+	padding-left: var(--team-lap);
+}
+
+.team__item {
+	position: relative;
+	flex: 0 0 auto;
+	width: var(--team-size);
+	margin-left: calc(var(--team-lap) * -1);
+	text-align: center;
+}
+
+.team__photo {
+	width: var(--team-size);
+	height: var(--team-size);
+	border-radius: 50%;
+	overflow: hidden;
+	/* кольцо цветом секции — им кружки отделяются друг от друга на нахлёсте */
+	box-shadow: 0 0 0 5px var(--color-bg-alt);
+	background: var(--color-bg-alt);
+	transition: transform 0.35s ease, box-shadow 0.35s ease;
+	will-change: transform;
+}
+
+.team__photo img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* наведение: вперёд + увеличение + небольшой поворот. Чётные крутим в другую сторону */
+.team__item:hover {
+	z-index: 3;
+}
+
+.team__item:hover .team__photo,
+.team__item:focus-within .team__photo {
+	transform: scale(1.08) rotate(3deg);
+	box-shadow: 0 0 0 5px var(--color-bg-alt), 0 14px 30px rgba(16, 32, 55, 0.22);
+}
+
+.team__item:nth-child(even):hover .team__photo,
+.team__item:nth-child(even):focus-within .team__photo {
+	transform: scale(1.08) rotate(-3deg);
+}
+
+/* поля по бокам — чтобы подписи соседних мастеров не сходились на нахлёсте */
+.team__caption {
+	margin-top: 14px;
+	padding: 0 14px;
+	line-height: 1.35;
+}
+
+.team__name {
+	font-weight: 800;
+	font-size: 16px;
+}
+
+.team__role {
+	font-weight: 700;
+	font-size: 14px;
+}
+
+.team__exp {
+	margin-top: 2px;
+	font-size: 13px;
+	color: var(--color-text-muted);
+}
+
+.team__note {
+	max-width: 760px;
+	margin: 36px auto 0;
+	text-align: center;
+	font-size: 16px;
+	color: var(--color-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.team__photo {
+		transition: none;
+	}
+
+	.team__item:hover .team__photo,
+	.team__item:focus-within .team__photo,
+	.team__item:nth-child(even):hover .team__photo,
+	.team__item:nth-child(even):focus-within .team__photo {
+		transform: none;
+	}
+}
+
 /* ===== назначить специалиста / скидка ветеранам ===== */
 /* фон с персонажем во всю ширину (жмётся в 15 КБ webp); кроп к верху — воздух над головой, ноги режутся */
 .section--specialist {
@@ -1016,6 +1486,7 @@ button {
 .msg-circle--tg  { background: #29a9eb; }
 .msg-circle--max { background: #7c5cff; }
 .msg-circle--wa  { background: #25d366; }
+.msg-circle--mail { background: var(--color-blue); }
 /* ===== отзывы ===== */
 .reviews__ratings {
 	display: flex;
@@ -1690,6 +2161,77 @@ button {
 	font-size: 14px;
 	color: var(--color-text-muted);
 	line-height: 1.55;
+}
+
+/* скрины отзыва вместо текста: ряд миниатюр, клик открывает полный размер */
+.review-card__shots {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	align-items: flex-start;
+}
+
+/* ширина плитки фиксирована под три в ряд и не зависит от их количества:
+   иначе отзыв с одним скрином растягивал бы его на всю карточку и ломал высоту ряда */
+.review-card__shot {
+	flex: 0 0 calc((100% - 20px) / 3);
+	max-width: calc((100% - 20px) / 3);
+	min-width: 0;
+	/* скрины приходят разного размера — одинаковая плитка + object-fit держит ряд ровным */
+	aspect-ratio: 3 / 4;
+	padding: 0;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	overflow: hidden;
+	background: var(--color-bg-page);
+	transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.review-card__shot img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: top;
+}
+
+/* увеличение при наведении — только там, где есть настоящий курсор */
+@media (hover: hover) {
+	button.review-card__shot {
+		cursor: pointer;
+	}
+
+	button.review-card__shot:hover,
+	button.review-card__shot:focus-visible {
+		transform: scale(1.08);
+		box-shadow: var(--shadow-hover);
+	}
+}
+
+/* заглушка до получения скринов */
+.review-card__shot--stub {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-style: dashed;
+	color: var(--color-text-muted);
+	opacity: 0.65;
+}
+
+.review-card__shot--stub svg {
+	width: 28px;
+	height: 28px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.review-card__shot {
+		transition: none;
+	}
+
+	button.review-card__shot:hover,
+	button.review-card__shot:focus-visible {
+		transform: none;
+	}
 }
 
 .reviews__nav,
@@ -2921,6 +3463,11 @@ body.modal-open {
 
 /* --- шапка: 6 пунктов меню, полное меню только когда есть место; ниже — бургер (≤1200) --- */
 @media (max-width: 1200px) {
+	/* всё те же 6 в ряд, просто кружки меньше */
+	.team {
+		--team-size: 176px;
+	}
+
 	.header__burger {
 		display: block;
 	}
@@ -2999,6 +3546,37 @@ body.modal-open {
 
 /* --- планшет: раскладка контента в один-два столбца --- */
 @media (max-width: 1024px) {
+	/* контакты: форма и карточка в одну колонку */
+	.contacts {
+		grid-template-columns: 1fr;
+		gap: 32px;
+	}
+
+	.contacts__card {
+		padding: 28px 24px;
+	}
+
+	.contacts-cta__inner {
+		grid-template-columns: 1fr;
+		gap: 32px;
+		padding: 32px 28px;
+	}
+
+	.contacts-cta__title {
+		font-size: 26px;
+	}
+
+	.contacts__map {
+		aspect-ratio: 16 / 10;
+	}
+
+	/* команда: 3 в ряд. Ширину задаём точно под три кружка, иначе на промежуточных
+	   размерах экрана в ряд вставало бы то 3, то 4. */
+	.team {
+		--team-size: 250px;
+		max-width: calc(var(--team-size) * 2.8);
+	}
+
 	/* города: 5 → 3 колонки */
 	.cities__list {
 		column-count: 3;
@@ -3155,6 +3733,45 @@ body.modal-open {
 
 /* --- крупный телефон / малый планшет --- */
 @media (max-width: 768px) {
+	.contacts__map {
+		aspect-ratio: 4 / 5;
+	}
+
+	.contacts-cta__inner {
+		padding: 24px 18px;
+	}
+
+	.contacts-cta__title {
+		font-size: 22px;
+	}
+
+	.contacts__item {
+		gap: 14px;
+	}
+
+	.contacts__value {
+		font-size: 16px;
+	}
+
+	.license__subtitle {
+		font-size: 21px;
+	}
+
+	.license__doc {
+		padding: 10px;
+	}
+
+	/* заглушка вытягивается: на узком экране разворот 5:2 превращается в полоску */
+	.license__stub {
+		aspect-ratio: 3 / 2;
+	}
+
+	/* команда: 2 в ряд */
+	.team {
+		--team-size: 220px;
+		max-width: calc(var(--team-size) * 1.9);
+	}
+
 	/* квадратная картинка геро съедает высоту — ужимаем, чтобы форма была ближе */
 	.hero__figure,
 	.hero-srv__figure {
@@ -3381,6 +3998,47 @@ body.modal-open {
 
 /* --- малый телефон --- */
 @media (max-width: 480px) {
+	.contacts__card {
+		padding: 22px 16px;
+	}
+
+	.contacts__icon {
+		width: 38px;
+		height: 38px;
+		border-radius: 10px;
+	}
+
+	.contacts__icon svg {
+		width: 19px;
+		height: 19px;
+	}
+
+	.contacts__value {
+		font-size: 15px;
+	}
+
+	.license__eyebrow {
+		font-size: 13px;
+	}
+
+	.license__subtitle {
+		font-size: 18px;
+	}
+
+	.license__item {
+		font-size: 15px;
+		padding-left: 30px;
+	}
+
+	.team {
+		--team-size: 160px;
+		max-width: calc(var(--team-size) * 1.9);
+	}
+
+	.team__note {
+		font-size: 15px;
+	}
+
 	/* города: две колонки остаются и на телефоне — иначе список бесконечный.
 	   Держим их за счёт шрифта и узкого промежутка. */
 	.cities__list {

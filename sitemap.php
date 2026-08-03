@@ -17,6 +17,7 @@ $base = $siteUrl;
 // главная + все видимые услуги; priority и changefreq не выводим — их всё равно игнорируют
 $urls = array(
 	array("loc" => $base . "/", "lastmod" => filemtime(__DIR__ . "/index.php")),
+	array("loc" => $base . "/kontakty/", "lastmod" => filemtime(__DIR__ . "/kontakty.php")),
 );
 foreach ($servicesData["services"] as $s) {
 	if (empty($s["visible"])) {

@@ -124,6 +124,9 @@ $homeServices = data_load("home-services");
 
 	<?php require __DIR__ . "/source/include/block-methods.php"; ?>
 
+	<!-- лицензия и аттестация: номер, скан удостоверения, список гарантий -->
+	<?php require __DIR__ . "/source/include/block-license.php"; ?>
+
 	<!-- цифры о компании: счётчики с анимацией от нуля -->
 	<?php require __DIR__ . "/source/include/block-stats.php"; ?>
 
@@ -132,6 +135,9 @@ $homeServices = data_load("home-services");
 	<?php require __DIR__ . "/source/include/block-marquee.php"; ?>
 
 	<?php require __DIR__ . "/source/include/block-certificates.php"; ?>
+
+	<!-- команда: круглые фото мастеров внахлёст -->
+	<?php require __DIR__ . "/source/include/block-team.php"; ?>
 
 	<?php require __DIR__ . "/source/include/block-veterans.php"; ?>
 

@@ -1,0 +1,43 @@
+{
+	"visible": true,
+	"title": "Наша команда",
+	"note": "… и другие. Всего в нашей команде <strong>35+ мастеров</strong> с опытом работы <strong>от 5 до 14 лет</strong>.",
+	"people": [
+		{
+			"name": "Вадим",
+			"role": "дезинсектор, дезинфектор",
+			"experience": "опыт — 8 лет",
+			"photo": "/source/img/team/vadim.webp"
+		},
+		{
+			"name": "Евгений",
+			"role": "дезинсектор, дезинфектор",
+			"experience": "опыт — 10 лет",
+			"photo": "/source/img/team/evgeniy.webp"
+		},
+		{
+			"name": "Александр",
+			"role": "дезинсектор, дезинфектор, фитопатолог",
+			"experience": "опыт — 14 лет",
+			"photo": "/source/img/team/aleksandr.webp"
+		},
+		{
+			"name": "Кирилл",
+			"role": "дезинфектор",
+			"experience": "опыт — 6 лет",
+			"photo": "/source/img/team/kirill.webp"
+		},
+		{
+			"name": "Сергей",
+			"role": "дезинсектор, дезинфектор",
+			"experience": "опыт — 7 лет",
+			"photo": "/source/img/team/sergey.webp"
+		},
+		{
+			"name": "Сергей",
+			"role": "дезинсектор",
+			"experience": "опыт — 4 года",
+			"photo": "/source/img/team/sergey-2.webp"
+		}
+	]
+}

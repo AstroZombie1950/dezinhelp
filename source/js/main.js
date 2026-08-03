@@ -375,14 +375,16 @@ document.addEventListener("DOMContentLoaded", function () {
 	initCarousel(".js-gal-track", ".gal__item", ".gal__btn");     // объекты санобработки
 	initCarousel(".js-works-track", ".work-card", ".works__btn"); // примеры «до/после»
 
-	// ===== лайтбокс сертификатов: увеличенный просмотр по клику =====
+	// ===== лайтбокс: увеличенный просмотр по клику =====
+	// один на страницу, открывает любую картинку: сертификаты по номеру,
+	// остальное (скрины отзывов) — по data-lightbox-src
 	var certLightbox = document.getElementById("cert-lightbox");
 	if (certLightbox) {
 		var certLightboxImg = certLightbox.querySelector(".lightbox__img");
 
-		function openCertLightbox(num) {
-			certLightboxImg.src = "/source/img/certificate/cert_" + num + "_full.webp";
-			certLightboxImg.alt = "Сертификат №" + num;
+		function openLightbox(src, alt) {
+			certLightboxImg.src = src;
+			certLightboxImg.alt = alt || "";
 			certLightbox.classList.add("is-open");
 			certLightbox.setAttribute("aria-hidden", "false");
 			document.body.classList.add("modal-open");
@@ -396,7 +398,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		document.querySelectorAll(".js-cert-open").forEach(function (btn) {
 			btn.addEventListener("click", function () {
-				openCertLightbox(btn.dataset.cert);
+				var num = btn.dataset.cert;
+				openLightbox("/source/img/certificate/cert_" + num + "_full.webp", "Сертификат №" + num);
+			});
+		});
+
+		document.querySelectorAll(".js-lightbox").forEach(function (btn) {
+			btn.addEventListener("click", function () {
+				openLightbox(btn.dataset.lightboxSrc, btn.dataset.lightboxAlt);
 			});
 		});
 

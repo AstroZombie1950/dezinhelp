@@ -41,8 +41,11 @@ ErrorDocument 404 /404.php
 	# политика конфиденциальности — своя страница; хвостовой слеш доводит она сама
 	RewriteRule ^politika/?$ politika.php [L]
 
+	# контакты — тоже отдельная страница со своим шаблоном
+	RewriteRule ^kontakty/?$ kontakty.php [L]
+
 	# зарезервированные пути мимо роутера: слагом услуги стать не могут
-	RewriteRule ^(admin|source|data|contacts|politika)(/|$) - [L]
+	RewriteRule ^(admin|source|data|contacts|kontakty|politika)(/|$) - [L]
 
 	# /<slug>/ и /<slug> уходят в шаблон; нижний регистр и хвостовой слеш
 	# доводит сам service.php — он же знает канонический адрес
