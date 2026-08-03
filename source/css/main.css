@@ -2163,26 +2163,27 @@ button {
 	line-height: 1.55;
 }
 
-/* скрины отзыва вместо текста: ряд миниатюр, клик открывает полный размер */
+/* скрин отзыва вместо текста: показываем верх скриншота во всю ширину карточки,
+   низ уводим в градиент. Полный размер открывается по клику в лайтбоксе. */
 .review-card__shots {
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: center;
 	gap: 10px;
 	align-items: flex-start;
 }
 
-/* ширина плитки фиксирована под три в ряд и не зависит от их количества:
-   иначе отзыв с одним скрином растягивал бы его на всю карточку и ломал высоту ряда */
 .review-card__shot {
-	flex: 0 0 calc((100% - 20px) / 3);
-	max-width: calc((100% - 20px) / 3);
-	min-width: 0;
-	/* скрины приходят разного размера — одинаковая плитка + object-fit держит ряд ровным */
-	aspect-ratio: 3 / 4;
+	position: relative;
+	/* небольшая вертикальная плитка: во всю ширину карточки скрин слишком растягивал блок,
+	   а соседние текстовые карточки тянулись за ним и пустовали */
+	flex: 0 0 auto;
+	width: 200px;
+	height: 240px;
 	padding: 0;
+	overflow: hidden;
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius-sm);
-	overflow: hidden;
 	background: var(--color-bg-page);
 	transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -2192,7 +2193,43 @@ button {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
-	object-position: top;
+	/* какую часть скрина показывать в превью: у части из них сверху переписка,
+	   а сам отзыв ниже. В лайтбокс при этом уходит картинка целиком */
+	object-position: center var(--shot-pos, top);
+}
+
+/* растворяем нижний край, чтобы обрезка не выглядела случайной */
+.review-card__shot--img::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 88px;
+	background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #fff);
+	pointer-events: none;
+}
+
+/* подсказка «увеличить» — тот же приём, что на карточках сертификатов */
+.review-card__zoom {
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 10px;
+	border-radius: 999px;
+	background: rgba(16, 32, 55, 0.82);
+	color: #fff;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.review-card__zoom svg {
+	width: 14px;
+	height: 14px;
 }
 
 /* увеличение при наведении — только там, где есть настоящий курсор */
@@ -2203,7 +2240,7 @@ button {
 
 	button.review-card__shot:hover,
 	button.review-card__shot:focus-visible {
-		transform: scale(1.08);
+		transform: scale(1.03);
 		box-shadow: var(--shadow-hover);
 	}
 }
@@ -2211,16 +2248,21 @@ button {
 /* заглушка до получения скринов */
 .review-card__shot--stub {
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	gap: 10px;
 	border-style: dashed;
 	color: var(--color-text-muted);
-	opacity: 0.65;
+	opacity: 0.7;
+	text-align: center;
+	padding: 16px;
+	font-size: 13px;
 }
 
 .review-card__shot--stub svg {
-	width: 28px;
-	height: 28px;
+	width: 30px;
+	height: 30px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3691,6 +3733,11 @@ body.modal-open {
 		flex-basis: calc((100% - 20px) / 2);
 	}
 
+	.review-card__shot {
+		width: 220px;
+		height: 264px;
+	}
+
 	.footer__columns {
 		grid-template-columns: repeat(3, 1fr);
 	}
@@ -3923,6 +3970,17 @@ body.modal-open {
 
 	.review-card {
 		flex-basis: 100%;
+	}
+
+	/* на телефоне карточка одна в ряду: высоты соседей друг с другом не сравниваются,
+	   поэтому не тянем их до самой высокой — пустоты под коротким текстом не будет */
+	.reviews__track {
+		align-items: flex-start;
+	}
+
+	.review-card__shot {
+		width: 240px;
+		height: 288px;
 	}
 
 	.footer__columns {

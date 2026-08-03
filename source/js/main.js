@@ -264,24 +264,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			});
 		});
 
-		// автопрокрутка с зацикливанием, пауза при наведении/касании
-		var timer = null;
-		function play() {
-			timer = setInterval(function () {
-				var maxScroll = track.scrollWidth - track.clientWidth - 4;
-				if (track.scrollLeft >= maxScroll) {
-					track.scrollTo({ left: 0, behavior: "smooth" });
-				} else {
-					track.scrollBy({ left: step(), behavior: "smooth" });
-				}
-			}, 5000);
-		}
-		function stop() { if (timer) { clearInterval(timer); timer = null; } }
-
-		carousel.addEventListener("mouseenter", stop);
-		carousel.addEventListener("mouseleave", play);
-		track.addEventListener("touchstart", stop, { passive: true });
-		play();
+		// автопрокрутки нет: листаем только стрелками и свайпом — по просьбе заказчика
 	}
 
 	// ===== поп-ап заявки (открывается со всех .js-order-open) =====

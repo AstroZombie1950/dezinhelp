@@ -185,42 +185,55 @@ $descr  = isset($seo["description"]) ? $seo["description"] : "";
 	</section>
 	<?php endif; ?>
 
-	<!-- 6. порядок обработки -->
+	<!-- 6. примеры работ: тот же слайдер «до/после», что на главной -->
+	<?php require __DIR__ . "/source/include/block-works.php"; ?>
+
+	<!-- 7. порядок обработки -->
 	<?php if (!empty($blocks["process"])): ?>
 	<?php require __DIR__ . "/source/include/block-process.php"; ?>
 	<?php endif; ?>
 
-	<!-- 7. методы обработки: та же сетка карточек, что на главной -->
+	<!-- 8. методы обработки: та же сетка карточек, что на главной -->
 	<?php if (!empty($blocks["methods"])): ?>
 	<?php require __DIR__ . "/source/include/block-methods.php"; ?>
 	<?php endif; ?>
 
-	<!-- 8. свидетельства -->
+	<!-- 9. свидетельства -->
 	<?php if (!empty($blocks["certificates"])): ?>
 	<?php require __DIR__ . "/source/include/block-certificates.php"; ?>
 	<?php endif; ?>
 
-	<!-- 9. бегущая строка: только сертифицированные препараты -->
+	<!-- 10. удостоверение мастера СЭС, команда и отзывы — те же блоки, что на главной -->
+	<?php require __DIR__ . "/source/include/block-license.php"; ?>
+
+	<?php require __DIR__ . "/source/include/block-team.php"; ?>
+
+	<?php require __DIR__ . "/source/include/block-reviews.php"; ?>
+
+	<!-- 11. бегущая строка: только сертифицированные препараты -->
 	<?php $marqueeItems = array_fill(0, 8, "ТОЛЬКО СЕРТИФИЦИРОВАННЫЕ ПРЕПАРАТЫ"); ?>
 	<?php require __DIR__ . "/source/include/block-marquee.php"; ?>
 
-	<!-- 10. скидка ветеранам -->
+	<!-- 12. скидка ветеранам -->
 	<?php if (!empty($blocks["veterans"])): ?>
 	<?php require __DIR__ . "/source/include/block-veterans.php"; ?>
 	<?php endif; ?>
 
-	<!-- 11. зона выезда -->
+	<!-- 13. зона выезда -->
 	<?php if (!empty($blocks["coverage"])): ?>
 	<?php require __DIR__ . "/source/include/block-coverage.php"; ?>
 	<?php endif; ?>
 
-	<!-- 12. форма заявки (квиз): вариант текущей услуги на шаге «проблема» отмечен заранее -->
+	<!-- 14. населённые пункты выезда: он же ручной выбор города -->
+	<?php require __DIR__ . "/source/include/block-cities.php"; ?>
+
+	<!-- 15. форма заявки (квиз): вариант текущей услуги на шаге «проблема» отмечен заранее -->
 	<?php if (!empty($blocks["quiz"])): ?>
 	<?php $quizData = data_load("quiz"); $quizSlug = $canonical; $quizSource = "Квиз — " . $service["name"]; ?>
 	<?php require __DIR__ . "/source/include/block-quiz.php"; ?>
 	<?php endif; ?>
 
-	<!-- 13. виды услуг: текущую услугу из слайдера выкидываем -->
+	<!-- 16. виды услуг: текущую услугу из слайдера выкидываем -->
 	<?php if (!empty($blocks["services"])): ?>
 	<section class="section section--alt" id="services">
 		<div class="container">
@@ -230,7 +243,7 @@ $descr  = isset($seo["description"]) ? $seo["description"] : "";
 	</section>
 	<?php endif; ?>
 
-	<!-- 14. частые вопросы: свои у каждой услуги -->
+	<!-- 17. частые вопросы: свои у каждой услуги -->
 	<?php if (!empty($blocks["faq"])): ?>
 	<?php $faqItems = $page["faq"]; $faqTitle = "Часто задаваемые вопросы"; ?>
 	<?php require __DIR__ . "/source/include/block-faq.php"; ?>
