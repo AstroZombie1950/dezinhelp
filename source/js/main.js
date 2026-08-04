@@ -183,6 +183,63 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	});
 
+	// ===== куки =====
+	// базовый домен берём у поп-апа города — куку должны видеть все поддомены,
+	// иначе гео-переход на другой город обнуляет и город, и рекламные метки
+	var geoAskEl = document.getElementById("geo-ask");
+	var cookieBase = geoAskEl ? (geoAskEl.dataset.base || "") : "";
+
+	function cookieDomain() {
+		if (cookieBase.indexOf(".") === -1) { return ""; }  // localhost
+		if (/^[\d.]+$/.test(cookieBase)) { return ""; }     // IP вместо домена
+		return "; domain=." + cookieBase;
+	}
+
+	function cookieGet(name) {
+		var m = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+		return m ? decodeURIComponent(m[1]) : "";
+	}
+
+	function cookieSet(name, value, days) {
+		document.cookie = name + "=" + encodeURIComponent(value) + "; path=/; max-age="
+			+ (days * 86400) + cookieDomain() + "; samesite=lax";
+	}
+
+	// ===== рекламные метки: запоминаем первый заход, подкладываем в заявку =====
+	// В amoCRM под них заведены отдельные поля (utm_*, yclid, gclid, _ym_uid, REFERER).
+	// Побеждает первый заход: переход по внутренней ссылке или гео-редирект иначе
+	// затёр бы источник и вся реклама выглядела бы прямыми заходами.
+	var TRACK_COOKIE = "dh_track";
+	var TRACK_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term",
+		"gclid", "yclid", "fbclid"];
+
+	var track = (function () {
+		var stored = {};
+		try { stored = JSON.parse(cookieGet(TRACK_COOKIE)) || {}; } catch (e) { stored = {}; }
+		if (stored.landing) { return stored; }  // первый заход уже записан
+
+		var q = new URLSearchParams(location.search);
+		var data = {};
+		TRACK_KEYS.forEach(function (k) {
+			var v = q.get(k);
+			if (v) { data[k] = v.slice(0, 300); }
+		});
+		data.landing = (location.origin + location.pathname + location.search).slice(0, 500);
+
+		// свои же поддомены переходом извне не считаем
+		var ref = document.referrer || "";
+		if (ref) {
+			var host = "";
+			try { host = new URL(ref).hostname; } catch (e) { host = ""; }
+			var own = host === location.hostname
+				|| (cookieBase !== "" && host.slice(-cookieBase.length) === cookieBase);
+			if (host && !own) { data.referrer = ref.slice(0, 500); }
+		}
+
+		cookieSet(TRACK_COOKIE, JSON.stringify(data), 90);
+		return data;
+	})();
+
 	// ===== отправка форм в Telegram (через order.php) =====
 	function setStatus(el, text, type) {
 		if (!el) { return; }
@@ -225,7 +282,15 @@ document.addEventListener("DOMContentLoaded", function () {
 			if (btn) { btn.disabled = true; }
 			setStatus(status, "Отправляем…", "");
 
-			fetch(form.action, { method: "POST", body: new FormData(form) })
+			// метки первого захода и страница отправки — для полей CRM
+			var payload = new FormData(form);
+			Object.keys(track).forEach(function (k) { payload.append(k, track[k]); });
+			payload.append("page", location.href);
+			if (document.body.dataset.service) { payload.append("service", document.body.dataset.service); }
+			var ymUid = cookieGet("_ym_uid");
+			if (ymUid) { payload.append("_ym_uid", ymUid); }
+
+			fetch(form.action, { method: "POST", body: payload })
 				.then(function (r) { return r.json(); })
 				.then(function (res) {
 					if (res.ok) {
@@ -604,26 +669,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	var cityPicker = document.getElementById("city-picker");
 	if (geoAsk && cityPicker) {
 		var citySlug = geoAsk.dataset.slug;
-		var cityBase = geoAsk.dataset.base || "";
 		var CITY_COOKIE = "dh_city";       // что определили — второй раз сервисы не дёргаем
 		var CITY_OK_COOKIE = "dh_city_ok"; // город подтверждён посетителем
-
-		// куку ставим на весь домен: поддомены должны видеть ответ друг друга
-		function cookieDomain() {
-			if (cityBase.indexOf(".") === -1) { return ""; }  // localhost
-			if (/^[\d.]+$/.test(cityBase)) { return ""; }     // IP вместо домена
-			return "; domain=." + cityBase;
-		}
-
-		function cookieGet(name) {
-			var m = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
-			return m ? decodeURIComponent(m[1]) : "";
-		}
-
-		function cookieSet(name, value, days) {
-			document.cookie = name + "=" + encodeURIComponent(value) + "; path=/; max-age="
-				+ (days * 86400) + cookieDomain() + "; samesite=lax";
-		}
 
 		// --- поп-ап подтверждения ---
 		function askShow() {

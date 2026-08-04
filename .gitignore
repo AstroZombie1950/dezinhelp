@@ -8,3 +8,7 @@
 /data/.trash/
 /data/.ratelimit.json
 /data/.geolimit.json
+
+# лог отправки заявок в amoCRM — пишется на сервере
+/data/.amo.log
+/data/.orders-failed.log*

@@ -15,12 +15,19 @@ ErrorDocument 404 /404.php
 	# detect.php — определение города, страница дёргает его через fetch
 	RewriteRule ^source/php/detect\.php$ - [L]
 
+	# amo-hook.php — сюда amoCRM шлёт вебхук о смене этапа сделки.
+	# Свой доступ он проверяет секретом в строке запроса
+	RewriteRule ^source/php/amo-hook\.php$ - [L]
+
 	# /data — контент страниц и прайс, наружу отдавать незачем
 	# /source/php — конфиг и хелперы
 	# /source/include — куски шаблонов, сами по себе не страницы
+	# /tools — скрипты разработчика, на хост не выкладываются. Правило на случай,
+	# если папка всё же уедет туда вместе с репозиторием
 	RewriteRule ^data/ - [F,L]
 	RewriteRule ^source/php/ - [F,L]
 	RewriteRule ^source/include/ - [F,L]
+	RewriteRule ^tools/ - [F,L]
 
 	# --- Роутинг страниц услуг ---
 	# /index.php — дубль главной, уводим на / (THE_REQUEST смотрит исходный

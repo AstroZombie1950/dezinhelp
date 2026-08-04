@@ -34,11 +34,32 @@ function order_cut($s, $max)
 	return substr($s, 0, $max);
 }
 
+// Последняя страховка: заявка не ушла ни в CRM, ни в Telegram — кладём её на диск.
+// Иначе она исчезнет вместе с посетителем, а он второй раз писать не станет.
+// Файл не чистим по размеру, только перекладываем в .old: это единственная копия
+function order_save_failed($text)
+{
+	$file = __DIR__ . "/../../data/.orders-failed.log";
+	if (file_exists($file) && filesize($file) > 1048576) {
+		@rename($file, $file . ".old");
+	}
+	@file_put_contents($file, date("d.m.Y H:i:s") . "\n" . $text . "\n\n----------\n\n", FILE_APPEND | LOCK_EX);
+}
+
 // сбор полей
 $name    = order_cut(trim($_POST["name"] ?? ""), 100);
 $phone   = order_cut(trim($_POST["phone"] ?? ""), 32);
 $comment = order_cut(trim($_POST["comment"] ?? ""), 500);
 $source  = order_cut(trim($_POST["source"] ?? "Сайт"), 100);
+
+// рекламные метки первого захода и страница отправки — их подкладывает main.js.
+// В amoCRM под каждую заведено своё поле, поэтому храним по ключам, а не строкой
+$track = array();
+foreach (array("utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term",
+	"gclid", "yclid", "fbclid", "_ym_uid", "referrer", "landing", "page") as $k) {
+	$v = order_cut(trim($_POST[$k] ?? ""), 500);
+	if ($v !== "") { $track[$k] = $v; }
+}
 
 // имя обязательно, кроме форм с флагом name_optional (герой — как у донора)
 if (empty($_POST["name_optional"]) && array_key_exists("name", $_POST) && $name === "") {
@@ -103,9 +124,10 @@ if (isset($_POST["contact_method"]) && empty($_POST["consent"])) {
 // ответы квиза: с клиента приходят только индексы, тексты берём из data/quiz.json.
 // иначе в Telegram можно было бы прислать произвольную строку
 $quizAnswers = array();
+$quizPicked  = array(); // те же ответы по индексам шагов — из них CRM заполняет поля
 $quizContact = "";
 if (isset($_POST["q0"]) || isset($_POST["contact_method"])) {
-	require __DIR__ . "/data.php";
+	require_once __DIR__ . "/data.php";
 	$quiz = data_load("quiz");
 
 	if (!empty($quiz["steps"])) {
@@ -122,6 +144,7 @@ if (isset($_POST["q0"]) || isset($_POST["contact_method"])) {
 			}
 			if ($texts) {
 				$quizAnswers[] = " • " . $step["title"] . ": " . implode(", ", $texts);
+				$quizPicked[$i] = $texts;
 			}
 		}
 	}
@@ -149,37 +172,46 @@ if ($quizAnswers) {
 	$lines[] = "📋 Ответы:";
 	$lines[] = implode("\n", $quizAnswers);
 }
+if (isset($track["page"])) { $lines[] = "🔗 Страница: " . $track["page"]; }
+if (isset($track["utm_source"])) {
+	$ad = array($track["utm_source"]);
+	foreach (array("utm_medium", "utm_campaign", "utm_term") as $k) {
+		if (isset($track[$k])) { $ad[] = $track[$k]; }
+	}
+	$lines[] = "📊 Реклама: " . implode(" / ", $ad);
+}
 $text = implode("\n", $lines);
 
-// секреты
-$token = $config["telegram_bot_token"] ?? "";
-$chat  = $config["telegram_chat_id"] ?? "";
-if ($token === "" || $chat === "") {
-	http_response_code(500);
-	echo json_encode(array("ok" => false, "error" => "config"));
-	exit;
+// --- amoCRM ---
+// шлём до Telegram, но результат не решающий: заявка считается принятой, если
+// сработал хотя бы один канал. Ошибки CRM уходят в data/.amo.log
+require __DIR__ . "/amo.php";
+$amoOk = false;
+if (amo_enabled($config)) {
+	$amo = amo_send($config, array(
+		"name"    => $name,
+		"phone"   => $phone,
+		"city"    => $cityName,
+		"source"  => $source,
+		"comment" => $comment,
+		"service" => order_cut(trim($_POST["service"] ?? ""), 60),
+		"quiz"    => $quizPicked,
+		"track"   => $track,
+		"note"    => $text,
+		"ip"      => isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : "",
+	));
+	$amoOk = !empty($amo["ok"]);
 }
 
-// отправка через Bot API
-$url = "https://api.telegram.org/bot" . $token . "/sendMessage";
-$payload = http_build_query(array(
-	"chat_id" => $chat,
-	"text"    => $text,
-));
+// Telegram оставлен вторым каналом по просьбе заказчика: amoCRM у них уже подводила,
+// а сообщение в чат приходит даже когда CRM недоступна
+require __DIR__ . "/telegram.php";
+$tgOk = tg_send($config, $text);
 
-$ch = curl_init($url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-$response = curl_exec($ch);
-$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-// curl_close не зовём: с PHP 8.0 он ничего не делает, а с 8.5 — deprecated,
-// и предупреждение ломало бы JSON-ответ
-
-if ($httpCode === 200) {
+if ($tgOk || $amoOk) {
 	echo json_encode(array("ok" => true));
 } else {
+	order_save_failed($text);
 	http_response_code(502);
 	echo json_encode(array("ok" => false, "error" => "telegram"));
 }

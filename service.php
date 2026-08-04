@@ -61,7 +61,8 @@ $descr  = isset($seo["description"]) ? $seo["description"] : "";
 	require __DIR__ . "/source/include/head.php";
 	?>
 </head>
-<body>
+<!-- слаг услуги подхватывает main.js и кладёт в заявку: в CRM по нему заполняется «Какая проблема?» -->
+<body data-service="<?= h($canonical) ?>">
 
 	<?php require __DIR__ . "/source/include/header.html"; ?>
 

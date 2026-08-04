@@ -4,8 +4,9 @@
 // Только GET-запросы: ничего не создаёт и не меняет.
 //
 //   php tools/amo-dump.php <поддомен> <токен>
-//   php tools/amo-dump.php                     — поддомен и токен из source/php/config.php
-//                                                (ключи amocrm_subdomain, amocrm_token)
+//   php tools/amo-dump.php <поддомен>          — токен из source/php/config.php
+//                                                (amo_long_term_token, amo_token или amocrm_token)
+//   php tools/amo-dump.php                     — ещё и поддомен из конфига (amo_subdomain)
 //   ... --raw                                  — не маскировать телефоны и почты
 //
 // Если в панели нет кнопки долгосрочного токена — обменять код авторизации
@@ -41,6 +42,7 @@ if (isset($args[0]) && $args[0] === "--auth") {
 	curl_setopt($ch, CURLOPT_POST, true);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
 	curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(array(
 		"client_id"     => $args[2],
 		"client_secret" => $args[3],
@@ -62,23 +64,26 @@ if (isset($args[0]) && $args[0] === "--auth") {
 
 // --- доступы ------------------------------------------------------------
 
-$HOST  = "";
-$TOKEN = "";
+$configFile = __DIR__ . "/../source/php/config.php";
+$config = file_exists($configFile) ? require $configFile : array();
 
-if (count($args) >= 2) {
-	$HOST  = amo_host($args[0]);
-	$TOKEN = trim($args[1]);
-} else {
-	$configFile = __DIR__ . "/../source/php/config.php";
-	$config = file_exists($configFile) ? require $configFile : array();
-	if (!empty($config["amocrm_subdomain"]) && !empty($config["amocrm_token"])) {
-		$HOST  = amo_host($config["amocrm_subdomain"]);
-		$TOKEN = $config["amocrm_token"];
+// имена ключей в конфиге могли разойтись — принимаем несколько вариантов
+function cfg($keys)
+{
+	foreach ($keys as $k) {
+		if (!empty($GLOBALS["config"][$k])) { return trim($GLOBALS["config"][$k]); }
 	}
+	return "";
 }
 
-if ($HOST === "" || $TOKEN === "") {
-	exit("Нужны поддомен и токен: php tools/amo-dump.php dezinhelp <токен>\n");
+$HOST  = isset($args[0]) ? amo_host($args[0]) : amo_host(cfg(array("amo_subdomain", "amocrm_subdomain", "amo_host")));
+$TOKEN = isset($args[1]) ? trim($args[1]) : cfg(array("amo_long_term_token", "amo_token", "amocrm_token"));
+
+if ($HOST === "" || $HOST === ".amocrm.ru" || $TOKEN === "") {
+	echo "Не хватает данных.\n";
+	echo "  поддомен: " . ($HOST !== "" && $HOST !== ".amocrm.ru" ? $HOST : "не задан — передайте аргументом") . "\n";
+	echo "  токен: " . ($TOKEN !== "" ? "найден" : "не найден ни в аргументах, ни в config.php") . "\n";
+	exit("Запуск: php tools/amo-dump.php dezinhelp [токен]\n");
 }
 
 // --- запросы ------------------------------------------------------------
@@ -90,6 +95,7 @@ function amo_url($url)
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 		"Authorization: Bearer " . $GLOBALS["TOKEN"],
 		"Content-Type: application/json",
@@ -113,13 +119,14 @@ function amo_get($path, $query = array())
 	return $r["json"];
 }
 
-// списки отдаются постранично, идём по ссылке next
-function amo_list($path, $query, $key)
+// списки отдаются постранично, идём по ссылке next.
+// limit в запросе — размер страницы, а не всего: сколько страниц брать, решает $maxPages
+function amo_list($path, $query, $key, $maxPages = 20)
 {
 	$items = array();
 	$url = "https://" . $GLOBALS["HOST"] . $path . ($query ? "?" . http_build_query($query) : "");
 	$page = 0;
-	while ($url !== "" && $page < 20) {
+	while ($url !== "" && $page < $maxPages) {
 		$r = amo_url($url);
 		if ($r["code"] === 204) { break; }
 		if ($r["code"] !== 200) {
@@ -182,7 +189,6 @@ if ($account) {
 	echo "id: " . ($account["id"] ?? "?") . "\n";
 	echo "название: " . ($account["name"] ?? "?") . "\n";
 	echo "валюта: " . ($account["currency"] ?? "?") . "\n";
-	echo "создан: " . dt($account["created_at"] ?? 0) . "\n";
 	echo "версия API-аккаунта: " . ($account["version"] ?? "?") . "\n";
 	foreach ((array) ($account["_embedded"]["users_groups"] ?? array()) as $g) {
 		echo "группа: [" . $g["id"] . "] " . $g["name"] . "\n";
@@ -280,12 +286,12 @@ if ($unsorted !== null) {
 }
 
 // -- последние сделки: по ним видно, что и как реально приходит
-h("ПОСЛЕДНИЕ СДЕЛКИ (10)");
+h("ПОСЛЕДНИЕ СДЕЛКИ (50)");
 $leads = amo_list("/api/v4/leads", array(
-	"limit"             => 10,
+	"limit"             => 50,
 	"order[created_at]" => "desc",
 	"with"              => "contacts,source_id",
-), "leads");
+), "leads", 1);
 
 $contactIds = array();
 foreach ($leads as $l) {
