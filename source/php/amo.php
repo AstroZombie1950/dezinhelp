@@ -323,7 +323,17 @@ function amo_send_unsorted($config, $map, $order, $lead, $contactId, $name, $pho
 		? array("id" => $contactId)
 		: amo_contact_payload($map, $name, $phone);
 
+	// amo отбивает форму с пустыми metadata.form_page и metadata.referer (400 NotBlank),
+	// а прямой заход и переходы внутри сайта как раз дают пустой referrer —
+	// подставляем страницу отправки, в крайнем случае адрес сайта
+	$site = (string) ($config["site_url"] ?? "");
+	if ($site === "") { $site = "https://" . (string) ($_SERVER["HTTP_HOST"] ?? "dezinhelp.ru"); }
+
 	$page = (string) ($order["track"]["page"] ?? $order["track"]["landing"] ?? "");
+	if ($page === "") { $page = $site; }
+
+	$referer = (string) ($order["track"]["referrer"] ?? "");
+	if ($referer === "") { $referer = $page; }
 
 	$body = array(array(
 		"source_name" => $map["source_name"] ?? "Сайт",
@@ -336,7 +346,7 @@ function amo_send_unsorted($config, $map, $order, $lead, $contactId, $name, $pho
 			"form_name"    => (string) ($order["source"] ?? "Заявка с сайта"),
 			"form_page"    => $page,
 			"form_sent_at" => time(),
-			"referer"      => (string) ($order["track"]["referrer"] ?? ""),
+			"referer"      => $referer,
 		),
 		"_embedded" => array(
 			"leads"    => array($lead),
