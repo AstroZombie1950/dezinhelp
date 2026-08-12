@@ -9,6 +9,10 @@ if (!empty($lic["visible"])):
 	$licMark  = isset($lic["title_mark"]) ? $lic["title_mark"] : "";
 	$licPos   = ($licMark !== "") ? strpos($licTitle, $licMark) : false;
 	$licImg   = isset($lic["image"]) ? trim($lic["image"]) : "";
+	// размеры скана — из данных: без них картинка догружается и двигает вёрстку.
+	// Меняете скан — поправьте и их, иначе браузер зарезервирует чужие пропорции
+	$licW     = isset($lic["image_width"]) ? (int) $lic["image_width"] : 0;
+	$licH     = isset($lic["image_height"]) ? (int) $lic["image_height"] : 0;
 ?>
 <section class="section section--alt license" id="license">
 	<div class="container">
@@ -27,7 +31,7 @@ if (!empty($lic["visible"])):
 
 		<figure class="license__doc">
 			<?php if ($licImg !== ""): ?>
-			<img class="license__img" src="<?= h($licImg) ?>" alt="<?= h($lic["image_alt"]) ?>" loading="lazy" decoding="async">
+			<img class="license__img" src="<?= h($licImg) ?>" alt="<?= h($lic["image_alt"]) ?>"<?= $licW && $licH ? ' width="' . $licW . '" height="' . $licH . '"' : "" ?> loading="lazy" decoding="async">
 			<?php else: ?>
 			<!-- заглушка до получения скана от заказчика -->
 			<div class="license__stub">

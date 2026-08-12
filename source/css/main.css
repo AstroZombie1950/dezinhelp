@@ -911,28 +911,6 @@ button {
 	text-transform: uppercase;
 }
 
-.contacts {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-	gap: 48px;
-	align-items: start;
-}
-
-.contacts__lead {
-	margin: 0 0 20px;
-	font-size: 17px;
-	line-height: 1.5;
-}
-
-.contacts__lead mark {
-	background: var(--gradient-accent);
-	color: #fff;
-	padding: 1px 7px;
-	border-radius: 4px;
-}
-
-.contacts__form input,
-.contacts__form textarea,
 .contacts-cta__form input,
 .contacts-cta__form textarea {
 	width: 100%;
@@ -946,14 +924,9 @@ button {
 	color: var(--color-text);
 }
 
-.contacts__form textarea,
 .contacts-cta__form textarea {
 	resize: vertical;
 	min-height: 96px;
-}
-
-.contacts__form .btn {
-	margin-top: 6px;
 }
 
 /* карточка контактов */
@@ -1858,6 +1831,14 @@ button {
 }
 
 /* ===== примеры работ: слайдер «до/после» (механика та же, что у услуг) ===== */
+
+/* Секция идёт следом за такой же светлой (отзывы на главной, прайс на странице
+   услуги): фон общий, границы не видно, и два отступа подряд читаются как
+   пустая полоса над заголовком. Свой верхний ужимаем */
+.section--alt + #works {
+	padding-top: 12px;
+}
+
 .works__carousel {
 	position: relative;
 }
@@ -3588,12 +3569,6 @@ body.modal-open {
 
 /* --- планшет: раскладка контента в один-два столбца --- */
 @media (max-width: 1024px) {
-	/* контакты: форма и карточка в одну колонку */
-	.contacts {
-		grid-template-columns: 1fr;
-		gap: 32px;
-	}
-
 	.contacts__card {
 		padding: 28px 24px;
 	}

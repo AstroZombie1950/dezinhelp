@@ -1,7 +1,7 @@
 	<!-- сертификаты: карусель сканов. клоны по краям — для бесшовной прокрутки без autoplay -->
 	<section class="section" id="certificates">
 		<div class="container">
-			<h2 class="section__title">Наши сертификаты</h2>
+			<h2 class="section__title">Образцы сертификатов</h2>
 			<div class="certs__carousel">
 				<div class="certs__track js-certs-track" data-real="6" data-clone="4">
 

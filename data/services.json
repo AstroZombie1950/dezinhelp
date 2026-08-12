@@ -34,7 +34,7 @@
 		{ "name": "Уборка после смерти", "slug": "uborka-posle-smerti", "group": "cleaning", "visible": true },
 		{ "name": "Удаление запахов", "slug": "udalenie-zapahov", "group": "cleaning", "visible": true },
 		{ "name": "Обработка от плесени", "slug": "obrabotka-ot-pleseni", "group": "cleaning", "visible": true , "footer": true },
-		{ "name": "Озонирование помещения", "slug": "ozonirovanie-pomeshcheniya", "group": "cleaning", "visible": true },
+		{ "name": "Промышленная озонация", "slug": "ozonirovanie-pomeshcheniya", "group": "cleaning", "visible": true },
 		{ "name": "Демеркуризация", "slug": "demerkurizatsiya", "group": "cleaning", "visible": true }
 	]
 }

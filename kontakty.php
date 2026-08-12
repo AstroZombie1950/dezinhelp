@@ -44,94 +44,77 @@ $tgHandle = trim($contacts["telegram_handle"]) !== "" ? $contacts["telegram_hand
 
 	<main>
 
-	<!-- 1. форма обратного звонка слева + карточка контактов справа -->
+	<!-- 1. карточка контактов на всю ширину. Формы здесь нет: заявку оставляют
+	     в третьем блоке страницы, в шапке и в модальном окне -->
 	<section class="section">
 		<div class="container">
 			<h1 class="section__title contacts__title"><?= h($contacts["h1"]) ?></h1>
 
-			<div class="contacts">
+			<!-- тёмная карточка: у донора чёрная с жёлтыми уголками, у нас фирменный navy -->
+			<div class="contacts__card">
+				<ul class="contacts__list">
 
-				<div class="contacts__form-side">
-					<p class="contacts__lead"><?= $contacts["form"]["lead"] ?></p>
+					<?php if ($phoneMain): ?>
+					<li class="contacts__item">
+						<span class="contacts__icon"><svg><use href="#i-phone"></use></svg></span>
+						<span class="contacts__value">
+							<a href="tel:<?= h($phoneMain["tel"]) ?>"><?= h($phoneMain["display"]) ?></a>
+						</span>
+					</li>
+					<?php endif; ?>
 
-					<form class="contacts__form js-form" action="/source/php/order.php" method="post">
-						<input type="hidden" name="source" value="Страница контактов">
-						<input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-						<input type="text" name="name" placeholder="Имя" autocomplete="name" aria-label="Ваше имя" required>
-						<input type="tel" name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" aria-label="Номер телефона" required>
-						<textarea name="comment" rows="4" placeholder="Комментарии" aria-label="Комментарии"></textarea>
-						<div class="hero__form-note">Нажимая на кнопку, я соглашаюсь с <a href="/politika/">правилами обработки данных</a></div>
-						<button type="submit" class="btn btn--accent"><?= h($contacts["form"]["button"]) ?></button>
-						<div class="form-status" role="status"></div>
-					</form>
-				</div>
+					<li class="contacts__item">
+						<span class="contacts__icon"><svg><use href="#i-tg"></use></svg></span>
+						<span class="contacts__value">
+							<a href="<?= h($msg["telegram"]) ?>" target="_blank" rel="noopener"><?= h($tgHandle) ?></a>
+						</span>
+					</li>
 
-				<!-- тёмная карточка: у донора чёрная с жёлтыми уголками, у нас фирменный navy -->
-				<div class="contacts__card">
-					<ul class="contacts__list">
+					<?php if ($phoneMobile): ?>
+					<li class="contacts__item">
+						<span class="contacts__icon"><svg><use href="#i-mobile"></use></svg></span>
+						<span class="contacts__value">
+							<a href="tel:<?= h($phoneMobile["tel"]) ?>"><?= h($phoneMobile["display"]) ?></a>
+						</span>
+					</li>
+					<?php endif; ?>
 
-						<?php if ($phoneMain): ?>
-						<li class="contacts__item">
-							<span class="contacts__icon"><svg><use href="#i-phone"></use></svg></span>
-							<span class="contacts__value">
-								<a href="tel:<?= h($phoneMain["tel"]) ?>"><?= h($phoneMain["display"]) ?></a>
-							</span>
-						</li>
-						<?php endif; ?>
+					<li class="contacts__item">
+						<span class="contacts__icon"><svg><use href="#i-mail"></use></svg></span>
+						<span class="contacts__value">
+							<a href="mailto:<?= h($email) ?>"><?= h($email) ?></a>
+						</span>
+					</li>
 
-						<li class="contacts__item">
-							<span class="contacts__icon"><svg><use href="#i-tg"></use></svg></span>
-							<span class="contacts__value">
-								<a href="<?= h($msg["telegram"]) ?>" target="_blank" rel="noopener"><?= h($tgHandle) ?></a>
-							</span>
-						</li>
+					<li class="contacts__item">
+						<span class="contacts__icon"><svg><use href="#i-pin"></use></svg></span>
+						<span class="contacts__value">
+							<span class="contacts__label"><?= h($cLabels["warehouse"]) ?></span>
+							<?= h($contacts["warehouse"]) ?>
+						</span>
+					</li>
 
-						<?php if ($phoneMobile): ?>
-						<li class="contacts__item">
-							<span class="contacts__icon"><svg><use href="#i-mobile"></use></svg></span>
-							<span class="contacts__value">
-								<a href="tel:<?= h($phoneMobile["tel"]) ?>"><?= h($phoneMobile["display"]) ?></a>
-							</span>
-						</li>
-						<?php endif; ?>
+					<li class="contacts__item">
+						<span class="contacts__icon"><svg><use href="#i-pin"></use></svg></span>
+						<span class="contacts__value">
+							<span class="contacts__label"><?= h($cLabels["legal"]) ?></span>
+							<?= h($config["address"]) ?>
+						</span>
+					</li>
 
-						<li class="contacts__item">
-							<span class="contacts__icon"><svg><use href="#i-mail"></use></svg></span>
-							<span class="contacts__value">
-								<a href="mailto:<?= h($email) ?>"><?= h($email) ?></a>
-							</span>
-						</li>
+					<li class="contacts__item">
+						<span class="contacts__icon"><svg><use href="#i-truck"></use></svg></span>
+						<span class="contacts__value"><?= h($contacts["schedule_visit"]) ?></span>
+					</li>
 
-						<li class="contacts__item">
-							<span class="contacts__icon"><svg><use href="#i-pin"></use></svg></span>
-							<span class="contacts__value">
-								<span class="contacts__label"><?= h($cLabels["warehouse"]) ?></span>
-								<?= h($contacts["warehouse"]) ?>
-							</span>
-						</li>
+					<li class="contacts__item">
+						<span class="contacts__icon"><svg><use href="#i-24"></use></svg></span>
+						<span class="contacts__value"><?= h($contacts["schedule_orders"]) ?></span>
+					</li>
 
-						<li class="contacts__item">
-							<span class="contacts__icon"><svg><use href="#i-pin"></use></svg></span>
-							<span class="contacts__value">
-								<span class="contacts__label"><?= h($cLabels["legal"]) ?></span>
-								<?= h($config["address"]) ?>
-							</span>
-						</li>
-
-						<li class="contacts__item">
-							<span class="contacts__icon"><svg><use href="#i-truck"></use></svg></span>
-							<span class="contacts__value"><?= h($contacts["schedule_visit"]) ?></span>
-						</li>
-
-						<li class="contacts__item">
-							<span class="contacts__icon"><svg><use href="#i-24"></use></svg></span>
-							<span class="contacts__value"><?= h($contacts["schedule_orders"]) ?></span>
-						</li>
-
-					</ul>
-				</div>
-
+				</ul>
 			</div>
+
 		</div>
 	</section>
 
