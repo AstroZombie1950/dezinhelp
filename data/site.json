@@ -8,12 +8,8 @@
 	],
 	"phones": [
 		{
-			"display": "+7 (495) 109-32-00",
-			"tel": "+74951093200"
-		},
-		{
-			"display": "+7 (926) 136-77-71",
-			"tel": "+79261367771"
+			"display": "+7 (925) 296-72-63",
+			"tel": "+79252967263"
 		}
 	],
 	"email": "dezinhelp@yandex.ru",
@@ -21,8 +17,8 @@
 	"legal": "Региональная служба дезинфекции. ИП Мунтаниол А.Ю., ИНН 391103958473.",
 	"license": "Номер лицензии: 77.00165.0.25 (ЕРУЛ № Л04-00111-70197).",
 	"messengers": {
-		"telegram": "https://t.me/+79261367771",
+		"telegram": "https://t.me/+79252967263",
 		"max": "#",
-		"whatsapp": "https://api.whatsapp.com/send/?phone=79261367771"
+		"whatsapp": "https://api.whatsapp.com/send/?phone=79252967263"
 	}
 }

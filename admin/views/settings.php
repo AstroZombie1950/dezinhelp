@@ -44,11 +44,11 @@ $mVal = function ($key) use ($sMsgs) { return isset($sMsgs[$key]) ? $sMsgs[$key]
 		<div class="phone-row js-phone-row">
 			<label class="field">
 				<span class="field__label">Как показывать</span>
-				<input type="text" name="phone_display[]" value="<?= h(isset($p["display"]) ? $p["display"] : "") ?>" placeholder="+7 (495) 109-32-00">
+				<input type="text" name="phone_display[]" value="<?= h(isset($p["display"]) ? $p["display"] : "") ?>" placeholder="+7 (925) 296-72-63">
 			</label>
 			<label class="field">
 				<span class="field__label">Номер для ссылки</span>
-				<input type="text" name="phone_tel[]" value="<?= h(isset($p["tel"]) ? $p["tel"] : "") ?>" placeholder="+74951093200">
+				<input type="text" name="phone_tel[]" value="<?= h(isset($p["tel"]) ? $p["tel"] : "") ?>" placeholder="+79252967263">
 			</label>
 			<button type="button" class="icon-btn icon-btn--danger js-phone-del" title="Удалить телефон">✕</button>
 		</div>

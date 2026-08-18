@@ -19,10 +19,6 @@ $cLabels = $contacts["labels"];
 $cMap    = $contacts["map"];
 $cCta    = $contacts["cta"];
 
-// телефоны в site.json лежат списком: первый считаем городским, второй мобильным
-$phoneMain   = isset($phones[0]) ? $phones[0] : null;
-$phoneMobile = isset($phones[1]) ? $phones[1] : null;
-
 // @-ник в телеграме заказчик пока не дал — до тех пор показываем обычную подпись
 $tgHandle = trim($contacts["telegram_handle"]) !== "" ? $contacts["telegram_handle"] : $cLabels["telegram"];
 ?>
@@ -54,14 +50,14 @@ $tgHandle = trim($contacts["telegram_handle"]) !== "" ? $contacts["telegram_hand
 			<div class="contacts__card">
 				<ul class="contacts__list">
 
-					<?php if ($phoneMain): ?>
+					<?php foreach ($phones as $p): ?>
 					<li class="contacts__item">
 						<span class="contacts__icon"><svg><use href="#i-phone"></use></svg></span>
 						<span class="contacts__value">
-							<a href="tel:<?= h($phoneMain["tel"]) ?>"><?= h($phoneMain["display"]) ?></a>
+							<a href="tel:<?= h($p["tel"]) ?>"><?= h($p["display"]) ?></a>
 						</span>
 					</li>
-					<?php endif; ?>
+					<?php endforeach; ?>
 
 					<li class="contacts__item">
 						<span class="contacts__icon"><svg><use href="#i-tg"></use></svg></span>
@@ -69,15 +65,6 @@ $tgHandle = trim($contacts["telegram_handle"]) !== "" ? $contacts["telegram_hand
 							<a href="<?= h($msg["telegram"]) ?>" target="_blank" rel="noopener"><?= h($tgHandle) ?></a>
 						</span>
 					</li>
-
-					<?php if ($phoneMobile): ?>
-					<li class="contacts__item">
-						<span class="contacts__icon"><svg><use href="#i-mobile"></use></svg></span>
-						<span class="contacts__value">
-							<a href="tel:<?= h($phoneMobile["tel"]) ?>"><?= h($phoneMobile["display"]) ?></a>
-						</span>
-					</li>
-					<?php endif; ?>
 
 					<li class="contacts__item">
 						<span class="contacts__icon"><svg><use href="#i-mail"></use></svg></span>

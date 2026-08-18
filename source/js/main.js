@@ -787,3 +787,17 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	}
 });
+
+// ===== медиа: закрываем простое сохранение =====
+// Правый клик и перетаскивание на картинках/видео. Остальное (долгое нажатие на
+// мобильных, выделение) снимает css. Защита только от случайного сохранения:
+// картинка уже загружена браузером, и полностью запретить её выгрузку нельзя.
+var NO_SAVE = "img, picture, video";
+
+document.addEventListener("contextmenu", function (e) {
+	if (e.target && e.target.closest && e.target.closest(NO_SAVE)) { e.preventDefault(); }
+});
+
+document.addEventListener("dragstart", function (e) {
+	if (e.target && e.target.closest && e.target.closest(NO_SAVE)) { e.preventDefault(); }
+});
