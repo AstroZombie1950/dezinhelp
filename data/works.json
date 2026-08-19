@@ -3,36 +3,52 @@
 	"title": "Примеры наших работ",
 	"items": [
 		{
-			"text": "Уничтожение плесени",
+			"text": "Дезинфекция от плесени",
 			"year": "2025",
-			"location": "Москва, метро Фили",
+			"location": "Москва",
 			"slug": "obrabotka-ot-pleseni",
-			"before": "/source/img/works/work_1_before.webp",
-			"after": "/source/img/works/work_1_after.webp"
+			"before": "/source/img/works/work_plesen-msk_before.webp",
+			"after": "/source/img/works/work_plesen-msk_after.webp"
 		},
 		{
-			"text": "Уничтожение борщевика",
+			"text": "Демонтаж, дезинфекция от плесени, сушка дома",
+			"year": "2025",
+			"location": "Миллениум парк",
+			"slug": "obrabotka-ot-pleseni",
+			"before": "/source/img/works/work_millenium_before.webp",
+			"after": "/source/img/works/work_millenium_after.webp"
+		},
+		{
+			"text": "Уничтожение тараканов",
 			"year": "2026",
-			"location": "Истра",
-			"slug": "unichtozhenie-borshchevika",
-			"before": "/source/img/works/work_2_before.webp",
-			"after": "/source/img/works/work_2_after.webp"
+			"location": "Москва",
+			"slug": "obrabotka-ot-tarakanov",
+			"before": "/source/img/works/work_tarakany-msk.webp",
+			"after": ""
 		},
 		{
-			"text": "Демонтаж, Дезинфекция, Осушение квартиры",
+			"text": "Демонтаж полов, сушка дома, дезинфекция от плесени",
+			"year": "2026",
+			"location": "Руза",
+			"slug": "obrabotka-ot-pleseni",
+			"before": "/source/img/works/work_ruza.webp",
+			"after": ""
+		},
+		{
+			"text": "Обработка от ос",
 			"year": "2024",
-			"location": "Москва, метро Селигерская",
-			"slug": "uborka-posle-zatopleniya",
-			"before": "/source/img/works/work_3_after.webp",
-			"after": "/source/img/works/work_3_before.webp"
+			"location": "Мытищи",
+			"slug": "izbavitsya-ot-os",
+			"before": "/source/img/works/work_osy-mytishchi.webp",
+			"after": ""
 		},
 		{
-			"text": "Уничтожение шершней",
-			"year": "2023",
-			"location": "Красногорский район",
-			"slug": "izbavitsya-ot-shershney",
-			"before": "/source/img/works/work_4_before.webp",
-			"after": "/source/img/works/work_4_after.webp"
+			"text": "Сушка подвала, дезинфекция",
+			"year": "2026",
+			"location": "Красногорск",
+			"slug": "uborka-posle-zatopleniya",
+			"before": "/source/img/works/work_podval-krasnogorsk.webp",
+			"after": ""
 		}
 	]
 }

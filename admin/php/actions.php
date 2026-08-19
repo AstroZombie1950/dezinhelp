@@ -398,11 +398,11 @@ case "works_save":
 		$text = isset($w["text"]) ? trim($w["text"]) : "";
 		if ($text === "") { fail("У примера №" . ($n + 1) . " не заполнен текст"); }
 
-		// оба фото обязательны — сравнивать иначе нечего
+		// первое фото обязательно; без второго пример показывается одним широким кадром
 		$before = isset($w["before"]) ? trim($w["before"]) : "";
 		$after  = isset($w["after"]) ? trim($w["after"]) : "";
-		if ($before === "" || $after === "") { fail("У примера «" . $text . "» должны быть оба фото — до и после"); }
-		if (strpos($before, "/source/img/") !== 0 || strpos($after, "/source/img/") !== 0) {
+		if ($before === "") { fail("У примера «" . $text . "» нужно загрузить хотя бы одно фото"); }
+		if (strpos($before, "/source/img/") !== 0 || ($after !== "" && strpos($after, "/source/img/") !== 0)) {
 			fail("У примера «" . $text . "» неправильный путь к фото");
 		}
 

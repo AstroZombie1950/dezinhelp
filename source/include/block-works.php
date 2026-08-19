@@ -5,8 +5,8 @@
 $works = data_load("works");
 $wItems = array();
 foreach ((array) (isset($works["items"]) ? $works["items"] : array()) as $w) {
-	// без пары фото карточку не показываем — сравнивать нечего
-	if (empty($w["before"]) || empty($w["after"])) { continue; }
+	// первое фото обязательно; без второго карточка показывается одним широким кадром
+	if (empty($w["before"])) { continue; }
 	$wItems[] = $w;
 }
 if (!empty($works["visible"]) && $wItems):

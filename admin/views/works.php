@@ -33,7 +33,7 @@ function works_photo_slot($role, $label, $src)
 	<h1 class="page-title">Примеры работ</h1>
 	<a class="btn" href="/#works" target="_blank" rel="noopener">Открыть на сайте ↗</a>
 </div>
-<p class="page-hint">Карточки «до/после» на главной. Оба фото подгоняются под квадрат сами — можно загружать любое. На десктопе видно две карточки, на планшете и мобиле — одну.</p>
+<p class="page-hint">Карточки на главной. Загрузите оба фото — получится сравнение «до/после», два квадрата со стрелкой. Загрузите только первое — получится пример из одного кадра во всю ширину карточки. Фото подгоняются сами, можно грузить любое. На десктопе видно две карточки, на планшете и мобиле — одну.</p>
 
 <form class="card js-tab-form" data-tab="works" data-action="works_save" id="works-form">
 	<label class="switch">
@@ -51,7 +51,7 @@ function works_photo_slot($role, $label, $src)
 		<div class="wcard js-wcard">
 			<div class="wcard__photos">
 				<?= works_photo_slot("before", "До", isset($w["before"]) ? $w["before"] : "") ?>
-				<?= works_photo_slot("after", "После", isset($w["after"]) ? $w["after"] : "") ?>
+				<?= works_photo_slot("after", "После (можно не грузить)", isset($w["after"]) ? $w["after"] : "") ?>
 			</div>
 			<div class="wcard__fields">
 				<input type="text" class="wcard__text" value="<?= h(isset($w["text"]) ? $w["text"] : "") ?>" placeholder="Что сделали (текст под фото)">
@@ -78,7 +78,7 @@ function works_photo_slot($role, $label, $src)
 	<div class="wcard js-wcard">
 		<div class="wcard__photos">
 			<?= works_photo_slot("before", "До", "") ?>
-			<?= works_photo_slot("after", "После", "") ?>
+			<?= works_photo_slot("after", "После (можно не грузить)", "") ?>
 		</div>
 		<div class="wcard__fields">
 			<input type="text" class="wcard__text" value="" placeholder="Что сделали (текст под фото)">

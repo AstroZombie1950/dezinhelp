@@ -5,11 +5,19 @@ $wYear = isset($work["year"]) ? trim($work["year"]) : "";
 $wLoc  = isset($work["location"]) ? trim($work["location"]) : "";
 // «год, локация» одной строкой; если чего-то нет — лишней запятой не будет
 $wMeta = $wYear . ($wYear !== "" && $wLoc !== "" ? ", " : "") . $wLoc;
+// нет второго фото — показываем один широкий кадр вместо пары «до/после».
+// Высота у него та же, что у пары квадратов, поэтому карточки в ряду не разъезжаются
+$wSingle = empty($work["after"]);
 ?>
 <div class="work-card"<?= $workClone ? ' aria-hidden="true"' : '' ?>>
 
-	<!-- до | стрелка | после -->
+	<!-- одно фото на всю ширину либо «до | стрелка | после» -->
 	<div class="work-card__media">
+		<?php if ($wSingle): ?>
+		<figure class="work-card__photo work-card__photo--single">
+			<img src="<?= h($work["before"]) ?>" alt="<?= $workClone ? "" : h($work["text"]) ?>" width="1280" height="640" loading="lazy">
+		</figure>
+		<?php else: ?>
 		<figure class="work-card__photo">
 			<img src="<?= h($work["before"]) ?>" alt="<?= $workClone ? "" : "До: " . h($work["text"]) ?>" width="640" height="640" loading="lazy">
 			<figcaption class="work-card__badge">До</figcaption>
@@ -24,6 +32,7 @@ $wMeta = $wYear . ($wYear !== "" && $wLoc !== "" ? ", " : "") . $wLoc;
 			<img src="<?= h($work["after"]) ?>" alt="<?= $workClone ? "" : "После: " . h($work["text"]) ?>" width="640" height="640" loading="lazy">
 			<figcaption class="work-card__badge work-card__badge--after">После</figcaption>
 		</figure>
+		<?php endif; ?>
 	</div>
 
 	<!-- текст -->

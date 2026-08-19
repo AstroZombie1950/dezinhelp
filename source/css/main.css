@@ -1895,6 +1895,12 @@ button {
 	margin: 0;
 }
 
+/* пример без пары: один кадр во всю ширину. 2:1 — ровно высота квадрата из пары,
+   поэтому такие карточки стоят в ряду вровень с обычными */
+.work-card__photo--single {
+	aspect-ratio: 2 / 1;
+}
+
 .work-card__photo img {
 	display: block;
 	width: 100%;
