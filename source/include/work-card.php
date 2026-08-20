@@ -8,6 +8,9 @@ $wMeta = $wYear . ($wYear !== "" && $wLoc !== "" ? ", " : "") . $wLoc;
 // нет второго фото — показываем один широкий кадр вместо пары «до/после».
 // Высота у него та же, что у пары квадратов, поэтому карточки в ряду не разъезжаются
 $wSingle = empty($work["after"]);
+// плашки «До»/«После» можно снять для конкретного примера — когда на снимках
+// разные ракурсы или разные помещения и подписи только путают. Ключа нет — плашки есть
+$wBadges = !isset($work["badges"]) || $work["badges"];
 ?>
 <div class="work-card"<?= $workClone ? ' aria-hidden="true"' : '' ?>>
 
@@ -20,7 +23,7 @@ $wSingle = empty($work["after"]);
 		<?php else: ?>
 		<figure class="work-card__photo">
 			<img src="<?= h($work["before"]) ?>" alt="<?= $workClone ? "" : "До: " . h($work["text"]) ?>" width="640" height="640" loading="lazy">
-			<figcaption class="work-card__badge">До</figcaption>
+			<?php if ($wBadges): ?><figcaption class="work-card__badge">До</figcaption><?php endif; ?>
 		</figure>
 
 		<!-- стрелка-переход: кружок фирменного градиента с белым шевроном -->
@@ -30,7 +33,7 @@ $wSingle = empty($work["after"]);
 
 		<figure class="work-card__photo">
 			<img src="<?= h($work["after"]) ?>" alt="<?= $workClone ? "" : "После: " . h($work["text"]) ?>" width="640" height="640" loading="lazy">
-			<figcaption class="work-card__badge work-card__badge--after">После</figcaption>
+			<?php if ($wBadges): ?><figcaption class="work-card__badge work-card__badge--after">После</figcaption><?php endif; ?>
 		</figure>
 		<?php endif; ?>
 	</div>

@@ -819,7 +819,8 @@
 				location: c.querySelector(".wcard__location").value,
 				slug: c.querySelector(".wcard__slug").value,
 				before: photoPath(c, "before"),
-				after: photoPath(c, "after")
+				after: photoPath(c, "after"),
+				badges: c.querySelector(".wcard__badges").checked
 			});
 		});
 		return {

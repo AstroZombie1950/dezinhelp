@@ -16,7 +16,8 @@
 			"location": "Миллениум парк",
 			"slug": "obrabotka-ot-pleseni",
 			"before": "/source/img/works/work_millenium_before.webp",
-			"after": "/source/img/works/work_millenium_after.webp"
+			"after": "/source/img/works/work_millenium_after.webp",
+			"badges": false
 		},
 		{
 			"text": "Уничтожение тараканов",

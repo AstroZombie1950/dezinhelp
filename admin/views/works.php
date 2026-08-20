@@ -60,6 +60,10 @@ function works_photo_slot($role, $label, $src)
 					<input type="text" class="wcard__location" value="<?= h(isset($w["location"]) ? $w["location"] : "") ?>" placeholder="Локация">
 				</div>
 				<?= works_slug_select($services, isset($w["slug"]) ? $w["slug"] : "") ?>
+				<label class="switch switch--small">
+					<input type="checkbox" class="wcard__badges"<?= !isset($w["badges"]) || $w["badges"] ? " checked" : "" ?>>
+					<span>Плашки «До» и «После» на фото</span>
+				</label>
 			</div>
 			<span class="pgroup__tools wcard__tools">
 				<button type="button" class="icon-btn js-wc-move" data-dir="up" title="Выше">↑</button>
@@ -87,6 +91,10 @@ function works_photo_slot($role, $label, $src)
 				<input type="text" class="wcard__location" value="" placeholder="Локация">
 			</div>
 			<?= works_slug_select($services, "") ?>
+			<label class="switch switch--small">
+				<input type="checkbox" class="wcard__badges" checked>
+				<span>Плашки «До» и «После» на фото</span>
+			</label>
 		</div>
 		<span class="pgroup__tools wcard__tools">
 			<button type="button" class="icon-btn js-wc-move" data-dir="up" title="Выше">↑</button>

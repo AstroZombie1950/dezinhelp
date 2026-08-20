@@ -419,6 +419,8 @@ case "works_save":
 			"slug"     => $cslug,
 			"before"   => $before,
 			"after"    => $after,
+			// ключа нет — считаем, что плашки нужны: так ведут себя все старые примеры
+			"badges"   => !isset($w["badges"]) || !empty($w["badges"]),
 		);
 	}
 
