@@ -379,6 +379,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		var carousel = track.parentElement;
 		var CLONE = parseInt(track.dataset.clone, 10); // клонов с каждой стороны
 		var REAL = parseInt(track.dataset.real, 10);   // реальных карточек
+		var index = CLONE;                             // текущая карточка в координатах трека
 
 		function step() {
 			var card = track.querySelector(cardSelector);
@@ -387,28 +388,52 @@ document.addEventListener("DOMContentLoaded", function () {
 			return card.offsetWidth + (isNaN(gap) ? 20 : gap);
 		}
 
-		// стартуем на первой настоящей карточке (после клонов слева), без анимации
-		function setPosition(index) {
+		// прыжок без анимации: snap на время выключаем, иначе браузер сам «доводит» позицию
+		function setPosition(i) {
+			index = i;
+			track.style.scrollSnapType = "none";
 			track.style.scrollBehavior = "auto";
-			track.scrollLeft = index * step();
+			track.scrollLeft = i * step();
+			track.getBoundingClientRect(); // форсим пересчёт, пока snap выключен
+			track.style.scrollSnapType = "";
 			track.style.scrollBehavior = "";
 		}
+
+		// стартуем на первой настоящей карточке (после клонов слева)
 		setPosition(CLONE);
-		window.addEventListener("resize", function () { setPosition(CLONE); });
+
+		// мобильные шлют resize, когда прячется адресная строка, то есть на каждой прокрутке
+		// страницы. Реагируем только на смену ширины и остаёмся на текущей карточке, а не в начале
+		var lastWidth = window.innerWidth;
+		window.addEventListener("resize", function () {
+			if (window.innerWidth === lastWidth) { return; }
+			lastWidth = window.innerWidth;
+			setPosition(index);
+		});
 
 		// после остановки скролла — если заехали в зону клонов, бесшовно телепортируем на реальную позицию
 		var settleTimer = null;
-		track.addEventListener("scroll", function () {
+		function settleLater() {
 			clearTimeout(settleTimer);
 			settleTimer = setTimeout(function () {
-				var index = Math.round(track.scrollLeft / step());
-				if (index < CLONE) {
-					setPosition(index + REAL);
-				} else if (index >= CLONE + REAL) {
-					setPosition(index - REAL);
+				// палец ещё на экране — ждём: прыжок под рукой ощущается как рывок через весь слайдер
+				if (touching) { settleLater(); return; }
+				var i = Math.round(track.scrollLeft / step());
+				index = i;
+				if (i < CLONE) {
+					setPosition(i + REAL);
+				} else if (i >= CLONE + REAL) {
+					setPosition(i - REAL);
 				}
-			}, 120);
-		}, { passive: true });
+			}, 160);
+		}
+		track.addEventListener("scroll", settleLater, { passive: true });
+
+		var touching = false;
+		track.addEventListener("touchstart", function () { touching = true; }, { passive: true });
+		["touchend", "touchcancel"].forEach(function (ev) {
+			track.addEventListener(ev, function () { touching = false; settleLater(); }, { passive: true });
+		});
 
 		carousel.querySelectorAll(btnSelector).forEach(function (btn) {
 			btn.addEventListener("click", function () {
