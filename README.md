@@ -522,3 +522,9 @@ sh tools/build.sh     # main.min.css + main.min.js
   без сети.
 - 100/100/96/100 на странице услуги при полностью самописном стеке и обычном shared-хостинге,
   без CDN, кэш-слоя и сборщиков.
+
+## Автор
+
+**Иван Сафронов** — веб-разработчик.
+Другие сайты для бизнеса: [ivansafronov.site/business/](https://ivansafronov.site/business/)
+Портфолио и контакты: [ivansafronov.site](https://ivansafronov.site/)
